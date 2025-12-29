@@ -187,7 +187,7 @@ function FictionForm() {
                       name="characters"
                       value={formData.characters}
                       onChange={handleChange}
-                      placeholder='{"name": "Detective Jane", "role": "protagonist", "quirks": ["allergic to peanuts", "talks to ghosts"]}'
+                      placeholder='[{"name": "Detective Jane", "role": "protagonist", "quirks": ["allergic to peanuts", "talks to ghosts"]}]'
                       rows="3"
                     />
                   </div>
@@ -198,7 +198,7 @@ function FictionForm() {
                       name="timeline"
                       value={formData.timeline}
                       onChange={handleChange}
-                      placeholder='{"chapter": 1, "description": "Body discovered", "mood": "tense"}'
+                      placeholder='[{"chapter": 1, "description": "Body discovered", "mood": "tense"}]'
                       rows="3"
                     />
                   </div>
