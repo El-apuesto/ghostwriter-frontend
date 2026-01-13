@@ -1,0 +1,137 @@
+.profile-container {
+  min-height: 100vh;
+  padding: 100px 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.profile-header h1 {
+  font-size: 2.5rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.profile-card {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+  transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+}
+
+.profile-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.profile-card h2 {
+  color: #00ff88;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.profile-info,
+.credits-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-row,
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: rgba(0, 255, 136, 0.05);
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.info-row:hover,
+.detail-row:hover {
+  background: rgba(0, 255, 136, 0.1);
+}
+
+.info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+.info-value {
+  color: #00ff88;
+  font-weight: 600;
+}
+
+.profile-credits {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-box {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(0, 255, 136, 0.05);
+  border: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  transform: scale(1.05);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 100px 1rem 1rem;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-header h1 {
+    font-size: 2rem;
+  }
+
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+}
