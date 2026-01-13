@@ -1,173 +1,125 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { getMyStories, getCreditBalance, getTransactions } from '../utils/api'
-import CreditsDisplay from '../components/CreditsDisplay'
-import '../styles/dashboard.css'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../utils/api';
 
 const Dashboard = () => {
-  const { user } = useAuth()
-  const [stories, setStories] = useState([])
-  const [credits, setCredits] = useState(null)
-  const [transactions, setTransactions] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { user, credits, updateCredits } = useAuth();
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [storiesData, creditsData, transactionsData] = await Promise.all([
-          getMyStories(5, 0),
-          getCreditBalance(),
-          getTransactions(5)
-        ])
-        setStories(storiesData)
-        setCredits(creditsData)
-        setTransactions(transactionsData)
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error)
-      } finally {
-        setLoading(false)
-      }
+    fetchStories();
+    updateCredits();
+  }, []);
+
+  const fetchStories = async () => {
+    try {
+      const response = await api.get('/stories');
+      setStories(response.data);
+    } catch (err) {
+      setError('Failed to load stories');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    fetchData()
-  }, [])
+  const handleDelete = async (storyId) => {
+    if (!window.confirm('Are you sure you want to delete this story?')) return;
 
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="neon-text">Loading dashboard...</div>
-      </div>
-    )
-  }
+    try {
+      await api.delete(`/stories/${storyId}`);
+      setStories(stories.filter(s => s.id !== storyId));
+    } catch (err) {
+      alert('Failed to delete story');
+    }
+  };
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1 className="neon-text">Welcome back, {user?.full_name || user?.email}!</h1>
-        <p className="dashboard-subtitle">Your creative command center</p>
-      </div>
-
-      <div className="dashboard-grid">
-        {/* Credits Card */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h2>💳 Credits</h2>
-            <Link to="/credits" className="card-link">Manage</Link>
+    <div className="dashboard-page">
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <div>
+            <h1 className="page-title">Dashboard</h1>
+            <p className="page-subtitle">Welcome back, {user?.name}</p>
           </div>
-          <div className="card-content">
-            <CreditsDisplay />
-            {credits && (
-              <div className="credits-stats">
-                <div className="stat">
-                  <span className="stat-label">Total Purchased:</span>
-                  <span className="stat-value">{credits.total_purchased}</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-label">Total Spent:</span>
-                  <span className="stat-value">{credits.total_spent}</span>
-                </div>
+          <div className="dashboard-stats">
+            <div className="stat-card">
+              <span className="stat-icon">⚡</span>
+              <div>
+                <div className="stat-value">{credits}</div>
+                <div className="stat-label">Credits</div>
               </div>
-            )}
-            <Link to="/credits" className="neon-btn btn-small">
-              Buy Credits
-            </Link>
-          </div>
-        </div>
-
-        {/* Quick Actions Card */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h2>✨ Quick Actions</h2>
-          </div>
-          <div className="card-content">
-            <div className="action-buttons">
-              <Link to="/fiction" className="action-btn">
-                <span className="action-icon">📖</span>
-                <span>Generate Fiction</span>
-              </Link>
-              <Link to="/biography" className="action-btn">
-                <span className="action-icon">📝</span>
-                <span>Generate Biography</span>
-              </Link>
-              <Link to="/library" className="action-btn">
-                <span className="action-icon">📚</span>
-                <span>View Library</span>
-              </Link>
+            </div>
+            <div className="stat-card">
+              <span className="stat-icon">📚</span>
+              <div>
+                <div className="stat-value">{stories.length}</div>
+                <div className="stat-label">Stories</div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Stories Card */}
-        <div className="dashboard-card full-width">
-          <div className="card-header">
-            <h2>📚 Recent Stories</h2>
-            <Link to="/library" className="card-link">View All</Link>
-          </div>
-          <div className="card-content">
-            {stories.length === 0 ? (
-              <div className="empty-state">
-                <p>No stories yet. Start creating!</p>
-                <Link to="/fiction" className="neon-btn btn-small">
-                  Create Your First Story
-                </Link>
-              </div>
-            ) : (
-              <div className="stories-list">
-                {stories.map((story) => (
-                  <div key={story.id} className="story-item">
-                    <div className="story-info">
-                      <h3 className="story-title">{story.title}</h3>
-                      <div className="story-meta">
-                        <span className="story-type">{story.story_type}</span>
-                        <span className="story-length">{story.length_type}</span>
-                        <span className="story-date">
-                          {new Date(story.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                    <Link to={`/story/${story.id}`} className="view-btn">
-                      View →
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="action-cards">
+          <Link to="/fiction" className="action-card">
+            <div className="action-icon">📖</div>
+            <h3>Generate Fiction</h3>
+            <p>Create a complete novel with AI</p>
+            <span className="action-cost">100-200 credits</span>
+          </Link>
+          <Link to="/biography" className="action-card">
+            <div className="action-icon">👤</div>
+            <h3>Write Biography</h3>
+            <p>Generate a compelling life story</p>
+            <span className="action-cost">150 credits</span>
+          </Link>
+          <Link to="/profile" className="action-card">
+            <div className="action-icon">💳</div>
+            <h3>Buy Credits</h3>
+            <p>Purchase more credits to continue</p>
+          </Link>
         </div>
 
-        {/* Recent Transactions Card */}
-        <div className="dashboard-card full-width">
-          <div className="card-header">
-            <h2>💰 Recent Transactions</h2>
-          </div>
-          <div className="card-content">
-            {transactions.length === 0 ? (
-              <div className="empty-state">
-                <p>No transactions yet</p>
-              </div>
-            ) : (
-              <div className="transactions-list">
-                {transactions.map((tx) => (
-                  <div key={tx.id} className="transaction-item">
-                    <div className="transaction-info">
-                      <span className="transaction-type">{tx.transaction_type}</span>
-                      <span className="transaction-desc">{tx.description}</span>
-                    </div>
-                    <div className="transaction-amount">
-                      <span className={tx.amount > 0 ? 'positive' : 'negative'}>
-                        {tx.amount > 0 ? '+' : ''}{tx.amount}
-                      </span>
-                    </div>
+        <div className="stories-section">
+          <h2 className="section-title">Your Stories</h2>
+          {loading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+            </div>
+          ) : error ? (
+            <div className="error-message">{error}</div>
+          ) : stories.length === 0 ? (
+            <div className="empty-state">
+              <p>No stories yet. Start creating!</p>
+            </div>
+          ) : (
+            <div className="stories-grid">
+              {stories.map((story) => (
+                <div key={story.id} className="story-card">
+                  <div className="story-header">
+                    <h3 className="story-title">{story.title}</h3>
+                    <span className="story-type">{story.type}</span>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  <p className="story-description">{story.description?.substring(0, 150)}...</p>
+                  <div className="story-meta">
+                    <span className="story-date">{new Date(story.created_at).toLocaleDateString()}</span>
+                    <span className="story-status">{story.status}</span>
+                  </div>
+                  <div className="story-actions">
+                    <button className="btn btn-sm btn-outline">View</button>
+                    <button className="btn btn-sm btn-outline">Edit</button>
+                    <button onClick={() => handleDelete(story.id)} className="btn btn-sm btn-danger">Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

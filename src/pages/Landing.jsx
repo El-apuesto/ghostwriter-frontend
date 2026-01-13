@@ -1,77 +1,105 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from '../components/Header'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function Landing() {
-  const navigate = useNavigate()
+const Landing = () => {
+  const { user } = useAuth();
 
   return (
-    <div className="page-container">
-      <Header />
-      
-      <main className="landing-main">
-        <section className="path-selection">
-          <h2 className="section-title">What Kind of Story Do You Need?</h2>
-          
-          <div className="path-cards">
-            <div className="path-card" onClick={() => navigate('/fiction')}>
-              <div className="card-icon">📚</div>
-              <h3 className="card-title">FICTION</h3>
-              <ul className="card-features">
-                <li>Novels & Novellas</li>
-                <li>Horror, Thriller, Mystery</li>
-                <li>Sci-Fi & Dark Fantasy</li>
-                <li>Sarcastic Dark Comedy</li>
-              </ul>
-              <button className="neon-button">CREATE FICTION</button>
-            </div>
+    <div className="landing-page">
+      <div className="hero-section">
+        <h1 className="hero-title">
+          <span className="gradient-text">AI-Powered</span> Story Generation
+        </h1>
+        <p className="hero-subtitle">
+          Transform your ideas into complete novels and biographies with the power of artificial intelligence.
+        </p>
+        <div className="hero-cta">
+          {user ? (
+            <Link to="/dashboard" className="btn btn-primary btn-lg">
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link to="/signup" className="btn btn-primary btn-lg">
+                Get Started
+              </Link>
+              <Link to="/login" className="btn btn-outline btn-lg">
+                Login
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
 
-            <div className="path-card" onClick={() => navigate('/biography')}>
-              <div className="card-icon">👤</div>
-              <h3 className="card-title">BIOGRAPHY</h3>
-              <ul className="card-features">
-                <li>Life Stories & Memoirs</li>
-                <li>Autobiographies</li>
-                <li>Personal Histories</li>
-                <li>Legacy Documentation</li>
-              </ul>
-              <button className="neon-button">CREATE BIOGRAPHY</button>
-            </div>
+      <div className="features-section">
+        <h2 className="section-title">Features</h2>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">📚</div>
+            <h3>Fiction Generation</h3>
+            <p>Create complete novels with AI assistance. Auto-generate or edit chapter by chapter.</p>
+            <span className="feature-cost">100-200 credits</span>
           </div>
-        </section>
-
-        <section className="features-section">
-          <h2 className="section-title">Why GhostWriter?</h2>
-          <div className="features-grid">
-            <div className="feature">
-              <span className="feature-icon">🤖</span>
-              <h4>AI-Powered</h4>
-              <p>Sarcastic, witty AI fills in what you miss</p>
-            </div>
-            <div className="feature">
-              <span className="feature-icon">⚡</span>
-              <h4>Fast Generation</h4>
-              <p>Get your story in minutes, not months</p>
-            </div>
-            <div className="feature">
-              <span className="feature-icon">🎨</span>
-              <h4>Your Vision</h4>
-              <p>As detailed or minimal as you want</p>
-            </div>
-            <div className="feature">
-              <span className="feature-icon">💀</span>
-              <h4>Dark Humor</h4>
-              <p>Stories with personality and bite</p>
-            </div>
+          <div className="feature-card">
+            <div className="feature-icon">👤</div>
+            <h3>Biography Writing</h3>
+            <p>Craft compelling life stories and autobiographies with AI guidance.</p>
+            <span className="feature-cost">150 credits</span>
           </div>
-        </section>
-      </main>
+          <div className="feature-card">
+            <div className="feature-icon">🎨</div>
+            <h3>Cover Generation</h3>
+            <p>Create professional book covers for your generated stories.</p>
+            <span className="feature-cost">25 credits</span>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">📖</div>
+            <h3>EPUB Export</h3>
+            <p>Export your stories to EPUB format for publishing and distribution.</p>
+            <span className="feature-cost">15 credits</span>
+          </div>
+        </div>
+      </div>
 
-      <footer className="footer">
-        <p>© 2025 GhostWriter | Haunting the internet with sarcasm</p>
-      </footer>
+      <div className="pricing-section">
+        <h2 className="section-title">Credit Packs</h2>
+        <div className="pricing-grid">
+          <div className="pricing-card">
+            <h3>Starter</h3>
+            <div className="price">$9.99</div>
+            <div className="credits">100 Credits</div>
+            <ul className="pricing-features">
+              <li>✓ 1 Novel (auto-gen)</li>
+              <li>✓ 4 Cover designs</li>
+              <li>✓ 6 EPUB exports</li>
+            </ul>
+          </div>
+          <div className="pricing-card featured">
+            <div className="popular-badge">Popular</div>
+            <h3>Pro</h3>
+            <div className="price">$19.99</div>
+            <div className="credits">250 Credits</div>
+            <ul className="pricing-features">
+              <li>✓ 2-3 Novels</li>
+              <li>✓ 10 Cover designs</li>
+              <li>✓ 16 EPUB exports</li>
+            </ul>
+          </div>
+          <div className="pricing-card">
+            <h3>Enterprise</h3>
+            <div className="price">$49.99</div>
+            <div className="credits">700 Credits</div>
+            <ul className="pricing-features">
+              <li>✓ 7 Novels</li>
+              <li>✓ 28 Cover designs</li>
+              <li>✓ 46 EPUB exports</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Landing
+export default Landing;

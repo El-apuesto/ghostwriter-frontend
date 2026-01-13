@@ -1,47 +1,61 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import '../styles/navbar.css'
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { isAuthenticated, user, logoutUser } = useAuth()
-  const navigate = useNavigate()
+  const { user, credits, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    logoutUser()
-    navigate('/')
-  }
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <span className="neon-text">👻 GhostWriter</span>
+          <img src="/ghost-logo.png" alt="GhostWriter" className="logo-img" />
+          <span className="logo-text">GhostWriter</span>
         </Link>
 
         <div className="navbar-menu">
-          {isAuthenticated ? (
+          {user ? (
             <>
-              <Link to="/dashboard" className="nav-link">Dashboard</Link>
-              <Link to="/fiction" className="nav-link">Fiction</Link>
-              <Link to="/biography" className="nav-link">Biography</Link>
-              <Link to="/library" className="nav-link">Library</Link>
-              <Link to="/credits" className="nav-link">Credits</Link>
-              <Link to="/profile" className="nav-link">Profile</Link>
-              <button onClick={handleLogout} className="nav-btn logout-btn">
+              <Link to="/dashboard" className="nav-link">
+                Dashboard
+              </Link>
+              <Link to="/fiction" className="nav-link">
+                Fiction
+              </Link>
+              <Link to="/biography" className="nav-link">
+                Biography
+              </Link>
+              <Link to="/profile" className="nav-link">
+                Profile
+              </Link>
+              <div className="credits-display">
+                <span className="credits-icon">⚡</span>
+                <span className="credits-amount">{credits}</span>
+              </div>
+              <button onClick={handleLogout} className="btn btn-outline">
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-link">Login</Link>
-              <Link to="/signup" className="nav-btn signup-btn">Sign Up</Link>
+              <Link to="/login" className="btn btn-outline">
+                Login
+              </Link>
+              <Link to="/signup" className="btn btn-primary">
+                Sign Up
+              </Link>
             </>
           )}
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
