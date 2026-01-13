@@ -1,0 +1,374 @@
+.credits-page-container {
+  min-height: 100vh;
+  padding: 100px 2rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.credits-page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.credits-page-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.credits-page-subtitle {
+  color: #00ff88;
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.balance-section {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+}
+
+.balance-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.balance-stat {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 255, 136, 0.1);
+  border-radius: 10px;
+}
+
+.balance-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.balance-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00ff88;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #00ff88;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.packs-section {
+  margin-bottom: 4rem;
+}
+
+.packs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pack-card {
+  position: relative;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.pack-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+}
+
+.pack-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.5);
+  border-color: #00ffff;
+}
+
+.pack-card:hover::before {
+  left: 100%;
+}
+
+.pack-card.popular {
+  border-color: #00ffff;
+  border-width: 3px;
+  transform: scale(1.05);
+}
+
+.pack-card.popular:hover {
+  transform: scale(1.05) translateY(-10px);
+}
+
+.popular-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #00ffff;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+.bonus-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: #ff0088;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(255, 0, 136, 0.6);
+}
+
+.pack-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.pack-name {
+  font-size: 1.5rem;
+  color: #00ff88;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.pack-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.price-symbol {
+  font-size: 1.5rem;
+  color: #00ffff;
+}
+
+.price-amount {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #00ffff;
+}
+
+.pack-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pack-credits {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(0, 255, 136, 0.1);
+  border-radius: 10px;
+}
+
+.credits-number {
+  display: block;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.credits-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+}
+
+.pack-description {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.pack-buy-btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.pack-buy-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pricing-info {
+  max-width: 900px;
+  margin: 0 auto 4rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  padding: 2rem;
+}
+
+.pricing-info h3 {
+  text-align: center;
+  color: #00ff88;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.usage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.usage-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 255, 136, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.usage-item:hover {
+  background: rgba(0, 255, 136, 0.1);
+  border-color: #00ff88;
+}
+
+.usage-icon {
+  font-size: 1.5rem;
+}
+
+.usage-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+}
+
+.transactions-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.transactions-table {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+  transition: all 0.3s ease;
+}
+
+.transaction-row:last-child {
+  border-bottom: none;
+}
+
+.transaction-row:hover {
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.transaction-type {
+  color: #00ff88;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.transaction-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.transaction-date {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+}
+
+.transaction-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.amount-positive {
+  color: #00ff88;
+}
+
+.amount-negative {
+  color: #ff0044;
+}
+
+@media (max-width: 768px) {
+  .credits-page-header h1 {
+    font-size: 2rem;
+  }
+
+  .packs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pack-card.popular {
+    transform: scale(1);
+  }
+
+  .usage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .balance-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
