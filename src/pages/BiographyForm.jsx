@@ -1,250 +1,249 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from '../components/Header'
-import LoadingOverlay from '../components/LoadingOverlay'
-import StoryModal from '../components/StoryModal'
-import { generateBiographySample, createCheckout } from '../utils/api'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../utils/api';
 
-function BiographyForm() {
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [story, setStory] = useState(null)
-  
+const BiographyForm = () => {
+  const { credits, updateCredits } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    biography_type: 'biography',
-    subject_names: '',
-    time_period_start: '',
-    time_period_end: 'Present',
-    story_length: 'sample',
-    email: '',
-    birth_details: '',
-    family_background: '',
-    career: '',
-    major_events: '',
+    title: '',
+    subject: '',
+    birthDate: '',
+    birthPlace: '',
+    earlyLife: '',
+    majorEvents: '',
+    achievements: '',
+    challenges: '',
     personality: '',
-    narrative_voice: 'third_person_limited'
-  })
+    legacy: '',
+    tone: 'inspirational',
+  });
+  const [error, setError] = useState('');
+
+  const tones = [
+    { value: 'inspirational', label: 'Inspirational' },
+    { value: 'factual', label: 'Factual & Academic' },
+    { value: 'intimate', label: 'Intimate & Personal' },
+    { value: 'dramatic', label: 'Dramatic' },
+  ];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    if (!formData.subject_names || !formData.time_period_start || !formData.email) {
-      alert('Please fill in required fields: Subject Name, Time Period, and Email')
-      return
+    e.preventDefault();
+    setError('');
+
+    const requiredCredits = 150;
+    if (credits < requiredCredits) {
+      setError(`Insufficient credits. You need ${requiredCredits} credits but have ${credits}.`);
+      return;
     }
 
-    const request = {
-      biography_type: formData.biography_type,
-      subject_names: formData.subject_names,
-      time_period_start: formData.time_period_start,
-      time_period_end: formData.time_period_end,
-      story_length: formData.story_length,
-      email: formData.email,
-      narrative_voice: formData.narrative_voice,
-      birth_details: formData.birth_details ? { text: formData.birth_details } : null,
-      family_background: formData.family_background ? { text: formData.family_background } : null,
-      career: formData.career ? { text: formData.career } : null,
-      personality: formData.personality ? { text: formData.personality } : null
-    }
+    setLoading(true);
 
-    if (formData.major_events) {
-      try {
-        request.major_events = JSON.parse(formData.major_events)
-      } catch (err) {
-        alert('Invalid JSON in major events: ' + err.message)
-        return
-      }
+    try {
+      const response = await api.post('/generate/biography', formData);
+      await updateCredits();
+      alert('Biography generation started! Check your dashboard.');
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to generate biography. Please try again.');
+    } finally {
+      setLoading(false);
     }
-
-    if (formData.story_length === 'sample') {
-      setLoading(true)
-      try {
-        const result = await generateBiographySample(request)
-        setLoading(false)
-        setStory(result.story || result)
-      } catch (error) {
-        setLoading(false)
-        alert(error.message || 'Generation failed')
-      }
-    } else {
-      try {
-        const { checkout_url } = await createCheckout(formData.story_length, formData.email)
-        sessionStorage.setItem('pendingBiography', JSON.stringify(request))
-        window.location.href = checkout_url
-      } catch (error) {
-        alert('Payment failed: ' + error.message)
-      }
-    }
-  }
+  };
 
   return (
-    <div className="page-container">
-      <Header />
-      
-      <main className="form-main">
-        <button className="back-button" onClick={() => navigate('/')}>
-          ← Back to Selection
-        </button>
+    <div className="form-page">
+      <div className="form-container">
+        <div className="form-header">
+          <h1 className="page-title">Generate Biography</h1>
+          <p className="page-subtitle">Create a compelling life story</p>
+          <div className="credits-display-form">
+            <span className="credits-icon">⚡</span>
+            <span>{credits} credits</span>
+          </div>
+        </div>
 
-        <div className="form-container bio-form">
-          <h2 className="form-title">👤 Biography Generator</h2>
-          <p className="form-subtitle">*Transform life stories into compelling narratives*</p>
+        {error && <div className="error-message">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="generation-form">
+          <div className="form-group">
+            <label htmlFor="title">Biography Title *</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              placeholder="Enter the biography title"
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="subject">Subject Name *</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              required
+              placeholder="Who is this biography about?"
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-row">
             <div className="form-group">
-              <label>Biography Type *</label>
-              <select name="biography_type" value={formData.biography_type} onChange={handleChange}>
-                <option value="biography">Biography (Someone Else's Story)</option>
-                <option value="autobiography">Autobiography (Your Own Story)</option>
-                <option value="memoir">Memoir (Specific Period/Theme)</option>
-                <option value="family_history">Family History (Multi-generational)</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Subject Name(s) *</label>
+              <label htmlFor="birthDate">Birth Date</label>
               <input
                 type="text"
-                name="subject_names"
-                value={formData.subject_names}
+                id="birthDate"
+                name="birthDate"
+                value={formData.birthDate}
                 onChange={handleChange}
-                placeholder="Full name of the person"
-                required
+                placeholder="e.g., January 1, 1980"
+                className="form-input"
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label>Time Period Start *</label>
-                <input
-                  type="text"
-                  name="time_period_start"
-                  value={formData.time_period_start}
-                  onChange={handleChange}
-                  placeholder="1945 or March 15, 1945"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Time Period End *</label>
-                <input
-                  type="text"
-                  name="time_period_end"
-                  value={formData.time_period_end}
-                  onChange={handleChange}
-                  placeholder="Present or 2020"
-                />
-              </div>
-            </div>
-
             <div className="form-group">
-              <label>Story Length *</label>
-              <select name="story_length" value={formData.story_length} onChange={handleChange}>
-                <option value="sample">FREE SAMPLE (5-10 pages)</option>
-                <option value="short_memoir">SHORT MEMOIR - $9.99 (10-20K words)</option>
-                <option value="standard_biography">STANDARD BIOGRAPHY - $14.99 (30-50K words)</option>
-                <option value="comprehensive">COMPREHENSIVE - $24.99 (60-100K words)</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Email *</label>
+              <label htmlFor="birthPlace">Birth Place</label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="birthPlace"
+                name="birthPlace"
+                value={formData.birthPlace}
                 onChange={handleChange}
-                required
+                placeholder="e.g., New York, USA"
+                className="form-input"
               />
             </div>
+          </div>
 
-            <div className="form-group">
-              <label>Narrative Voice</label>
-              <select name="narrative_voice" value={formData.narrative_voice} onChange={handleChange}>
-                <option value="first_person">First Person (I did...)</option>
-                <option value="third_person_limited">Third Person Limited</option>
-                <option value="third_person_omniscient">Third Person Omniscient</option>
-                <option value="conversational">Conversational</option>
-              </select>
-            </div>
+          <div className="form-group">
+            <label htmlFor="earlyLife">Early Life *</label>
+            <textarea
+              id="earlyLife"
+              name="earlyLife"
+              value={formData.earlyLife}
+              onChange={handleChange}
+              required
+              rows={4}
+              placeholder="Describe the subject's early life, family background, and formative years..."
+              className="form-textarea"
+            />
+          </div>
 
-            <h3 className="section-subtitle">📝 Life Details (All Optional - AI fills in gaps)</h3>
+          <div className="form-group">
+            <label htmlFor="majorEvents">Major Life Events *</label>
+            <textarea
+              id="majorEvents"
+              name="majorEvents"
+              value={formData.majorEvents}
+              onChange={handleChange}
+              required
+              rows={4}
+              placeholder="List key events, turning points, and significant moments..."
+              className="form-textarea"
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Birth Details</label>
-              <textarea
-                name="birth_details"
-                value={formData.birth_details}
-                onChange={handleChange}
-                placeholder="Birth date, location, circumstances, family situation..."
-                rows="3"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="achievements">Achievements & Accomplishments</label>
+            <textarea
+              id="achievements"
+              name="achievements"
+              value={formData.achievements}
+              onChange={handleChange}
+              rows={3}
+              placeholder="Notable achievements, awards, and contributions..."
+              className="form-textarea"
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Family Background</label>
-              <textarea
-                name="family_background"
-                value={formData.family_background}
-                onChange={handleChange}
-                placeholder="Parents, siblings, heritage, family culture..."
-                rows="3"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="challenges">Challenges & Obstacles</label>
+            <textarea
+              id="challenges"
+              name="challenges"
+              value={formData.challenges}
+              onChange={handleChange}
+              rows={3}
+              placeholder="Struggles, setbacks, and how they were overcome..."
+              className="form-textarea"
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Career/Professional Life</label>
-              <textarea
-                name="career"
-                value={formData.career}
-                onChange={handleChange}
-                placeholder="Jobs, achievements, career path..."
-                rows="3"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="personality">Personality & Character</label>
+            <textarea
+              id="personality"
+              name="personality"
+              value={formData.personality}
+              onChange={handleChange}
+              rows={2}
+              placeholder="Key personality traits, values, and characteristics..."
+              className="form-textarea"
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Major Life Events (JSON format)</label>
-              <textarea
-                name="major_events"
-                value={formData.major_events}
-                onChange={handleChange}
-                placeholder='[{"date": "1965", "event_type": "graduation", "description": "Graduated with honors", "impact": "Set career trajectory"}]'
-                rows="4"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="legacy">Legacy & Impact</label>
+            <textarea
+              id="legacy"
+              name="legacy"
+              value={formData.legacy}
+              onChange={handleChange}
+              rows={2}
+              placeholder="Lasting impact and how they'll be remembered..."
+              className="form-textarea"
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Personality & Character Traits</label>
-              <textarea
-                name="personality"
-                value={formData.personality}
-                onChange={handleChange}
-                placeholder="Core traits, values, quirks, sense of humor..."
-                rows="3"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="tone">Tone</label>
+            <select
+              id="tone"
+              name="tone"
+              value={formData.tone}
+              onChange={handleChange}
+              className="form-select"
+            >
+              {tones.map(tone => (
+                <option key={tone.value} value={tone.value}>{tone.label}</option>
+              ))}
+            </select>
+          </div>
 
-            <button type="submit" className="submit-button">
-              <span>📖 GENERATE LIFE STORY 📖</span>
+          <div className="form-actions">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="btn btn-outline"
+            >
+              Cancel
             </button>
-          </form>
-        </div>
-      </main>
-
-      {loading && <LoadingOverlay />}
-      {story && <StoryModal story={story} onClose={() => setStory(null)} />}
-      
-      <footer className="footer">
-        <p>© 2025 GhostWriter</p>
-      </footer>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+            >
+              {loading ? 'Generating...' : 'Generate (150 credits)'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default BiographyForm
+export default BiographyForm;

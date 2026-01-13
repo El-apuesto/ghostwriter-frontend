@@ -1,34 +1,26 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from '../components/Header'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Cancel() {
-  const navigate = useNavigate()
-
+const Cancel = () => {
   return (
-    <div className="page-container">
-      <Header />
-      
-      <main className="cancel-main">
-        <div className="cancel-content">
-          <h1 className="cancel-title">💀 Payment Cancelled</h1>
-          <p className="cancel-message">
-            The spirits understand... your wallet is sacred too.
-          </p>
-          <p className="cancel-note">
-            No charges were made. The ghosts are still waiting if you change your mind.
-          </p>
-          <button className="neon-button" onClick={() => navigate('/')}>
-            Return to the Void
-          </button>
+    <div className="status-page">
+      <div className="status-container">
+        <div className="status-icon cancel">×</div>
+        <h1 className="status-title">Payment Cancelled</h1>
+        <p className="status-message">
+          Your payment was cancelled. No charges were made to your account.
+        </p>
+        <div className="status-actions">
+          <Link to="/profile" className="btn btn-primary">
+            Try Again
+          </Link>
+          <Link to="/dashboard" className="btn btn-outline">
+            Back to Dashboard
+          </Link>
         </div>
-      </main>
-      
-      <footer className="footer">
-        <p>© 2025 GhostWriter</p>
-      </footer>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Cancel
+export default Cancel;
