@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
+import api from '../utils/api'
+import LoadingOverlay from '../components/LoadingOverlay'
 import '../styles/StoryDetail.css'
 
-const StoryDetail = () => {
+function StoryDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [story, setStory] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [generatingExtra, setGeneratingExtra] = useState(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     fetchStory()
@@ -17,250 +20,253 @@ const StoryDetail = () => {
 
   const fetchStory = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/stories/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      setLoading(true)
+      const response = await api.get(`/stories/${id}`)
       setStory(response.data)
+      setError('')
     } catch (err) {
       setError('Failed to load story')
-      console.error(err)
+      console.error('Error fetching story:', err)
     } finally {
       setLoading(false)
     }
   }
 
-  const generateExtra = async (extraType, endpoint, cost) => {
-    if (!window.confirm(`Generate ${extraType}? This will cost ${cost} credits.`)) return
-
+  const generateExtra = async (extraType, coverType = null) => {
     setGeneratingExtra(extraType)
     try {
-      const token = localStorage.getItem('token')
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/extras/${endpoint}/${id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      let response
+      switch (extraType) {
+        case 'ebook_cover':
+        case 'print_cover':
+          response = await api.post(`/extras/cover?story_id=${id}&cover_type=${coverType}`)
+          break
+        case 'epub':
+          response = await api.post(`/extras/epub/${id}`)
+          break
+        case 'mobi':
+          response = await api.post(`/extras/mobi/${id}`)
+          break
+        case 'pdf':
+          response = await api.post(`/extras/pdf/${id}`)
+          break
+        case 'blurb':
+          response = await api.post(`/extras/blurb/${id}`)
+          break
+        default:
+          throw new Error('Unknown extra type')
+      }
+      
       alert(`${extraType} generated successfully!`)
-      fetchStory() // Refresh to show new extras
+      fetchStory() // Refresh to show new extra
     } catch (err) {
       alert(`Failed to generate ${extraType}: ${err.response?.data?.detail || err.message}`)
-    } finally {
-      setGeneratingExtra(null)
-    }
-  }
-
-  const generateCover = async (coverType) => {
-    const cost = coverType === 'ebook' ? 10 : 15
-    if (!window.confirm(`Generate ${coverType} cover? This will cost ${cost} credits.`)) return
-
-    setGeneratingExtra(`${coverType}-cover`)
-    try {
-      const token = localStorage.getItem('token')
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/extras/cover?story_id=${id}&cover_type=${coverType}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      alert(`${coverType} cover generated!`)
-      fetchStory()
-    } catch (err) {
-      alert(`Failed to generate cover: ${err.response?.data?.detail || err.message}`)
+      console.error(`Error generating ${extraType}:`, err)
     } finally {
       setGeneratingExtra(null)
     }
   }
 
   const renderContent = () => {
-    if (story.story_type === 'fiction') {
-      // Fiction has structured chapters
+    if (story.story_type === 'fiction' && typeof story.content === 'object') {
       return (
         <div className="fiction-content">
           {story.content.outline && (
-            <div className="outline-section">
-              <h2>📋 Story Outline</h2>
-              <p>{story.content.outline}</p>
-            </div>
+            <section className="outline-section">
+              <h3>📋 Story Outline</h3>
+              <div className="outline-content">{story.content.outline}</div>
+            </section>
           )}
-
+          
           {story.content.characters && story.content.characters.length > 0 && (
-            <div className="characters-section">
-              <h2>👥 Characters</h2>
+            <section className="characters-section">
+              <h3>👥 Characters</h3>
               {story.content.characters.map((char, idx) => (
                 <div key={idx} className="character-card">
-                  <h3>{char.name}</h3>
+                  <h4>{char.name}</h4>
                   <p><strong>Role:</strong> {char.role}</p>
                   <p>{char.description}</p>
                 </div>
               ))}
-            </div>
+            </section>
           )}
 
           {story.content.chapters && story.content.chapters.length > 0 && (
-            <div className="chapters-section">
-              <h2>📖 Chapters</h2>
+            <section className="chapters-section">
+              <h3>📖 Chapters</h3>
               {story.content.chapters.map((chapter, idx) => (
                 <div key={idx} className="chapter">
-                  <h3>Chapter {chapter.number}: {chapter.title}</h3>
+                  <h4>Chapter {idx + 1}: {chapter.title}</h4>
                   <div className="chapter-content">{chapter.content}</div>
                 </div>
               ))}
-            </div>
+            </section>
           )}
         </div>
       )
     } else {
-      // Biography is plain text
+      // Biography or plain text
       return (
         <div className="biography-content">
-          <div className="content-text">
-            {story.content}
-          </div>
+          <div className="content-text">{story.content}</div>
         </div>
       )
     }
   }
 
   if (loading) {
-    return <div className="story-detail-container"><div className="loading">Loading story...</div></div>
+    return <LoadingOverlay message="Loading story..." />
   }
 
   if (error || !story) {
     return (
-      <div className="story-detail-container">
-        <div className="error-message">{error || 'Story not found'}</div>
-        <button onClick={() => navigate('/stories')} className="btn-back">← Back to Library</button>
+      <div className="story-detail error-container">
+        <h2>Story not found</h2>
+        <button onClick={() => navigate('/stories')} className="btn-primary">
+          Back to Library
+        </button>
       </div>
     )
   }
 
   return (
-    <div className="story-detail-container">
-      <button onClick={() => navigate('/stories')} className="btn-back">← Back to Library</button>
-
-      {/* Story Header */}
+    <div className="story-detail">
+      {generatingExtra && <LoadingOverlay message={`Generating ${generatingExtra}...`} />}
+      
       <div className="story-header">
-        <h1>{story.title}</h1>
-        <div className="story-meta">
-          <span className={`badge ${story.story_type}`}>{story.story_type}</span>
-          <span className="badge">{story.length_type}</span>
-          <span>📅 {new Date(story.created_at).toLocaleDateString()}</span>
-          <span>💎 {story.credits_cost} credits</span>
+        <button onClick={() => navigate('/stories')} className="btn-back">
+          ← Back to Library
+        </button>
+        
+        <div className="header-content">
+          <span className={`story-type-badge ${story.story_type}`}>
+            {story.story_type === 'fiction' ? '📖 Fiction' : '📝 Biography'}
+          </span>
+          <h1>{story.title}</h1>
+          <div className="meta-info">
+            <span>🗓️ {new Date(story.created_at).toLocaleDateString()}</span>
+            <span>📊 {story.length_type}</span>
+            <span>⭐ {story.credits_cost} credits</span>
+          </div>
         </div>
       </div>
 
-      {/* Story Content */}
-      <div className="story-content">
+      <div className="story-body">
         {renderContent()}
       </div>
 
-      {/* Extras Section */}
       <div className="extras-section">
-        <h2>📦 Story Extras</h2>
-        <p className="extras-description">Generate additional content and exports for your story</p>
-
+        <h2>🎉 Story Extras</h2>
+        <p className="extras-subtitle">Enhance your story with covers, exports, and marketing content</p>
+        
         <div className="extras-grid">
           {/* Book Covers */}
           <div className="extra-card">
-            <h3>📕 eBook Cover</h3>
-            <p>Digital book cover (1600x2560px)</p>
-            <p className="cost">Cost: 10 credits</p>
+            <div className="extra-icon">📕</div>
+            <h3>eBook Cover</h3>
+            <p>Digital book cover (1600x2400px)</p>
+            <div className="extra-cost">10 credits</div>
             {story.has_ebook_cover ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateCover('ebook')}
-                disabled={generatingExtra === 'ebook-cover'}
+                onClick={() => generateExtra('ebook_cover', 'ebook')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'ebook-cover' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
 
           <div className="extra-card">
-            <h3>📘 Print Cover</h3>
+            <div className="extra-icon">📘</div>
+            <h3>Print Cover</h3>
             <p>Print-ready cover with spine</p>
-            <p className="cost">Cost: 15 credits</p>
+            <div className="extra-cost">15 credits</div>
             {story.has_print_cover ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateCover('print')}
-                disabled={generatingExtra === 'print-cover'}
+                onClick={() => generateExtra('print_cover', 'print')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'print-cover' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
 
           {/* Exports */}
           <div className="extra-card">
-            <h3>📄 ePub Export</h3>
+            <div className="extra-icon">📄</div>
+            <h3>ePub Export</h3>
             <p>Standard eBook format</p>
-            <p className="cost">Cost: 5 credits</p>
+            <div className="extra-cost">5 credits</div>
             {story.has_epub ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateExtra('ePub', 'epub', 5)}
-                disabled={generatingExtra === 'ePub'}
+                onClick={() => generateExtra('epub')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'ePub' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
 
           <div className="extra-card">
-            <h3>📱 MOBI Export</h3>
+            <div className="extra-icon">📱</div>
+            <h3>MOBI Export</h3>
             <p>Kindle-compatible format</p>
-            <p className="cost">Cost: 5 credits</p>
+            <div className="extra-cost">5 credits</div>
             {story.has_mobi ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateExtra('MOBI', 'mobi', 5)}
-                disabled={generatingExtra === 'MOBI'}
+                onClick={() => generateExtra('mobi')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'MOBI' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
 
           <div className="extra-card">
-            <h3>📋 PDF Export</h3>
-            <p>KDP-ready PDF file</p>
-            <p className="cost">Cost: 10 credits</p>
+            <div className="extra-icon">📑</div>
+            <h3>KDP PDF</h3>
+            <p>Print-ready manuscript</p>
+            <div className="extra-cost">10 credits</div>
             {story.has_pdf ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateExtra('PDF', 'pdf', 10)}
-                disabled={generatingExtra === 'PDF'}
+                onClick={() => generateExtra('pdf')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'PDF' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
 
           {/* Marketing */}
           <div className="extra-card">
-            <h3>✍️ Book Blurb</h3>
+            <div className="extra-icon">✨</div>
+            <h3>Book Blurb</h3>
             <p>Marketing description</p>
-            <p className="cost">Cost: 5 credits</p>
+            <div className="extra-cost">5 credits</div>
             {story.has_blurb ? (
-              <button className="btn-has" disabled>✓ Generated</button>
+              <span className="badge-complete">✓ Generated</span>
             ) : (
               <button 
-                onClick={() => generateExtra('Blurb', 'blurb', 5)}
-                disabled={generatingExtra === 'Blurb'}
+                onClick={() => generateExtra('blurb')}
+                disabled={generatingExtra}
                 className="btn-generate"
               >
-                {generatingExtra === 'Blurb' ? 'Generating...' : 'Generate'}
+                Generate
               </button>
             )}
           </div>
