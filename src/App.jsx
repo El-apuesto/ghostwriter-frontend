@@ -10,6 +10,9 @@ import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import FictionForm from './pages/FictionForm'
 import BiographyForm from './pages/BiographyForm'
+import StoryLibrary from './pages/StoryLibrary'
+import StoryDetail from './pages/StoryDetail'
+import Credits from './pages/Credits'
 import Success from './pages/Success'
 import Cancel from './pages/Cancel'
 
@@ -50,6 +53,21 @@ function App() {
             <Route path="/biography" element={
               <ProtectedRoute>
                 <BiographyForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/stories" element={
+              <ProtectedRoute>
+                <StoryLibrary />
+              </ProtectedRoute>
+            } />
+            <Route path="/stories/:id" element={
+              <ProtectedRoute>
+                <StoryDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/credits" element={
+              <ProtectedRoute>
+                <Credits />
               </ProtectedRoute>
             } />
           </Routes>
