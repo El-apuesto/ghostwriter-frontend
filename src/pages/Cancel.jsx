@@ -1,20 +1,19 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Cancel = () => {
   return (
-    <div className="status-page">
-      <div className="status-container">
-        <div className="status-icon cancel">×</div>
-        <h1 className="status-title">Payment Cancelled</h1>
-        <p className="status-message">
+    <div className="cancel-page">
+      <div className="cancel-container">
+        <div className="cancel-icon">❌</div>
+        <h1>Payment Cancelled</h1>
+        <p className="cancel-message">
           Your payment was cancelled. No charges were made to your account.
         </p>
-        <div className="status-actions">
+        <div className="cancel-actions">
           <Link to="/profile" className="btn btn-primary">
             Try Again
           </Link>
-          <Link to="/dashboard" className="btn btn-outline">
+          <Link to="/dashboard" className="btn btn-secondary">
             Back to Dashboard
           </Link>
         </div>
