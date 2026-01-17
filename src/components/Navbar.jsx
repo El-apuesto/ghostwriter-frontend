@@ -1,50 +1,55 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, credits, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        {/* Logo */}
         <Link to="/" className="navbar-logo">
-          <img src="/ghost-logo.png" alt="GhostWriter" className="logo-img" />
+          <span className="logo-ghost">👻</span>
           <span className="logo-text">GhostWriter</span>
         </Link>
 
+        {/* Navigation Links */}
         <div className="navbar-menu">
-          {user ? (
+          {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="nav-link">
+              <Link to="/dashboard" className="navbar-link">
                 Dashboard
               </Link>
-              <Link to="/fiction" className="nav-link">
-                Fiction
+              <Link to="/fiction" className="navbar-link">
+                Generate Fiction
               </Link>
-              <Link to="/biography" className="nav-link">
-                Biography
+              <Link to="/biography" className="navbar-link">
+                Generate Biography
               </Link>
-              <Link to="/profile" className="nav-link">
+              <Link to="/profile" className="navbar-link">
                 Profile
               </Link>
-              <div className="credits-display">
+              
+              {/* Credits Display */}
+              <div className="navbar-credits">
                 <span className="credits-icon">⚡</span>
-                <span className="credits-amount">{credits}</span>
+                <span className="credits-amount">{user?.credits || 0}</span>
+                <span className="credits-label">credits</span>
               </div>
-              <button onClick={handleLogout} className="btn btn-outline">
+
+              <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-outline">
+              <Link to="/login" className="btn btn-secondary">
                 Login
               </Link>
               <Link to="/signup" className="btn btn-primary">
