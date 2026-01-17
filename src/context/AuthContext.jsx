@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { authAPI } from '../utils/api';
 
 const AuthContext = createContext(null);
@@ -16,37 +16,26 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load user from localStorage on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
-    
-    if (token && savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-        // Optionally verify token with backend
-        authAPI.getMe()
-          .then(response => {
-            setUser(response.data);
-            localStorage.setItem('user', JSON.stringify(response.data));
-          })
-          .catch(() => {
-            // Token invalid, clear everything
-            logout();
-          })
-          .finally(() => setLoading(false));
-      } catch (err) {
-        logout();
-        setLoading(false);
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await authAPI.getMe();
+          setUser(response.data);
+        } catch (err) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
       }
-    } else {
       setLoading(false);
-    }
+    };
+    initAuth();
   }, []);
 
   const login = async (email, password) => {
+    setError(null);
     try {
-      setError(null);
       const response = await authAPI.login({ email, password });
       const { access_token, user: userData } = response.data;
       
@@ -62,14 +51,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (email, password, fullName) => {
+  const signup = async (name, email, password) => {
+    setError(null);
     try {
-      setError(null);
-      const response = await authAPI.signup({ 
-        email, 
-        password, 
-        full_name: fullName 
-      });
+      const response = await authAPI.signup({ name, email, password });
       const { access_token, user: userData } = response.data;
       
       localStorage.setItem('token', access_token);
@@ -88,23 +73,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    setError(null);
+    window.location.href = '/';
   };
 
-  const updateUser = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-
-  const refreshUserData = async () => {
-    try {
-      const response = await authAPI.getMe();
-      setUser(response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
-      return response.data;
-    } catch (err) {
-      console.error('Failed to refresh user data:', err);
-      return null;
+  const updateCredits = (newBalance) => {
+    if (user) {
+      const updatedUser = { ...user, credits: newBalance };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 
@@ -115,8 +91,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
-    updateUser,
-    refreshUserData,
+    updateCredits,
     isAuthenticated: !!user,
   };
 
