@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,31 +9,40 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
   const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
+
+    // Validation
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Please fill in all fields');
+      setLoading(false);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-
-    try {
-      await signup(email, password, name);
+    const result = await signup(name, email, password);
+    
+    if (result.success) {
       navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Signup failed. Please try again.');
-    } finally {
+    } else {
+      setError(result.error);
       setLoading(false);
     }
   };
@@ -42,22 +51,28 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-card">
-          <h1 className="auth-title">Create Account</h1>
-          <p className="auth-subtitle">Start writing your story today</p>
+          <div className="auth-header">
+            <h1>👻 Join GhostWriter</h1>
+            <p>Start creating amazing stories with AI</p>
+          </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="alert alert-error">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">Full Name</label>
               <input
                 type="text"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                placeholder="John Doe"
                 required
-                placeholder="Your Name"
-                className="form-input"
+                disabled={loading}
               />
             </div>
 
@@ -68,9 +83,9 @@ const Signup = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 placeholder="your@email.com"
-                className="form-input"
+                required
+                disabled={loading}
               />
             </div>
 
@@ -81,9 +96,10 @@ const Signup = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 placeholder="••••••••"
-                className="form-input"
+                required
+                disabled={loading}
+                minLength={6}
               />
             </div>
 
@@ -94,20 +110,27 @@ const Signup = () => {
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                required
                 placeholder="••••••••"
-                className="form-input"
+                required
+                disabled={loading}
               />
             </div>
 
-            <button type="submit" disabled={loading} className="btn btn-primary btn-full">
+            <button 
+              type="submit" 
+              className="btn btn-primary btn-full"
+              disabled={loading}
+            >
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
           </form>
 
-          <p className="auth-footer">
-            Already have an account? <Link to="/login" className="auth-link">Login</Link>
-          </p>
+          <div className="auth-footer">
+            <p>
+              Already have an account?{' '}
+              <Link to="/login" className="auth-link">Login</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
