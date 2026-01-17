@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
-  // Show loading spinner while checking auth
+  // Show loading spinner while checking auth status
   if (loading) {
     return (
       <div className="loading-container">
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Render protected content
+  // Render protected content if authenticated
   return children;
 };
 
