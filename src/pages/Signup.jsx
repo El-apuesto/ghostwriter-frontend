@@ -7,8 +7,9 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -16,15 +17,14 @@ const Signup = () => {
     e.preventDefault();
     setError('');
 
-    // Validate passwords match
+    // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
 
@@ -43,14 +43,13 @@ const Signup = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>👻 GhostWriter</h1>
-          <h2>Join the Haunt</h2>
-          <p>Create your account and start writing</p>
+          <h1>👻 Join GhostWriter</h1>
+          <p>Start creating AI-powered stories</p>
         </div>
 
         {error && (
-          <div className="error-message">
-            <span>⚠️</span> {error}
+          <div className="alert alert-error">
+            {error}
           </div>
         )}
 
@@ -62,8 +61,8 @@ const Signup = () => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
               required
+              placeholder="Your name"
               disabled={loading}
             />
           </div>
@@ -75,8 +74,8 @@ const Signup = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
               required
+              placeholder="your@email.com"
               disabled={loading}
             />
           </div>
@@ -88,10 +87,10 @@ const Signup = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
               required
+              placeholder="••••••••"
+              minLength={8}
               disabled={loading}
-              minLength={6}
             />
           </div>
 
@@ -102,10 +101,10 @@ const Signup = () => {
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
               required
+              placeholder="••••••••"
+              minLength={8}
               disabled={loading}
-              minLength={6}
             />
           </div>
 
@@ -122,7 +121,7 @@ const Signup = () => {
           <p>
             Already have an account?{' '}
             <Link to="/login" className="link-primary">
-              Sign in here
+              Login
             </Link>
           </p>
         </div>
