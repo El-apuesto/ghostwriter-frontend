@@ -41,4 +41,19 @@ export const getCreditBalance = async () => {
   return response.data;
 };
 
+export const getCreditPacks = async () => {
+  const response = await api.get('/credits/packs');
+  return response.data;
+};
+
+export const purchaseCredits = async (packId) => {
+  const response = await api.post('/credits/purchase', { packId });
+  return response.data;
+};
+
+export const getTransactions = async () => {
+  const response = await api.get('/credits/transactions');
+  return response.data;
+};
+
 export default api;
