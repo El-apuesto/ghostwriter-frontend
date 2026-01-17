@@ -5,8 +5,8 @@ import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -18,71 +18,55 @@ const Login = () => {
 
     const result = await login(email, password);
     
+    setLoading(false);
+    
     if (result.success) {
       navigate('/dashboard');
     } else {
       setError(result.error);
-      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
+    <div className="auth-page">
+      <div className="auth-container">
         <div className="auth-header">
           <h1>👻 Welcome Back</h1>
           <p>Login to continue your stories</p>
         </div>
 
-        {error && (
-          <div className="alert alert-error">
-            {error}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="auth-form">
+          {error && <div className="error-message">{error}</div>}
+          
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label>Email</label>
             <input
               type="email"
-              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               placeholder="your@email.com"
-              disabled={loading}
+              required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label>Password</label>
             <input
               type="password"
-              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               placeholder="••••••••"
-              disabled={loading}
+              required
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary btn-block"
-            disabled={loading}
-          >
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
         <div className="auth-footer">
-          <p>
-            Don't have an account?{' '}
-            <Link to="/signup" className="link-primary">
-              Sign up
-            </Link>
-          </p>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </div>
       </div>
     </div>
