@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getCreditBalance } from '../utils/api'
+import { creditsAPI } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
 import '../styles/credits.css'
 
@@ -7,7 +7,7 @@ const ADMIN_EMAIL = 'thecitieschoice@gmail.com'
 
 const CreditsDisplay = () => {
   const { user } = useAuth()
-  const [credits, setCredits] = useState(user?.credits_balance || 0)
+  const [credits, setCredits] = useState(user?.credits || 0)
   const [loading, setLoading] = useState(false)
 
   const fetchCredits = async () => {
@@ -19,8 +19,8 @@ const CreditsDisplay = () => {
 
     try {
       setLoading(true)
-      const data = await getCreditBalance()
-      setCredits(data.credits_balance)
+      const response = await creditsAPI.getBalance()
+      setCredits(response.data.balance)
     } catch (error) {
       console.error('Failed to fetch credits:', error)
     } finally {
@@ -29,8 +29,10 @@ const CreditsDisplay = () => {
   }
 
   useEffect(() => {
-    fetchCredits()
-  }, [])
+    if (user) {
+      fetchCredits()
+    }
+  }, [user])
 
   return (
     <div className="credits-display">
