@@ -1,157 +1,117 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { api } from '../utils/api';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+import { creditsAPI } from '../utils/api';
 
 const Profile = () => {
-  const { user, credits, updateCredits } = useAuth();
-  const [creditPacks, setCreditPacks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [transactionHistory, setTransactionHistory] = useState([]);
+  const { user, updateCredits } = useAuth();
+  const [packs, setPacks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCreditPacks();
-    fetchTransactionHistory();
+    loadPacks();
   }, []);
 
-  const fetchCreditPacks = async () => {
+  const loadPacks = async () => {
     try {
-      const response = await api.get('/credits/packs');
-      setCreditPacks(response.data);
+      const response = await creditsAPI.getPacks();
+      setPacks(response.data);
     } catch (err) {
-      console.error('Failed to load credit packs:', err);
-    }
-  };
-
-  const fetchTransactionHistory = async () => {
-    try {
-      const response = await api.get('/credits/history');
-      setTransactionHistory(response.data);
-    } catch (err) {
-      console.error('Failed to load transaction history:', err);
-    }
-  };
-
-  const handlePurchase = async (packId) => {
-    setLoading(true);
-    try {
-      const response = await api.post('/credits/purchase', { pack_id: packId });
-      const { sessionId } = response.data;
-
-      const stripe = await stripePromise;
-      await stripe.redirectToCheckout({ sessionId });
-    } catch (err) {
-      alert('Failed to initiate purchase. Please try again.');
+      console.error('Failed to load packs:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  const handlePurchase = async (packId) => {
+    try {
+      const response = await creditsAPI.purchase(packId);
+      if (response.data.checkout_url) {
+        window.location.href = response.data.checkout_url;
+      }
+    } catch (err) {
+      alert('Failed to initiate purchase: ' + err.message);
+    }
+  };
+
   return (
     <div className="profile-page">
-      <div className="profile-container">
+      <div className="container">
         <div className="profile-header">
-          <div>
-            <h1 className="page-title">Profile</h1>
-            <p className="page-subtitle">{user?.email}</p>
+          <div className="profile-info">
+            <h1>👻 {user?.name}</h1>
+            <p>{user?.email}</p>
           </div>
-          <div className="credits-large">
-            <span className="credits-icon-lg">⚡</span>
-            <span className="credits-amount-lg">{credits}</span>
-            <span className="credits-label">Credits</span>
-          </div>
-        </div>
-
-        <div className="section">
-          <h2 className="section-title">Purchase Credits</h2>
-          <div className="credit-packs-grid">
-            {creditPacks.map((pack) => (
-              <div key={pack.id} className="credit-pack-card">
-                <h3>{pack.name}</h3>
-                <div className="pack-credits">{pack.credits} Credits</div>
-                <div className="pack-price">${(pack.price / 100).toFixed(2)}</div>
-                <button
-                  onClick={() => handlePurchase(pack.id)}
-                  disabled={loading}
-                  className="btn btn-primary btn-full"
-                >
-                  {loading ? 'Processing...' : 'Purchase'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="section">
-          <h2 className="section-title">Credit Usage Guide</h2>
-          <div className="usage-guide">
-            <div className="usage-item">
-              <span className="usage-icon">📚</span>
-              <div>
-                <h4>Novel (Auto-generate)</h4>
-                <p>100 credits - Complete novel generated automatically</p>
-              </div>
-            </div>
-            <div className="usage-item">
-              <span className="usage-icon">✍️</span>
-              <div>
-                <h4>Novel (Chapter Edit)</h4>
-                <p>150-200 credits - Edit and refine each chapter</p>
-              </div>
-            </div>
-            <div className="usage-item">
-              <span className="usage-icon">👤</span>
-              <div>
-                <h4>Biography</h4>
-                <p>150 credits - Complete life story generation</p>
-              </div>
-            </div>
-            <div className="usage-item">
-              <span className="usage-icon">🎨</span>
-              <div>
-                <h4>Cover Generation</h4>
-                <p>25 credits - AI-generated book cover</p>
-              </div>
-            </div>
-            <div className="usage-item">
-              <span className="usage-icon">📖</span>
-              <div>
-                <h4>EPUB Export</h4>
-                <p>15 credits - Professional ebook format</p>
-              </div>
-            </div>
-            <div className="usage-item">
-              <span className="usage-icon">📝</span>
-              <div>
-                <h4>Blurb Generation</h4>
-                <p>15 credits - Marketing description</p>
-              </div>
+          <div className="credits-display">
+            <div className="credits-icon">⚡</div>
+            <div>
+              <div className="credits-label">Available Credits</div>
+              <div className="credits-value">{user?.credits || 0}</div>
             </div>
           </div>
         </div>
 
-        {transactionHistory.length > 0 && (
-          <div className="section">
-            <h2 className="section-title">Transaction History</h2>
-            <div className="transaction-list">
-              {transactionHistory.map((transaction) => (
-                <div key={transaction.id} className="transaction-item">
-                  <div>
-                    <div className="transaction-type">{transaction.type}</div>
-                    <div className="transaction-date">
-                      {new Date(transaction.created_at).toLocaleDateString()}
-                    </div>
-                  </div>
-                  <div className={`transaction-amount ${transaction.amount > 0 ? 'positive' : 'negative'}`}>
-                    {transaction.amount > 0 ? '+' : ''}{transaction.amount}
-                  </div>
+        <section className="credit-packs-section">
+          <h2>Buy More Credits</h2>
+          <p className="section-subtitle">One-time purchase, credits never expire</p>
+
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            <div className="pricing-grid">
+              {packs.map((pack) => (
+                <div key={pack.id} className={`pricing-card ${pack.bonus_percent >= 40 ? 'featured' : ''}`}>
+                  {pack.bonus_percent >= 40 && <div className="badge">Best Value</div>}
+                  <h3>{pack.name}</h3>
+                  <div className="price">${pack.price}</div>
+                  <div className="credits">{pack.credits} credits</div>
+                  {pack.bonus_percent > 0 && (
+                    <div className="bonus">+{pack.bonus_percent}% bonus</div>
+                  )}
+                  <button 
+                    onClick={() => handlePurchase(pack.id)}
+                    className="btn btn-primary"
+                  >
+                    Buy Now
+                  </button>
                 </div>
               ))}
             </div>
+          )}
+        </section>
+
+        <section className="pricing-info">
+          <h3>Credit Usage Guide</h3>
+          <div className="usage-grid">
+            <div className="usage-card">
+              <h4>📝 Fiction Stories</h4>
+              <ul>
+                <li>Sample: FREE</li>
+                <li>Novella: 50 credits</li>
+                <li>Novel: 100 credits</li>
+              </ul>
+            </div>
+            <div className="usage-card">
+              <h4>📖 Biographies</h4>
+              <ul>
+                <li>Sample: FREE</li>
+                <li>Short: 75 credits</li>
+                <li>Standard: 150 credits</li>
+                <li>Comprehensive: 200 credits</li>
+              </ul>
+            </div>
+            <div className="usage-card">
+              <h4>🎨 Extras</h4>
+              <ul>
+                <li>Basic Cover: 15 credits</li>
+                <li>AI Cover: 30 credits</li>
+                <li>ePub/MOBI: 10 credits each</li>
+                <li>KDP PDF: 15 credits</li>
+                <li>Marketing Blurb: 20 credits</li>
+                <li>Author Bio: 15 credits</li>
+              </ul>
+            </div>
           </div>
-        )}
+        </section>
       </div>
     </div>
   );
