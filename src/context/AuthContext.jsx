@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api } from '../utils/api';
+import { createContext, useState, useContext, useEffect } from 'react';
+import { authAPI } from '../utils/api';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 };
@@ -14,72 +14,94 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [credits, setCredits] = useState(0);
+  const [error, setError] = useState(null);
 
+  // Check if user is logged in on mount
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUser();
-    } else {
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await authAPI.getMe();
+          setUser(response.data);
+        } catch (err) {
+          console.error('Auth initialization failed:', err);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
       setLoading(false);
-    }
+    };
+    initAuth();
   }, []);
 
-  const fetchUser = async () => {
+  // Login function
+  const login = async (email, password) => {
+    setError(null);
     try {
-      const response = await api.get('/auth/me');
-      setUser(response.data);
-      setCredits(response.data.credits || 0);
-    } catch (error) {
-      console.error('Failed to fetch user:', error);
-      localStorage.removeItem('token');
-    } finally {
-      setLoading(false);
+      const response = await authAPI.login({ email, password });
+      const { access_token, user: userData } = response.data;
+      
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      
+      return { success: true };
+    } catch (err) {
+      const errorMessage = err.message || 'Login failed';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 
-  const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { access_token, user: userData } = response.data;
-    localStorage.setItem('token', access_token);
-    setUser(userData);
-    setCredits(userData.credits || 0);
-    return userData;
+  // Signup function
+  const signup = async (name, email, password) => {
+    setError(null);
+    try {
+      const response = await authAPI.signup({ name, email, password });
+      const { access_token, user: userData } = response.data;
+      
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      
+      return { success: true };
+    } catch (err) {
+      const errorMessage = err.message || 'Signup failed';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    }
   };
 
-  const signup = async (email, password, name) => {
-    const response = await api.post('/auth/signup', { email, password, name });
-    const { access_token, user: userData } = response.data;
-    localStorage.setItem('token', access_token);
-    setUser(userData);
-    setCredits(userData.credits || 0);
-    return userData;
-  };
-
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
-    setCredits(0);
+    window.location.href = '/';
   };
 
-  const updateCredits = async () => {
-    try {
-      const response = await api.get('/credits/balance');
-      setCredits(response.data.balance);
-    } catch (error) {
-      console.error('Failed to fetch credits:', error);
+  // Update user credits after purchase
+  const updateCredits = (newBalance) => {
+    if (user) {
+      const updatedUser = { ...user, credits: newBalance };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 
   const value = {
     user,
     loading,
-    credits,
+    error,
     login,
     signup,
     logout,
     updateCredits,
+    isAuthenticated: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthContext;
