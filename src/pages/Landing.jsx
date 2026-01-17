@@ -1,21 +1,17 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { creditsAPI } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 const Landing = () => {
-  const [creditPacks, setCreditPacks] = useState([]);
+  const { isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    const fetchPacks = async () => {
-      try {
-        const response = await creditsAPI.getPacks();
-        setCreditPacks(response.data);
-      } catch (error) {
-        console.error('Failed to fetch credit packs:', error);
-      }
-    };
-    fetchPacks();
-  }, []);
+  const packs = [
+    { name: 'Micro', price: '$4.99', credits: 50, popular: false },
+    { name: 'Small', price: '$9.99', credits: 100, popular: false },
+    { name: 'Medium', price: '$19.99', credits: 250, bonus: '25% bonus', popular: true },
+    { name: 'Starter', price: '$29.99', credits: 400, bonus: '33% bonus', popular: false },
+    { name: 'Value', price: '$49.99', credits: 700, bonus: '40% bonus', popular: false },
+    { name: 'Pro', price: '$99.99', credits: 1500, bonus: '50% bonus', popular: false },
+  ];
 
   return (
     <div className="landing">
@@ -23,64 +19,66 @@ const Landing = () => {
       <section className="hero">
         <div className="hero-content">
           <h1 className="hero-title">
-            <span className="ghost-icon">👻</span>
-            <br />
-            Let AI Ghost Your Next Bestseller
+            <span className="ghost-emoji">👻</span>
+            Write Stories with AI
           </h1>
           <p className="hero-subtitle">
-            From premise to published novel. Fiction and biographies written by our sarcastic AI.
+            Generate fiction and biographies with Llama 3.3 70B.
             <br />
-            Powered by Llama 3.3 70B.
+            Sarcastic deadpan style. Dark cyberpunk vibes.
           </p>
-          <div className="hero-buttons">
-            <Link to="/signup" className="btn btn-primary btn-large">
-              Start Writing Free
-            </Link>
-            <Link to="/login" className="btn btn-secondary btn-large">
-              Sign In
-            </Link>
+          <div className="hero-cta">
+            {isAuthenticated ? (
+              <Link to="/dashboard" className="btn btn-primary btn-lg">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link to="/signup" className="btn btn-primary btn-lg">
+                  Start Writing
+                </Link>
+                <Link to="/login" className="btn btn-secondary btn-lg">
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="features">
-        <h2 className="section-title">Why GhostWriter?</h2>
+        <h2 className="section-title">Features</h2>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">✍️</div>
             <h3>Fiction Generation</h3>
-            <p>
-              Create complete novels from your premise. Define characters, plot timelines, 
-              and writing style. From samples to full 50k+ word novels.
-            </p>
+            <p>Create novels, novellas, and samples with custom characters and timelines</p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">📖</div>
             <h3>Biography Writing</h3>
-            <p>
-              Turn life stories into compelling narratives. Autobiographies, family histories, 
-              or biographies with rich detail and emotional depth.
-            </p>
+            <p>Generate autobiographies, memoirs, and family histories with detailed life events</p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">🎨</div>
-            <h3>Book Extras</h3>
-            <p>
-              AI-generated covers, marketing blurbs, author bios. Export to ePub, MOBI, 
-              or KDP-ready PDF formats.
-            </p>
+            <h3>AI Book Covers</h3>
+            <p>Generate 4 unique cover options with AI image generation</p>
           </div>
-
           <div className="feature-card">
-            <div className="feature-icon">🤖</div>
-            <h3>Sarcastic AI</h3>
-            <p>
-              Powered by Llama 3.3 70B with attitude. Multiple writing styles from 
-              deadpan to gothic horror to cyberpunk.
-            </p>
+            <div className="feature-icon">📦</div>
+            <h3>Export Options</h3>
+            <p>Export to ePub, MOBI, and KDP-ready PDF formats</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">📊</div>
+            <h3>Marketing Tools</h3>
+            <p>Generate blurbs, author bios, and promotional content</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">⚡</div>
+            <h3>Credit System</h3>
+            <p>Pay-as-you-go with flexible credit packs</p>
           </div>
         </div>
       </section>
@@ -88,71 +86,43 @@ const Landing = () => {
       {/* Pricing Section */}
       <section className="pricing">
         <h2 className="section-title">Credit Packs</h2>
-        <p className="section-subtitle">
-          Pay only for what you generate. No subscriptions, no hidden fees.
-        </p>
-        
+        <p className="section-subtitle">Pay once, use anytime. No subscriptions.</p>
         <div className="pricing-grid">
-          {creditPacks.map((pack) => (
-            <div key={pack.id} className="pricing-card">
-              {pack.bonus_percentage > 0 && (
-                <div className="pricing-badge">
-                  {pack.bonus_percentage}% BONUS
-                </div>
-              )}
+          {packs.map((pack) => (
+            <div 
+              key={pack.name} 
+              className={`pricing-card ${pack.popular ? 'popular' : ''}`}
+            >
+              {pack.popular && <div className="popular-badge">Popular</div>}
               <h3>{pack.name}</h3>
-              <div className="pricing-amount">
-                <span className="price">${(pack.price / 100).toFixed(2)}</span>
+              <div className="price">{pack.price}</div>
+              <div className="credits">
+                <span className="credits-amount">{pack.credits}</span> credits
               </div>
-              <div className="credits-amount">
-                <span className="credits">💎 {pack.credits}</span>
-                {pack.bonus_credits > 0 && (
-                  <span className="bonus"> +{pack.bonus_credits}</span>
-                )}
-              </div>
-              <p className="pricing-description">{pack.description}</p>
-              <Link to="/signup" className="btn btn-primary btn-block">
-                Get Started
-              </Link>
+              {pack.bonus && <div className="bonus">{pack.bonus}</div>}
+              {isAuthenticated ? (
+                <Link to="/profile" className="btn btn-primary">
+                  Purchase
+                </Link>
+              ) : (
+                <Link to="/signup" className="btn btn-primary">
+                  Get Started
+                </Link>
+              )}
             </div>
           ))}
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="how-it-works">
-        <h2 className="section-title">How It Works</h2>
-        <div className="steps-grid">
-          <div className="step">
-            <div className="step-number">1</div>
-            <h3>Sign Up Free</h3>
-            <p>Create your account and get started immediately</p>
-          </div>
-          <div className="step">
-            <div className="step-number">2</div>
-            <h3>Choose Your Story</h3>
-            <p>Fiction or biography. Add characters, timelines, and details</p>
-          </div>
-          <div className="step">
-            <div className="step-number">3</div>
-            <h3>Generate</h3>
-            <p>AI writes your story in minutes. Edit and refine as needed</p>
-          </div>
-          <div className="step">
-            <div className="step-number">4</div>
-            <h3>Publish</h3>
-            <p>Export to ePub, MOBI, or KDP PDF. Add covers and blurbs</p>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="cta">
-        <h2>Ready to Write Your Story?</h2>
-        <p>Join writers using AI to bring their stories to life</p>
-        <Link to="/signup" className="btn btn-primary btn-large">
-          Start Writing Now
-        </Link>
+      <section className="cta-section">
+        <h2>Ready to Create Your Story?</h2>
+        <p>Join GhostWriter and start generating AI-powered content today</p>
+        {!isAuthenticated && (
+          <Link to="/signup" className="btn btn-primary btn-lg">
+            Sign Up Free
+          </Link>
+        )}
       </section>
     </div>
   );
