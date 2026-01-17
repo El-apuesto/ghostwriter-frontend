@@ -2,9 +2,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
 
-  // Show loading spinner while checking auth status
+  // Show loading spinner while checking auth
   if (loading) {
     return (
       <div className="loading-container">
@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // Redirect to login if not authenticated
-  if (!isAuthenticated) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
