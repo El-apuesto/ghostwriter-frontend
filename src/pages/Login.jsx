@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -7,6 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -15,12 +16,19 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    try {
-      await login(email, password);
+    // Basic validation
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      setLoading(false);
+      return;
+    }
+
+    const result = await login(email, password);
+    
+    if (result.success) {
       navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
-    } finally {
+    } else {
+      setError(result.error);
       setLoading(false);
     }
   };
@@ -29,10 +37,16 @@ const Login = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-card">
-          <h1 className="auth-title">Welcome Back</h1>
-          <p className="auth-subtitle">Login to continue your story</p>
+          <div className="auth-header">
+            <h1>👻 Welcome Back</h1>
+            <p>Login to continue your stories</p>
+          </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="alert alert-error">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
@@ -42,9 +56,9 @@ const Login = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 placeholder="your@email.com"
-                className="form-input"
+                required
+                disabled={loading}
               />
             </div>
 
@@ -55,20 +69,27 @@ const Login = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 placeholder="••••••••"
-                className="form-input"
+                required
+                disabled={loading}
               />
             </div>
 
-            <button type="submit" disabled={loading} className="btn btn-primary btn-full">
+            <button 
+              type="submit" 
+              className="btn btn-primary btn-full"
+              disabled={loading}
+            >
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
-          <p className="auth-footer">
-            Don't have an account? <Link to="/signup" className="auth-link">Sign up</Link>
-          </p>
+          <div className="auth-footer">
+            <p>
+              Don't have an account?{' '}
+              <Link to="/signup" className="auth-link">Sign up</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
