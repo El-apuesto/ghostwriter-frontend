@@ -35,4 +35,10 @@ api.interceptors.response.use(
   }
 );
 
+// Credits API
+export const getCreditBalance = async () => {
+  const response = await api.get('/credits/balance');
+  return response.data;
+};
+
 export default api;
