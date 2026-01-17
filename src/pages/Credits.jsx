@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getCreditPacks, purchaseCredits, getCreditBalance, getTransactions } from '../utils/api'
+import { creditsAPI } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
 import CreditsDisplay from '../components/CreditsDisplay'
 import '../styles/credits-page.css'
 
 const Credits = () => {
-  const { user, refreshUser } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [packs, setPacks] = useState([])
   const [balance, setBalance] = useState(null)
@@ -17,14 +17,14 @@ const Credits = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [packsData, balanceData, transactionsData] = await Promise.all([
-          getCreditPacks(),
-          getCreditBalance(),
-          getTransactions(10)
+        const [packsRes, balanceRes, transactionsRes] = await Promise.all([
+          creditsAPI.getPacks(),
+          creditsAPI.getBalance(),
+          creditsAPI.getTransactions(10)
         ])
-        setPacks(packsData)
-        setBalance(balanceData)
-        setTransactions(transactionsData)
+        setPacks(packsRes.data)
+        setBalance(balanceRes.data)
+        setTransactions(transactionsRes.data)
       } catch (error) {
         console.error('Failed to fetch credits data:', error)
       } finally {
@@ -35,12 +35,12 @@ const Credits = () => {
     fetchData()
   }, [])
 
-  const handlePurchase = async (packKey) => {
-    setPurchasing(packKey)
+  const handlePurchase = async (packId) => {
+    setPurchasing(packId)
     try {
-      const response = await purchaseCredits(packKey)
-      if (response.checkout_url) {
-        window.location.href = response.checkout_url
+      const response = await creditsAPI.purchase(packId)
+      if (response.data.checkout_url) {
+        window.location.href = response.data.checkout_url
       }
     } catch (error) {
       console.error('Purchase failed:', error)
@@ -71,11 +71,11 @@ const Credits = () => {
           <div className="balance-stats">
             <div className="balance-stat">
               <span className="balance-label">Total Purchased</span>
-              <span className="balance-value neon-text">{balance.total_purchased}</span>
+              <span className="balance-value neon-text">{balance.total_purchased || 0}</span>
             </div>
             <div className="balance-stat">
               <span className="balance-label">Total Spent</span>
-              <span className="balance-value">{balance.total_spent}</span>
+              <span className="balance-value">{balance.total_spent || 0}</span>
             </div>
           </div>
         )}
@@ -86,19 +86,18 @@ const Credits = () => {
         <h2 className="section-title">Choose Your Pack</h2>
         <div className="packs-grid">
           {packs.map((pack) => {
-            const priceInDollars = pack.price / 100
-            const hasBonus = pack.bonus && pack.bonus > 0
+            const hasBonus = pack.bonus_percent && pack.bonus_percent > 0
             
             return (
-              <div key={pack.key} className={`pack-card ${pack.popular ? 'popular' : ''}`}>
+              <div key={pack.id} className={`pack-card ${pack.popular ? 'popular' : ''}`}>
                 {pack.popular && <div className="popular-badge">MOST POPULAR</div>}
-                {hasBonus && <div className="bonus-badge">+{pack.bonus}% BONUS</div>}
+                {hasBonus && <div className="bonus-badge">+{pack.bonus_percent}% BONUS</div>}
                 
                 <div className="pack-header">
                   <h3 className="pack-name">{pack.name}</h3>
                   <div className="pack-price">
                     <span className="price-symbol">$</span>
-                    <span className="price-amount">{priceInDollars.toFixed(2)}</span>
+                    <span className="price-amount">{pack.price}</span>
                   </div>
                 </div>
 
@@ -113,11 +112,11 @@ const Credits = () => {
                   )}
 
                   <button
-                    onClick={() => handlePurchase(pack.key)}
-                    disabled={purchasing === pack.key}
+                    onClick={() => handlePurchase(pack.id)}
+                    disabled={purchasing === pack.id}
                     className="pack-buy-btn neon-btn"
                   >
-                    {purchasing === pack.key ? 'Processing...' : 'Buy Now'}
+                    {purchasing === pack.id ? 'Processing...' : 'Buy Now'}
                   </button>
                 </div>
               </div>
@@ -132,27 +131,51 @@ const Credits = () => {
         <div className="usage-grid">
           <div className="usage-item">
             <span className="usage-icon">📖</span>
-            <span className="usage-text">Short Story: ~25 credits</span>
+            <span className="usage-text">Fiction Sample: FREE</span>
           </div>
           <div className="usage-item">
-            <span className="usage-icon">📚</span>
-            <span className="usage-text">Novella: ~50 credits</span>
+            <span className="usage-icon">📖</span>
+            <span className="usage-text">Biography Sample: FREE</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">📘</span>
+            <span className="usage-text">Fiction Novella: 50 credits</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">📗</span>
+            <span className="usage-text">Fiction Novel: 100 credits</span>
           </div>
           <div className="usage-item">
             <span className="usage-icon">📕</span>
-            <span className="usage-text">Novel: ~100 credits</span>
+            <span className="usage-text">Biography Short: 75 credits</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">📙</span>
+            <span className="usage-text">Biography Standard: 150 credits</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">📚</span>
+            <span className="usage-text">Biography Comprehensive: 200 credits</span>
           </div>
           <div className="usage-item">
             <span className="usage-icon">🎨</span>
-            <span className="usage-text">Book Cover: ~10 credits</span>
+            <span className="usage-text">Book Cover: 15-30 credits</span>
           </div>
           <div className="usage-item">
             <span className="usage-icon">📄</span>
-            <span className="usage-text">Export (ePub/PDF): ~5 credits</span>
+            <span className="usage-text">Export ePub/MOBI: 10 credits</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">📄</span>
+            <span className="usage-text">Export KDP PDF: 15 credits</span>
           </div>
           <div className="usage-item">
             <span className="usage-icon">✍️</span>
-            <span className="usage-text">Blurb/Bio: ~5 credits</span>
+            <span className="usage-text">Marketing Blurb: 20 credits</span>
+          </div>
+          <div className="usage-item">
+            <span className="usage-icon">✍️</span>
+            <span className="usage-text">Author Bio: 15 credits</span>
           </div>
         </div>
       </div>
