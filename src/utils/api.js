@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL } from '../config';
 
+// Create axios instance with base configuration
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -8,6 +9,7 @@ const api = axios.create({
   },
 });
 
+// Request interceptor - Add JWT token to all requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -21,15 +23,18 @@ api.interceptors.request.use(
   }
 );
 
+// Response interceptor - Handle errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // If 401 Unauthorized, clear token and redirect to login
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
     }
     
+    // Return formatted error
     const errorMessage = error.response?.data?.detail || 
                         error.response?.data?.message || 
                         error.message || 
@@ -43,12 +48,14 @@ api.interceptors.response.use(
   }
 );
 
+// Auth API calls
 export const authAPI = {
   signup: (data) => api.post('/api/auth/signup', data),
   login: (data) => api.post('/api/auth/login', data),
   getMe: () => api.get('/api/auth/me'),
 };
 
+// Stories API calls
 export const storiesAPI = {
   generateFiction: (data) => api.post('/api/generate/fiction', data),
   generateBiography: (data) => api.post('/api/generate/biography', data),
@@ -57,6 +64,7 @@ export const storiesAPI = {
   delete: (id) => api.delete(`/api/stories/${id}`),
 };
 
+// Credits API calls
 export const creditsAPI = {
   getPacks: () => api.get('/api/credits/packs'),
   purchase: (packType) => api.post('/api/credits/purchase', { pack_type: packType }),
@@ -64,6 +72,7 @@ export const creditsAPI = {
   getTransactions: (limit = 50) => api.get(`/api/credits/transactions?limit=${limit}`),
 };
 
+// Extras API calls
 export const extrasAPI = {
   generateCover: (storyId, coverType, premium = false, style = 'dark') => 
     api.post(`/api/extras/cover?story_id=${storyId}&cover_type=${coverType}&premium=${premium}&style=${style}`),
