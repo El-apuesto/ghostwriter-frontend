@@ -32,7 +32,7 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>👻 Join GhostWriter</h1>
+          <h1>Join GhostWriter</h1>
           <p>Create your account and start writing</p>
         </div>
 
