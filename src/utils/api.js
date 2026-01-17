@@ -80,7 +80,7 @@ export const extrasAPI = {
   exportMobi: (storyId) => api.post(`/api/extras/mobi/${storyId}`, null, { responseType: 'blob' }),
   exportPdf: (storyId) => api.post(`/api/extras/pdf/${storyId}`, null, { responseType: 'blob' }),
   generateBlurb: (storyId) => api.post(`/api/extras/blurb/${storyId}`),
-  generateAuthorBio: (bioInfo = null) => api.post('/api/extras/author-bio', { bio_info: bioInfo }),
+  generateAuthorBio: (bioInfo) => api.post('/api/extras/author-bio', { bio_info: bioInfo }),
 };
 
 export default api;
