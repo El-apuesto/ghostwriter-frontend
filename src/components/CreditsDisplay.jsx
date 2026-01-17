@@ -3,12 +3,20 @@ import { getCreditBalance } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
 import '../styles/credits.css'
 
+const ADMIN_EMAIL = 'thecitieschoice@gmail.com'
+
 const CreditsDisplay = () => {
   const { user } = useAuth()
   const [credits, setCredits] = useState(user?.credits_balance || 0)
   const [loading, setLoading] = useState(false)
 
   const fetchCredits = async () => {
+    // Admin gets unlimited credits
+    if (user?.email === ADMIN_EMAIL) {
+      setCredits(999999)
+      return
+    }
+
     try {
       setLoading(true)
       const data = await getCreditBalance()
