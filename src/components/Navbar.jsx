@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,37 +12,30 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-container">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
-          <span className="logo-ghost">👻</span>
+      <div className="nav-container">
+        <Link to="/" className="nav-logo">
+          <span className="ghost-icon">👻</span>
           <span className="logo-text">GhostWriter</span>
         </Link>
 
-        {/* Navigation Links */}
-        <div className="navbar-menu">
+        <div className="nav-menu">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="navbar-link">
+              <Link to="/dashboard" className="nav-link">
                 Dashboard
               </Link>
-              <Link to="/fiction" className="navbar-link">
-                Generate Fiction
+              <Link to="/fiction" className="nav-link">
+                Fiction
               </Link>
-              <Link to="/biography" className="navbar-link">
-                Generate Biography
+              <Link to="/biography" className="nav-link">
+                Biography
               </Link>
-              <Link to="/profile" className="navbar-link">
+              <Link to="/profile" className="nav-link">
                 Profile
               </Link>
-              
-              {/* Credits Display */}
-              <div className="navbar-credits">
-                <span className="credits-icon">⚡</span>
-                <span className="credits-amount">{user?.credits || 0}</span>
-                <span className="credits-label">credits</span>
+              <div className="credits-badge">
+                💎 {user?.credits || 0} credits
               </div>
-
               <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
               </button>
