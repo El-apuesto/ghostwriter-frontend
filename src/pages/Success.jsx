@@ -8,22 +8,36 @@ const Success = () => {
   const { updateCredits } = useAuth();
   const [loading, setLoading] = useState(true);
   const [newBalance, setNewBalance] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBalance = async () => {
+    const verifyPayment = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch balance - backend returns 'credits_balance' not 'balance'
         const response = await creditsAPI.getBalance();
-        setNewBalance(response.data.balance);
-        updateCredits(response.data.balance);
+        
+        // Backend returns: { credits_balance: N, total_purchased: N, total_spent: N }
+        const creditsBalance = response.data?.credits_balance;
+        
+        if (creditsBalance !== undefined) {
+          setNewBalance(creditsBalance);
+          updateCredits(creditsBalance);
+        } else {
+          setError('Could not verify credits - please refresh the page');
+        }
       } catch (err) {
-        console.error('Failed to fetch balance:', err);
+        console.error('Payment verification error:', err);
+        setError(err?.message || 'Failed to verify payment. Your credits may still be processing.');
       } finally {
         setLoading(false);
       }
     };
     
-    fetchBalance();
-  }, []);
+    verifyPayment();
+  }, [updateCredits]);
 
   return (
     <div className="success-page">
@@ -31,11 +45,20 @@ const Success = () => {
         <div className="success-icon">✅</div>
         <h1>Payment Successful!</h1>
         {loading ? (
-          <p>Updating your credit balance...</p>
+          <p>Verifying your payment and updating credits...</p>
+        ) : error ? (
+          <>
+            <p className="error-message" style={{ color: '#ff6b6b', marginBottom: '20px' }}>
+              ⚠️ {error}
+            </p>
+            <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+              If your credits don't appear within a few moments, try refreshing the page.
+            </p>
+          </>
         ) : (
           <>
             <p className="success-message">
-              Your credits have been added to your account
+              Your credits have been added to your account!
             </p>
             {newBalance !== null && (
               <div className="credits-display">
