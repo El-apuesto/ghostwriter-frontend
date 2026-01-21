@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateCredits = (newBalance) => {
     if (user) {
-      const updatedUser = { ...user, credits: newBalance };
+      const updatedUser = { ...user, credits_balance: newBalance };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
     }
