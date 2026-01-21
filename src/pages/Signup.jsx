@@ -6,6 +6,7 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -15,6 +16,12 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!acceptedTerms) {
+      setError('You must accept the Terms of Service to continue');
+      return;
+    }
+
     setLoading(true);
 
     const result = await signup(name, email, password);
@@ -22,6 +29,8 @@ const Signup = () => {
     setLoading(false);
     
     if (result.success) {
+      // Log ToS acceptance timestamp
+      localStorage.setItem('tos_accepted_at', new Date().toISOString());
       navigate('/dashboard');
     } else {
       setError(result.error);
@@ -32,7 +41,7 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>Join GhostWriter</h1>
+          <h1>👻 Join GhostWriter</h1>
           <p>Create your account and start writing</p>
         </div>
 
@@ -68,12 +77,31 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              minLength="6"
+              minLength="8"
               required
             />
+            <small className="help-text">Minimum 8 characters</small>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+          <div className="form-group checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                required
+              />
+              <span>
+                I accept the{' '}
+                <Link to="/terms" target="_blank" className="link-accent">
+                  Terms of Service
+                </Link>
+                {' '}and understand that AI-generated content may require review before publication.
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-block" disabled={loading || !acceptedTerms}>
             {loading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
