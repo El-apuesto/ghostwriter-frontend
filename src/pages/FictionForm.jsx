@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { storiesAPI } from '../utils/api';
@@ -8,6 +8,7 @@ const FictionForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [saveStatus, setSaveStatus] = useState(''); // 'saving', 'saved', ''
 
   // Required fields
   const [premise, setPremise] = useState('');
@@ -36,6 +37,66 @@ const FictionForm = () => {
     sample: 0,
     novella: 50,
     novel: 100
+  };
+
+  // Load saved draft on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('fictionDraft');
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft);
+        setPremise(draft.premise || '');
+        setLength(draft.length || 'sample');
+        setTitle(draft.title || '');
+        setWritingStyle(draft.writingStyle || '');
+        setGenre(draft.genre || '');
+        setSetting(draft.setting || '');
+        setTone(draft.tone || '');
+        setThemes(draft.themes || ['']);
+        setEmulateAuthor(draft.emulateAuthor || '');
+        setCharacters(draft.characters || [{ name: '', role: '', description: '', quirks: [''] }]);
+        setTimeline(draft.timeline || [{ chapter: '', event: '', mood: '' }]);
+      } catch (e) {
+        console.error('Failed to load draft:', e);
+      }
+    }
+  }, []);
+
+  // Autosave every 3 seconds when form changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveDraft();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [premise, length, title, writingStyle, genre, setting, tone, themes, emulateAuthor, characters, timeline]);
+
+  const saveDraft = () => {
+    const draft = {
+      premise,
+      length,
+      title,
+      writingStyle,
+      genre,
+      setting,
+      tone,
+      themes,
+      emulateAuthor,
+      characters,
+      timeline
+    };
+    localStorage.setItem('fictionDraft', JSON.stringify(draft));
+    setSaveStatus('saved');
+    setTimeout(() => setSaveStatus(''), 2000);
+  };
+
+  const handleManualSave = () => {
+    setSaveStatus('saving');
+    saveDraft();
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem('fictionDraft');
   };
 
   const handleAddTheme = () => {
@@ -104,8 +165,8 @@ const FictionForm = () => {
 
     // Check credits
     const cost = creditCosts[length];
-    if (user.credits < cost) {
-      setError(`Insufficient credits. Need ${cost} credits, you have ${user.credits}.`);
+    if (user.credits_balance < cost) {
+      setError(`Insufficient credits. Need ${cost} credits, you have ${user.credits_balance}.`);
       return;
     }
 
@@ -124,7 +185,7 @@ const FictionForm = () => {
 
     const payload = {
       premise,
-      length,
+      story_length: length,
       ...(title && { title }),
       ...(writingStyle && { writing_style: writingStyle }),
       ...(genre && { genre }),
@@ -138,6 +199,7 @@ const FictionForm = () => {
 
     try {
       const response = await storiesAPI.generateFiction(payload);
+      clearDraft(); // Clear saved draft after successful generation
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Failed to generate story');
@@ -148,9 +210,18 @@ const FictionForm = () => {
 
   return (
     <div className="container" style={{ padding: '2rem 0', maxWidth: '900px' }}>
-      <h1>📝 Generate Fiction</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1>📝 Generate Fiction</h1>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {saveStatus === 'saved' && <span style={{ color: 'var(--success)' }}>✓ Draft saved</span>}
+          {saveStatus === 'saving' && <span style={{ color: 'var(--text-secondary)' }}>Saving...</span>}
+          <button type="button" onClick={handleManualSave} className="btn btn-secondary btn-sm">
+            💾 Save Draft
+          </button>
+        </div>
+      </div>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-        Create a fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong>
+        Create a fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
       </p>
 
       {error && <div className="error-message">{error}</div>}
