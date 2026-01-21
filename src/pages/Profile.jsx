@@ -45,7 +45,7 @@ const Profile = () => {
             <div className="credits-icon">⚡</div>
             <div>
               <div className="credits-label">Available Credits</div>
-              <div className="credits-value">{user?.credits || 0}</div>
+              <div className="credits-value">{user?.credits_balance || 0}</div>
             </div>
           </div>
         </div>
