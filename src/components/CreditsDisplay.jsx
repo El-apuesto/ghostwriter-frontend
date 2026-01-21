@@ -7,7 +7,7 @@ const ADMIN_EMAIL = 'thecitieschoice@gmail.com'
 
 const CreditsDisplay = () => {
   const { user } = useAuth()
-  const [credits, setCredits] = useState(user?.credits || 0)
+  const [credits, setCredits] = useState(user?.credits_balance || 0)
   const [loading, setLoading] = useState(false)
 
   const fetchCredits = async () => {
@@ -20,7 +20,7 @@ const CreditsDisplay = () => {
     try {
       setLoading(true)
       const response = await creditsAPI.getBalance()
-      setCredits(response.data.balance)
+      setCredits(response.data.credits_balance)
     } catch (error) {
       console.error('Failed to fetch credits:', error)
     } finally {
@@ -40,7 +40,7 @@ const CreditsDisplay = () => {
       <div className="credits-info">
         <div className="credits-label">Credits</div>
         <div className="credits-amount neon-text">
-          {loading ? '...' : credits}
+          {loading ? '...' : credits.toLocaleString()}
         </div>
       </div>
     </div>
