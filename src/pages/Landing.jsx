@@ -23,7 +23,7 @@ const Landing = () => {
             <span className="gradient-text">AI-Powered</span> Story Generation
           </h1>
           <p className="hero-subtitle">
-            Create novels, novellas, and biographies with Llama 3.3 70B. 
+            Create novels, novellas, and biographies with advanced AI. 
             Dark humor, sarcastic wit, and compelling narratives.
           </p>
           <div className="hero-actions">
@@ -52,7 +52,7 @@ const Landing = () => {
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">🤖</div>
-              <h3>Powered by Llama 3.3 70B</h3>
+              <h3>Advanced AI Technology</h3>
               <p>State-of-the-art AI creates compelling, unique narratives</p>
             </div>
             <div className="feature-card">
