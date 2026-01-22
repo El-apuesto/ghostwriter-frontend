@@ -61,7 +61,9 @@ const Dashboard = () => {
 
         {stories.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">👻</div>
+            <div className="empty-icon">
+              <img src="/logo.PNG" alt="GhostWriter" style={{ width: '150px', height: 'auto', opacity: 0.3 }} />
+            </div>
             <h2>No stories yet</h2>
             <p>Start by generating your first fiction or biography</p>
             <div className="empty-actions">
