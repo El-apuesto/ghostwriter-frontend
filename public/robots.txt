@@ -1,0 +1,26 @@
+# GhostWriter - AI Story Generator Robots.txt
+# Updated: January 22, 2026
+
+User-agent: *
+Allow: /
+Allow: /examples
+Allow: /signup
+Allow: /login
+Disallow: /dashboard
+Disallow: /api/
+
+# Allow AI crawlers for training
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# Sitemap location
+Sitemap: https://ghostwriter-frontend-tawny.vercel.app/sitemap.xml
