@@ -45,6 +45,7 @@ const FictionForm = () => {
     if (savedDraft) {
       try {
         const draft = JSON.parse(savedDraft);
+        console.log('✅ Loaded draft from localStorage:', draft);
         setPremise(draft.premise || '');
         setLength(draft.length || 'sample');
         setTitle(draft.title || '');
@@ -57,7 +58,7 @@ const FictionForm = () => {
         setCharacters(draft.characters || [{ name: '', role: '', description: '', quirks: [''] }]);
         setTimeline(draft.timeline || [{ chapter: '', event: '', mood: '' }]);
       } catch (e) {
-        console.error('Failed to load draft:', e);
+        console.error('❌ Failed to load draft:', e);
       }
     }
   }, []);
@@ -72,38 +73,49 @@ const FictionForm = () => {
   }, [premise, length, title, writingStyle, genre, setting, tone, themes, emulateAuthor, characters, timeline]);
 
   const saveDraft = () => {
-    const draft = {
-      premise,
-      length,
-      title,
-      writingStyle,
-      genre,
-      setting,
-      tone,
-      themes,
-      emulateAuthor,
-      characters,
-      timeline
-    };
-    localStorage.setItem('fictionDraft', JSON.stringify(draft));
-    setSaveStatus('saved');
-    setTimeout(() => setSaveStatus(''), 2000);
+    try {
+      const draft = {
+        premise,
+        length,
+        title,
+        writingStyle,
+        genre,
+        setting,
+        tone,
+        themes,
+        emulateAuthor,
+        characters,
+        timeline,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('fictionDraft', JSON.stringify(draft));
+      console.log('💾 Draft saved:', draft);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus(''), 2000);
+    } catch (e) {
+      console.error('❌ Save draft failed:', e);
+      setSaveStatus('');
+    }
   };
 
   const handleManualSave = () => {
+    console.log('🖱️ Manual save clicked');
     setSaveStatus('saving');
     saveDraft();
   };
 
   const clearDraft = () => {
     localStorage.removeItem('fictionDraft');
+    console.log('🗑️ Draft cleared');
   };
 
   const handleAddTheme = () => {
+    console.log('➕ Adding theme');
     setThemes([...themes, '']);
   };
 
   const handleRemoveTheme = (index) => {
+    console.log('➖ Removing theme at index:', index);
     setThemes(themes.filter((_, i) => i !== index));
   };
 
@@ -114,10 +126,12 @@ const FictionForm = () => {
   };
 
   const handleAddCharacter = () => {
+    console.log('➕ Adding character. Current count:', characters.length);
     setCharacters([...characters, { name: '', role: '', description: '', quirks: [''] }]);
   };
 
   const handleRemoveCharacter = (index) => {
+    console.log('➖ Removing character at index:', index);
     setCharacters(characters.filter((_, i) => i !== index));
   };
 
@@ -128,12 +142,14 @@ const FictionForm = () => {
   };
 
   const handleAddQuirk = (charIndex) => {
+    console.log('➕ Adding quirk to character:', charIndex);
     const newCharacters = [...characters];
     newCharacters[charIndex].quirks.push('');
     setCharacters(newCharacters);
   };
 
   const handleRemoveQuirk = (charIndex, quirkIndex) => {
+    console.log('➖ Removing quirk:', { charIndex, quirkIndex });
     const newCharacters = [...characters];
     newCharacters[charIndex].quirks = newCharacters[charIndex].quirks.filter((_, i) => i !== quirkIndex);
     setCharacters(newCharacters);
@@ -146,10 +162,12 @@ const FictionForm = () => {
   };
 
   const handleAddTimelineEvent = () => {
+    console.log('➕ Adding timeline event. Current count:', timeline.length);
     setTimeline([...timeline, { chapter: '', event: '', mood: '' }]);
   };
 
   const handleRemoveTimelineEvent = (index) => {
+    console.log('➖ Removing timeline event at index:', index);
     setTimeline(timeline.filter((_, i) => i !== index));
   };
 
@@ -161,12 +179,23 @@ const FictionForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('🚀 Form submitted');
     setError('');
 
     // Check credits
     const cost = creditCosts[length];
+    console.log('💰 Credit check:', { cost, balance: user?.credits_balance, user });
+    
+    if (!user) {
+      setError('You must be logged in to generate stories');
+      console.error('❌ No user found');
+      return;
+    }
+
     if (user.credits_balance < cost) {
-      setError(`Insufficient credits. Need ${cost} credits, you have ${user.credits_balance}.`);
+      const errorMsg = `Insufficient credits. Need ${cost} credits, you have ${user.credits_balance}.`;
+      setError(errorMsg);
+      console.error('❌', errorMsg);
       return;
     }
 
@@ -197,12 +226,19 @@ const FictionForm = () => {
       ...(cleanTimeline.length && { timeline: cleanTimeline })
     };
 
+    console.log('📦 Payload being sent:', payload);
+
     try {
+      console.log('⏳ Calling API...');
       const response = await storiesAPI.generateFiction(payload);
-      clearDraft(); // Clear saved draft after successful generation
+      console.log('✅ API Response:', response);
+      clearDraft();
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Failed to generate story');
+      const errorMsg = err.message || 'Failed to generate story';
+      console.error('❌ API Error:', err);
+      setError(errorMsg);
+      alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check console for details.`);
     } finally {
       setLoading(false);
     }
@@ -224,7 +260,7 @@ const FictionForm = () => {
         Create a fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
       </p>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message" style={{ marginBottom: '1rem', padding: '1rem', background: '#ff000020', border: '1px solid #ff0000', borderRadius: '8px', color: '#ff6b6b' }}>{error}</div>}
 
       <form onSubmit={handleSubmit}>
         {/* Required Fields */}
@@ -346,11 +382,11 @@ const FictionForm = () => {
 
         {/* Characters */}
         <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-          <h3>Characters (Optional)</h3>
+          <h3>Characters (Optional) - Total: {characters.length}</h3>
           {characters.map((char, charIndex) => (
             <div key={charIndex} style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--bg-card)', borderRadius: '8px' }}>
               <div className="form-group">
-                <label>Character Name</label>
+                <label>Character #{charIndex + 1} Name</label>
                 <input
                   type="text"
                   value={char.name}
@@ -411,23 +447,23 @@ const FictionForm = () => {
                   onClick={() => handleRemoveCharacter(charIndex)}
                   className="btn btn-danger"
                 >
-                  Remove Character
+                  Remove Character #{charIndex + 1}
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={handleAddCharacter} className="btn btn-primary">
-            + Add Character
+          <button type="button" onClick={handleAddCharacter} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+            + Add Character (Currently: {characters.length})
           </button>
         </div>
 
         {/* Timeline */}
         <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-          <h3>Timeline Events (Optional)</h3>
+          <h3>Timeline Events (Optional) - Total: {timeline.length}</h3>
           {timeline.map((event, index) => (
             <div key={index} style={{ marginBottom: '1rem', padding: '1rem', background: 'var(--bg-card)', borderRadius: '8px' }}>
               <div className="form-group">
-                <label>Chapter # (Optional)</label>
+                <label>Event #{index + 1} - Chapter # (Optional)</label>
                 <input
                   type="number"
                   value={event.chapter}
@@ -460,20 +496,20 @@ const FictionForm = () => {
                   onClick={() => handleRemoveTimelineEvent(index)}
                   className="btn btn-danger"
                 >
-                  Remove Event
+                  Remove Event #{index + 1}
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={handleAddTimelineEvent} className="btn btn-primary">
-            + Add Timeline Event
+          <button type="button" onClick={handleAddTimelineEvent} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+            + Add Timeline Event (Currently: {timeline.length})
           </button>
         </div>
 
         {/* Submit */}
         <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
           <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
-            {loading ? 'Generating Story...' : `Generate Fiction (${creditCosts[length]} credits)`}
+            {loading ? '⏳ Generating Story... (this may take 2-3 minutes)' : `🚀 Generate Fiction (${creditCosts[length]} credits)`}
           </button>
           <button
             type="button"
