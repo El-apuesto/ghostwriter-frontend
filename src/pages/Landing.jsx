@@ -19,6 +19,18 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
+          <img 
+            src="/ghostwriter-logo.webp" 
+            alt="GhostWriter Logo" 
+            style={{
+              width: '400px',
+              height: 'auto',
+              maxWidth: '90vw',
+              margin: '0 auto 2rem',
+              display: 'block',
+              filter: 'drop-shadow(0 0 30px rgba(0, 255, 249, 0.4))'
+            }}
+          />
           <h1 className="hero-title">
             <span className="gradient-text">AI-Powered</span> Story Generation
           </h1>
