@@ -81,7 +81,7 @@ const FictionForm = () => {
         const response = await storiesAPI.getOne(storyId);
         
         if (response.data && response.data.id) {
-          setGenerationProgress('✓ Story found! Loading your creation...');
+          setGenerationProgress('Story found! Loading your creation...');
           return response.data;
         }
       } catch (err) {
@@ -139,25 +139,27 @@ const FictionForm = () => {
     };
 
     try {
-      setGenerationProgress('📝 Sending request to AI server...');
+      setGenerationProgress('Sending request to AI server...');
       const response = await storiesAPI.generateFiction(payload);
       
       console.log('Generation response:', response.data);
       
       if (response.data && response.data.story && response.data.story.id) {
         const storyId = response.data.story.id;
-        setGenerationProgress('⏳ Story queued! Llama 70B is generating (2-3 min expected)...');
+        setGenerationProgress('Story queued! Llama 70B is generating (2-3 min expected)...');
         
         const storyData = await pollForStory(storyId);
         
         if (storyData) {
           // Story found and ready
           clearDraft();
+          setLoading(false); // RESET LOADING
           navigate(`/stories/${storyId}`, { state: { storyData } });
         } else {
           // Timeout - story is still generating but will be in dashboard soon
           clearDraft();
-          setGenerationProgress('✓ Story generation submitted! Check your Dashboard in a moment.');
+          setGenerationProgress('Story generation submitted! Check your Dashboard in a moment.');
+          setLoading(false); // RESET LOADING
           
           setTimeout(() => {
             navigate('/dashboard');
@@ -170,11 +172,8 @@ const FictionForm = () => {
       const errorMsg = err.message || 'Failed to generate story';
       setError(errorMsg);
       console.error('Generation error:', err);
-      setGenerationProgress('❌ Generation failed. Check error message below.');
-      
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      setGenerationProgress('Generation failed. Check error message below.');
+      setLoading(false); // RESET LOADING
     }
   };
 
@@ -221,7 +220,7 @@ const FictionForm = () => {
           Create a compelling fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
         </p>
 
-        {error && <div className="error-message"><strong>⚠️ Error:</strong> {error}</div>}
+        {error && <div className="error-message"><strong>Error:</strong> {error}</div>}
         {generationProgress && <div className="generation-progress">{generationProgress}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -304,7 +303,7 @@ const FictionForm = () => {
               {themes.map((theme, i) => (
                 <div key={i} className="input-row">
                   <input type="text" value={theme} onChange={(e) => updateTheme(i, e.target.value)} placeholder={`Theme ${i + 1}`} />
-                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTheme(i)}>×</button>}
+                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTheme(i)}>x</button>}
                 </div>
               ))}
               <button type="button" className="add-button" onClick={addTheme}>+ Add Theme</button>
@@ -320,7 +319,7 @@ const FictionForm = () => {
                   <div className="input-row">
                     <input type="text" placeholder="Character name" value={char.name} onChange={(e) => updateCharacter(i, 'name', e.target.value)} />
                     <input type="text" placeholder="Role" value={char.role} onChange={(e) => updateCharacter(i, 'role', e.target.value)} />
-                    {i > 0 && <button type="button" className="remove-button" onClick={() => removeCharacter(i)}>×</button>}
+                    {i > 0 && <button type="button" className="remove-button" onClick={() => removeCharacter(i)}>x</button>}
                   </div>
                   <input type="text" placeholder="Description" value={char.description} onChange={(e) => updateCharacter(i, 'description', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem' }} />
                 </div>
@@ -338,7 +337,7 @@ const FictionForm = () => {
                   <input type="text" placeholder="Chapter #" value={event.chapter} onChange={(e) => updateTimelineEvent(i, 'chapter', e.target.value)} />
                   <input type="text" placeholder="Event" value={event.event} onChange={(e) => updateTimelineEvent(i, 'event', e.target.value)} />
                   <input type="text" placeholder="Mood" value={event.mood} onChange={(e) => updateTimelineEvent(i, 'mood', e.target.value)} />
-                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTimelineEvent(i)}>×</button>}
+                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTimelineEvent(i)}>x</button>}
                 </div>
               ))}
               <button type="button" className="add-button" onClick={addTimelineEvent}>+ Add Event</button>
@@ -348,7 +347,7 @@ const FictionForm = () => {
           {/* SUBMIT */}
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
-              {loading ? '⏳ Generating...' : `Generate Fiction (${creditCosts[length]} credits)`}
+              {loading ? 'Generating...' : `Generate Fiction (${creditCosts[length]} credits)`}
             </button>
             <button type="button" onClick={() => navigate('/dashboard')} className="btn btn-secondary" disabled={loading}>Cancel</button>
           </div>
