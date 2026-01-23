@@ -241,8 +241,27 @@ const FictionForm = () => {
       console.log('⏳ Calling API...');
       const response = await storiesAPI.generateFiction(payload);
       console.log('✅ API Response:', response);
-      clearDraft();
-      navigate('/dashboard');
+      
+      // FIXED: Backend now returns full story data in response
+      // No need to fetch by ID anymore - story is complete in response.data.story
+      if (response.data && response.data.story) {
+        const storyData = response.data.story;
+        console.log('✅ Story data received:', storyData);
+        
+        // Clear the draft
+        clearDraft();
+        
+        // Navigate to the story detail page with the story ID
+        // The story is already in the database, but we have all the data we need
+        navigate(`/stories/${storyData.id}`, {
+          state: { storyData } // Pass story data to avoid immediate fetch
+        });
+      } else {
+        // Fallback if response structure is unexpected
+        console.warn('⚠️ Unexpected response structure:', response);
+        clearDraft();
+        navigate('/dashboard');
+      }
     } catch (err) {
       const errorMsg = err.message || 'Failed to generate story';
       console.error('❌ API Error:', err);
