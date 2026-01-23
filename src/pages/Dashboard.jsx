@@ -13,10 +13,15 @@ const Dashboard = () => {
 
   const loadStories = async () => {
     try {
+      setLoading(true);
       const response = await storiesAPI.getAll();
-      setStories(response.data);
+      console.log('Stories loaded:', response.data);
+      setStories(response.data || []);
+      setError('');
     } catch (err) {
-      setError(err.message || 'Failed to load stories');
+      console.error('Failed to load stories:', err);
+      setError(err.message || 'Failed to load stories from database');
+      setStories([]);
     } finally {
       setLoading(false);
     }
@@ -37,7 +42,7 @@ const Dashboard = () => {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>Loading your stories...</p>
+        <p>Loading your stories from database...</p>
       </div>
     );
   }
@@ -49,20 +54,25 @@ const Dashboard = () => {
           <h1>Your Stories</h1>
           <div className="dashboard-actions">
             <Link to="/generate/fiction" className="btn btn-primary">
-              📝 New Fiction
+              New Fiction
             </Link>
             <Link to="/generate/biography" className="btn btn-primary">
-              📖 New Biography
+              New Biography
             </Link>
           </div>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">
+            <strong>Error loading stories:</strong> {error}
+            <button onClick={loadStories} className="btn btn-sm btn-secondary" style={{marginLeft: '1rem'}}>Retry</button>
+          </div>
+        )}
 
-        {stories.length === 0 ? (
+        {stories.length === 0 && !error ? (
           <div className="empty-state">
             <div className="empty-icon">
-              <img src="/logo.PNG" alt="GhostWriter" style={{ width: '150px', height: 'auto', opacity: 0.3 }} />
+              <img src="/logo.PNG" alt="GhostWriter" style={{ width: '250px', height: 'auto', opacity: 0.3 }} />
             </div>
             <h2>No stories yet</h2>
             <p>Start by generating your first fiction or biography</p>
@@ -75,23 +85,30 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-        ) : (
+        ) : stories.length > 0 ? (
           <div className="stories-grid">
             {stories.map((story) => (
               <div key={story.id} className="story-card">
                 <div className="story-type-badge">
-                  {story.story_type === 'fiction' ? '📝' : '📖'} {story.story_type}
+                  {story.story_type || 'fiction'} | {story.length_type || 'unknown'}
                 </div>
                 <h3>{story.title || 'Untitled Story'}</h3>
                 <p className="story-meta">
-                  {story.length} • Created {new Date(story.created_at).toLocaleDateString()}
+                  {story.credits_cost || 0} credits | Created {new Date(story.created_at).toLocaleDateString()}
                 </p>
-                {story.premise && (
-                  <p className="story-preview">{story.premise.substring(0, 150)}...</p>
+                {story.generation_status && (
+                  <p className="story-status" style={{
+                    color: story.generation_status === 'complete' ? 'var(--success)' : 
+                           story.generation_status === 'generating' ? 'var(--cyan)' : 'var(--error)',
+                    fontWeight: 'bold',
+                    marginTop: '0.5rem'
+                  }}>
+                    Status: {story.generation_status}
+                  </p>
                 )}
                 <div className="story-actions">
-                  <Link to={`/story/${story.id}`} className="btn btn-secondary btn-sm">
-                    View
+                  <Link to={`/stories/${story.id}`} className="btn btn-secondary btn-sm">
+                    View Story
                   </Link>
                   <button 
                     onClick={() => handleDelete(story.id)} 
@@ -103,7 +120,7 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
