@@ -1,0 +1,264 @@
+/* ============================================
+   FICTION FORM PAGE
+   ============================================ */
+
+.fiction-form-page {
+  min-height: 100vh;
+  padding: var(--spacing-xl) 0;
+}
+
+.fiction-form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.form-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.05rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.save-status {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.save-status.saved {
+  color: var(--success);
+  background: rgba(6, 214, 160, 0.1);
+}
+
+.save-status.saving {
+  color: var(--text-secondary);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.generation-progress {
+  margin-bottom: var(--spacing-md);
+  padding: 1rem;
+  background: rgba(0, 255, 249, 0.1);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 8px;
+  color: var(--accent-cyan);
+}
+
+/* ============================================
+   FORM SECTIONS
+   ============================================ */
+
+.form-section {
+  background: var(--bg-secondary);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  transition: border-color 0.3s;
+}
+
+.form-section:hover {
+  border-color: #444;
+}
+
+.form-section-title {
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section-title::before {
+  content: '';
+  width: 3px;
+  height: 1.3rem;
+  background: var(--accent-cyan);
+  border-radius: 2px;
+}
+
+/* ============================================
+   FORM GROUPS
+   ============================================ */
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group label .required {
+  color: var(--error);
+  margin-left: 0.25rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: var(--font-family);
+  transition: all 0.3s;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.form-group select::placeholder {
+  color: #666;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 249, 0.1);
+  background: #0d1929;
+}
+
+.form-group textarea {
+  min-height: 140px;
+  resize: vertical;
+  font-family: var(--font-family);
+}
+
+.form-group small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   MULTI-INPUT GROUPS
+   ============================================ */
+
+.multi-input-group {
+  background: var(--bg-card);
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.input-row:last-child {
+  margin-bottom: 0;
+}
+
+.input-row .form-group {
+  margin-bottom: 0;
+}
+
+.input-row input {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.add-button {
+  background: transparent;
+  border: 1px dashed var(--accent-cyan);
+  color: var(--accent-cyan);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  margin-top: var(--spacing-sm);
+}
+
+.add-button:hover {
+  background: rgba(0, 255, 249, 0.1);
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
+}
+
+.remove-button {
+  background: transparent;
+  border: none;
+  color: var(--error);
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.3s;
+  align-self: center;
+}
+
+.remove-button:hover {
+  color: #ff1a1a;
+}
+
+@media (max-width: 768px) {
+  .fiction-form-page {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .form-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .form-section {
+    padding: var(--spacing-md);
+  }
+  
+  .form-section-title {
+    font-size: 1.1rem;
+  }
+  
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+}
