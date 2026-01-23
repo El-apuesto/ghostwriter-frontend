@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../utils/api'
 import LoadingOverlay from '../components/LoadingOverlay'
@@ -8,6 +8,7 @@ import '../styles/StoryDetail.css'
 function StoryDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
   const [story, setStory] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -15,8 +16,18 @@ function StoryDetail() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchStory()
-  }, [id])
+    // FIXED: Check if story data was passed via navigation state first
+    if (location.state?.storyData) {
+      console.log('✅ Using story data from navigation state:', location.state.storyData)
+      setStory(location.state.storyData)
+      setLoading(false)
+      setError('')
+    } else {
+      // Fallback to fetching from API
+      console.log('⏳ Story data not in state, fetching from API...')
+      fetchStory()
+    }
+  }, [id, location.state])
 
   const fetchStory = async () => {
     try {
