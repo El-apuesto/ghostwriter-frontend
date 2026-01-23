@@ -23,7 +23,7 @@ const Navbar = () => {
               <Link to="/dashboard" className="nav-link">Dashboard</Link>
               <Link to="/profile" className="nav-link">Profile</Link>
               <div className="credits-badge">
-                ⚡ {user?.credits_balance || 0} credits
+                {user?.credits_balance || 0} credits
               </div>
               <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
