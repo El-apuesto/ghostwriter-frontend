@@ -39,6 +39,14 @@ const FictionForm = () => {
     novel: 100
   };
 
+  // SAFETY CHECK: Redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      console.error('❌ No user found, redirecting to login');
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
   // Load saved draft on mount
   useEffect(() => {
     const savedDraft = localStorage.getItem('fictionDraft');
@@ -184,7 +192,8 @@ const FictionForm = () => {
 
     // Check credits
     const cost = creditCosts[length];
-    console.log('💰 Credit check:', { cost, balance: user?.credits_balance, user });
+    const userCredits = user?.credits_balance || 0;
+    console.log('💰 Credit check:', { cost, balance: userCredits, user });
     
     if (!user) {
       setError('You must be logged in to generate stories');
@@ -192,8 +201,8 @@ const FictionForm = () => {
       return;
     }
 
-    if (user.credits_balance < cost) {
-      const errorMsg = `Insufficient credits. Need ${cost} credits, you have ${user.credits_balance}.`;
+    if (userCredits < cost) {
+      const errorMsg = `Insufficient credits. Need ${cost} credits, you have ${userCredits}.`;
       setError(errorMsg);
       console.error('❌', errorMsg);
       return;
@@ -243,6 +252,15 @@ const FictionForm = () => {
       setLoading(false);
     }
   };
+
+  // SAFETY CHECK: Don't render form until user is loaded
+  if (!user) {
+    return (
+      <div className="container" style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>Loading user data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ padding: '2rem 0', maxWidth: '900px' }}>
