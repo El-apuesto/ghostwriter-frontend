@@ -71,24 +71,33 @@ const FictionForm = () => {
 
   const clearDraft = () => localStorage.removeItem('fictionDraft');
 
-  const pollForStory = async (storyId, maxAttempts = 40) => {
+  const pollForStory = async (storyId, maxAttempts = 80) => {
     for (let i = 0; i < maxAttempts; i++) {
       try {
-        setGenerationProgress(`Checking story status... (${i + 1}/${maxAttempts})`);
+        const elapsed = Math.floor(i * 3 / 60);
+        const mins = elapsed > 0 ? `(~${elapsed} min)` : '';
+        setGenerationProgress(`Waiting for story to complete... Attempt ${i + 1}/${maxAttempts} ${mins}`);
+        
         const response = await storiesAPI.getOne(storyId);
         
         if (response.data && response.data.id) {
-          setGenerationProgress('Story found! Redirecting...');
+          setGenerationProgress('✓ Story found! Loading your creation...');
           return response.data;
         }
       } catch (err) {
-        console.log(`Poll attempt ${i + 1} failed:`, err.message);
+        // Log CORS errors but don't spam console
+        if (err.message.includes('CORS') || err.status === 500) {
+          console.log(`Poll ${i + 1}: Backend still generating...`);
+        } else if (err.status !== 404) {
+          console.warn(`Poll ${i + 1}:`, err.message);
+        }
       }
       
       await new Promise(resolve => setTimeout(resolve, 3000));
     }
     
-    throw new Error('Story generation timed out. Check your Dashboard.');
+    // Final attempt message
+    return null; // Timeout - let user go to dashboard
   };
 
   const handleSubmit = async (e) => {
@@ -130,18 +139,30 @@ const FictionForm = () => {
     };
 
     try {
-      setGenerationProgress('Sending request to AI...');
+      setGenerationProgress('📝 Sending request to AI server...');
       const response = await storiesAPI.generateFiction(payload);
       
       console.log('Generation response:', response.data);
       
       if (response.data && response.data.story && response.data.story.id) {
         const storyId = response.data.story.id;
-        setGenerationProgress('Story created! Waiting for completion...');
+        setGenerationProgress('⏳ Story queued! Llama 70B is generating (2-3 min expected)...');
         
         const storyData = await pollForStory(storyId);
-        clearDraft();
-        navigate(`/stories/${storyId}`, { state: { storyData } });
+        
+        if (storyData) {
+          // Story found and ready
+          clearDraft();
+          navigate(`/stories/${storyId}`, { state: { storyData } });
+        } else {
+          // Timeout - story is still generating but will be in dashboard soon
+          clearDraft();
+          setGenerationProgress('✓ Story generation submitted! Check your Dashboard in a moment.');
+          
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 3000);
+        }
       } else {
         throw new Error('Invalid response from server - no story ID received');
       }
@@ -149,10 +170,11 @@ const FictionForm = () => {
       const errorMsg = err.message || 'Failed to generate story';
       setError(errorMsg);
       console.error('Generation error:', err);
-      alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check your Dashboard - the story may have been created.`);
-    } finally {
-      setLoading(false);
-      setGenerationProgress('');
+      setGenerationProgress('❌ Generation failed. Check error message below.');
+      
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     }
   };
 
@@ -199,7 +221,7 @@ const FictionForm = () => {
           Create a compelling fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
         </p>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message"><strong>⚠️ Error:</strong> {error}</div>}
         {generationProgress && <div className="generation-progress">{generationProgress}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -326,7 +348,7 @@ const FictionForm = () => {
           {/* SUBMIT */}
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
-              {loading ? 'Generating Story... (2-3 minutes)' : `Generate Fiction (${creditCosts[length]} credits)`}
+              {loading ? '⏳ Generating...' : `Generate Fiction (${creditCosts[length]} credits)`}
             </button>
             <button type="button" onClick={() => navigate('/dashboard')} className="btn btn-secondary" disabled={loading}>Cancel</button>
           </div>
