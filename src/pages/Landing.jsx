@@ -20,7 +20,7 @@ const Landing = () => {
       <section className="hero">
         <div className="hero-content">
           <img 
-            src="/ghostwriter-logo.webp" 
+            src="/logo.PNG" 
             alt="GhostWriter Logo" 
             style={{
               width: '400px',
