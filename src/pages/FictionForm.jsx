@@ -9,6 +9,7 @@ const FictionForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [saveStatus, setSaveStatus] = useState('');
+  const [generationProgress, setGenerationProgress] = useState('');
 
   const [premise, setPremise] = useState('');
   const [length, setLength] = useState('sample');
@@ -69,9 +70,30 @@ const FictionForm = () => {
 
   const clearDraft = () => localStorage.removeItem('fictionDraft');
 
+  const pollForStory = async (storyId, maxAttempts = 40) => {
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        setGenerationProgress(`Checking story status... (${i + 1}/${maxAttempts})`);
+        const response = await storiesAPI.getOne(storyId);
+        
+        if (response.data && response.data.id) {
+          setGenerationProgress('Story found! Redirecting...');
+          return response.data;
+        }
+      } catch (err) {
+        console.log(`Poll attempt ${i + 1} failed:`, err.message);
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    
+    throw new Error('Story generation timed out. Check your Dashboard.');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setGenerationProgress('');
 
     const cost = creditCosts[length];
     const userCredits = user?.credits_balance || 0;
@@ -107,22 +129,29 @@ const FictionForm = () => {
     };
 
     try {
+      setGenerationProgress('Sending request to AI...');
       const response = await storiesAPI.generateFiction(payload);
       
-      if (response.data && response.data.story) {
-        const storyData = response.data.story;
+      console.log('Generation response:', response.data);
+      
+      if (response.data && response.data.story && response.data.story.id) {
+        const storyId = response.data.story.id;
+        setGenerationProgress('Story created! Waiting for completion...');
+        
+        const storyData = await pollForStory(storyId);
         clearDraft();
-        navigate(`/stories/${storyData.id}`, { state: { storyData } });
+        navigate(`/stories/${storyId}`, { state: { storyData } });
       } else {
-        clearDraft();
-        navigate('/dashboard');
+        throw new Error('Invalid response from server - no story ID received');
       }
     } catch (err) {
       const errorMsg = err.message || 'Failed to generate story';
       setError(errorMsg);
-      alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check console for details.`);
+      console.error('Generation error:', err);
+      alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check your Dashboard - the story may have been created.`);
     } finally {
       setLoading(false);
+      setGenerationProgress('');
     }
   };
 
@@ -145,6 +174,7 @@ const FictionForm = () => {
       </p>
 
       {error && <div className="error-message" style={{ marginBottom: '1rem', padding: '1rem', background: '#ff000020', border: '1px solid #ff0000', borderRadius: '8px', color: '#ff6b6b' }}>{error}</div>}
+      {generationProgress && <div style={{ marginBottom: '1rem', padding: '1rem', background: 'rgba(0, 255, 249, 0.1)', border: '1px solid var(--cyan)', borderRadius: '8px', color: 'var(--cyan)' }}>{generationProgress}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
