@@ -1,174 +1,207 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import api from '../utils/api'
-import LoadingOverlay from '../components/LoadingOverlay'
-import '../styles/StoryDetail.css'
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { storiesAPI } from '../utils/api';
 
-function StoryDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { user } = useAuth()
-  const [story, setStory] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [generatingExtra, setGeneratingExtra] = useState(null)
-  const [error, setError] = useState('')
+const StoryDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [story, setStory] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (location.state?.storyData) {
-      setStory(location.state.storyData)
-      setLoading(false)
-      setError('')
-    } else {
-      fetchStory()
-    }
-  }, [id, location.state])
-
-  const fetchStory = async () => {
-    try {
-      setLoading(true)
-      const response = await api.get(`/stories/${id}`)
-      setStory(response.data)
-      setError('')
-    } catch (err) {
-      setError('Failed to load story')
-      console.error('Error fetching story:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const generateExtra = async (extraType, coverType = null) => {
-    setGeneratingExtra(extraType)
-    try {
-      let response
-      switch (extraType) {
-        case 'ebook_cover':
-        case 'print_cover':
-          response = await api.post(`/extras/cover?story_id=${id}&cover_type=${coverType}`)
-          break
-        case 'epub':
-          response = await api.post(`/extras/epub/${id}`)
-          break
-        case 'mobi':
-          response = await api.post(`/extras/mobi/${id}`)
-          break
-        case 'pdf':
-          response = await api.post(`/extras/pdf/${id}`)
-          break
-        case 'blurb':
-          response = await api.post(`/extras/blurb/${id}`)
-          break
-        default:
-          throw new Error('Unknown extra type')
+    const fetchStory = async () => {
+      if (!id) {
+        setError('No story ID provided');
+        setLoading(false);
+        return;
       }
-      
-      alert(`${extraType} generated successfully!`)
-      fetchStory()
-    } catch (err) {
-      alert(`Failed to generate ${extraType}: ${err.response?.data?.detail || err.message}`)
-      console.error(`Error generating ${extraType}:`, err)
-    } finally {
-      setGeneratingExtra(null)
-    }
-  }
 
-  const renderContent = () => {
-    if (story.story_type === 'fiction' && typeof story.content === 'object') {
-      return (
-        <div className="fiction-content">
-          {story.content.chapters && story.content.chapters.length > 0 && (
-            <section className="chapters-section">
-              <h3>Chapters</h3>
-              {story.content.chapters.map((chapter, idx) => (
-                <div key={idx} className="chapter">
-                  <h4>Chapter {idx + 1}: {chapter.title}</h4>
-                  <div className="chapter-content">{chapter.content}</div>
-                </div>
-              ))}
-            </section>
-          )}
-        </div>
-      )
-    } else {
-      return <div className="biography-content"><div className="content-text">{story.content}</div></div>
-    }
-  }
-
-  if (loading) return <LoadingOverlay message="Loading story..." />
-  if (error || !story) return <div className="story-detail error-container"><h2>Story not found</h2><button onClick={() => navigate('/stories')} className="btn-primary">Back to Library</button></div>
-
-  return (
-    <div className="story-detail">
-      {generatingExtra && <LoadingOverlay message={`Generating ${generatingExtra}...`} />}
-      
-      <div className="story-header">
-        <button onClick={() => navigate('/stories')} className="btn-back">Back to Library</button>
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await storiesAPI.getOne(id);
         
-        <div className="header-content">
-          <span className={`story-type-badge ${story.story_type}`}>{story.story_type === 'fiction' ? 'Fiction' : 'Biography'}</span>
-          <h1>{story.title}</h1>
-          <div className="meta-info">
-            <span>{new Date(story.created_at).toLocaleDateString()}</span>
-            <span>{story.length_type}</span>
-            <span>{story.credits_cost} credits</span>
+        if (!data) {
+          throw new Error('Story not found');
+        }
+        
+        setStory(data);
+      } catch (err) {
+        console.error('Error fetching story:', err);
+        setError(err.message || 'Failed to load story');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStory();
+  }, [id]);
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this story?')) {
+      return;
+    }
+
+    try {
+      await storiesAPI.delete(id);
+      navigate('/');
+    } catch (err) {
+      console.error('Error deleting story:', err);
+      setError('Failed to delete story');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600">Loading story...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Error</h2>
+            <p className="text-red-600 mb-4">{error}</p>
+            <Link
+              to="/"
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Back to Home
+            </Link>
           </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="story-body">{renderContent()}</div>
+  if (!story) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-yellow-800 mb-2">Story Not Found</h2>
+            <p className="text-yellow-600 mb-4">The story you're looking for doesn't exist.</p>
+            <Link
+              to="/"
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-      <div className="extras-section">
-        <h2>Story Extras</h2>
-        <p className="extras-subtitle">Enhance your story with covers, exports, and marketing content</p>
-        
-        <div className="extras-grid">
-          <div className="extra-card">
-            <h3>eBook Cover</h3>
-            <p>Digital book cover (1600x2400px)</p>
-            <div className="extra-cost">10 credits</div>
-            {story.has_ebook_cover ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('ebook_cover', 'ebook')} disabled={generatingExtra} className="btn-generate">Generate</button>}
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  {story.title || 'Untitled Story'}
+                </h1>
+                <div className="flex flex-wrap gap-2">
+                  {story.genre && (
+                    <span className="inline-block bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">
+                      {story.genre}
+                    </span>
+                  )}
+                  {story.theme && (
+                    <span className="inline-block bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">
+                      {story.theme}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Link
+                  to="/"
+                  className="bg-white text-blue-600 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Back
+                </Link>
+                <button
+                  onClick={handleDelete}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="extra-card">
-            <h3>Print Cover</h3>
-            <p>Print-ready cover with spine</p>
-            <div className="extra-cost">15 credits</div>
-            {story.has_print_cover ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('print_cover', 'print')} disabled={generatingExtra} className="btn-generate">Generate</button>}
-          </div>
+          {/* Story Content */}
+          <div className="px-8 py-8">
+            {story.status === 'generating' && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-blue-800">
+                  Story is still being generated. Please refresh in a moment.
+                </p>
+              </div>
+            )}
 
-          <div className="extra-card">
-            <h3>ePub Export</h3>
-            <p>Standard eBook format</p>
-            <div className="extra-cost">5 credits</div>
-            {story.has_epub ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('epub')} disabled={generatingExtra} className="btn-generate">Generate</button>}
-          </div>
+            {story.status === 'failed' && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-800">
+                  Story generation failed. Please try again.
+                </p>
+              </div>
+            )}
 
-          <div className="extra-card">
-            <h3>MOBI Export</h3>
-            <p>Kindle-compatible format</p>
-            <div className="extra-cost">5 credits</div>
-            {story.has_mobi ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('mobi')} disabled={generatingExtra} className="btn-generate">Generate</button>}
-          </div>
+            {story.content ? (
+              <div className="prose max-w-none">
+                <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                  {story.content}
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No content available yet.</p>
+            )}
 
-          <div className="extra-card">
-            <h3>KDP PDF</h3>
-            <p>Print-ready manuscript</p>
-            <div className="extra-cost">10 credits</div>
-            {story.has_pdf ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('pdf')} disabled={generatingExtra} className="btn-generate">Generate</button>}
-          </div>
+            {/* Metadata */}
+            {(story.setting || story.characters) && (
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Story Details</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {story.setting && (
+                    <div>
+                      <h3 className="font-medium text-gray-700 mb-1">Setting</h3>
+                      <p className="text-gray-600">{story.setting}</p>
+                    </div>
+                  )}
+                  {story.characters && (
+                    <div>
+                      <h3 className="font-medium text-gray-700 mb-1">Characters</h3>
+                      <p className="text-gray-600">{story.characters}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
-          <div className="extra-card">
-            <h3>Book Blurb</h3>
-            <p>Marketing description</p>
-            <div className="extra-cost">5 credits</div>
-            {story.has_blurb ? <span className="badge-complete">Generated</span> : <button onClick={() => generateExtra('blurb')} disabled={generatingExtra} className="btn-generate">Generate</button>}
+            {/* Timestamp */}
+            {story.created_at && (
+              <div className="mt-6 text-sm text-gray-500">
+                Created: {new Date(story.created_at).toLocaleString()}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StoryDetail
+export default StoryDetail;
