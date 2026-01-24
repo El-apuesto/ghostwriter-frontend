@@ -1,87 +1,82 @@
-import axios from 'axios';
-import { API_URL } from '../config';
+// API utility functions with proper error handling and CORS support
 
-// Create axios instance with base configuration
-const api = axios.create({
-  baseURL: API_URL,
-  timeout: 120000, // 120 seconds to handle Render free tier cold starts
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Request interceptor - Add JWT token to all requests
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Helper function to handle API responses
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `HTTP error! status: ${response.status}`);
   }
-);
-
-// Response interceptor - Handle errors globally
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // If 401 Unauthorized, clear token and redirect to login
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    
-    // Return formatted error
-    const errorMessage = error.response?.data?.detail || 
-                        error.response?.data?.message || 
-                        error.message || 
-                        'An unexpected error occurred';
-    
-    return Promise.reject({
-      message: errorMessage,
-      status: error.response?.status,
-      data: error.response?.data,
-    });
-  }
-);
-
-// Auth API calls
-export const authAPI = {
-  signup: (data) => api.post('/api/auth/signup', data),
-  login: (data) => api.post('/api/auth/login', data),
-  getMe: () => api.get('/api/auth/me'),
+  return response.json();
 };
 
-// Stories API calls
+// Helper function to make API calls with proper headers
+const apiCall = async (endpoint, options = {}) => {
+  const url = `${API_BASE_URL}${endpoint}`;
+  
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    const response = await fetch(url, config);
+    return await handleResponse(response);
+  } catch (error) {
+    console.error(`API call failed for ${endpoint}:`, error);
+    throw error;
+  }
+};
+
+// Stories API
 export const storiesAPI = {
-  generateFiction: (data) => api.post('/api/generate/fiction', data),
-  generateBiography: (data) => api.post('/api/generate/biography', data),
-  getAll: (limit = 50, offset = 0) => api.get(`/api/stories?limit=${limit}&offset=${offset}`),
-  getOne: (id) => api.get(`/api/stories/${id}`),
-  delete: (id) => api.delete(`/api/stories/${id}`),
+  // Get all stories
+  getAll: async () => {
+    return apiCall('/stories');
+  },
+
+  // Get a single story by ID
+  getOne: async (id) => {
+    if (!id) {
+      throw new Error('Story ID is required');
+    }
+    return apiCall(`/stories/${id}`);
+  },
+
+  // Create a new story
+  create: async (storyData) => {
+    return apiCall('/stories', {
+      method: 'POST',
+      body: JSON.stringify(storyData),
+    });
+  },
+
+  // Update a story
+  update: async (id, storyData) => {
+    if (!id) {
+      throw new Error('Story ID is required');
+    }
+    return apiCall(`/stories/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(storyData),
+    });
+  },
+
+  // Delete a story
+  delete: async (id) => {
+    if (!id) {
+      throw new Error('Story ID is required');
+    }
+    return apiCall(`/stories/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
-// Credits API calls
-export const creditsAPI = {
-  getPacks: () => api.get('/api/credits/packs'),
-  purchase: (packType) => api.post('/api/credits/purchase', { pack_type: packType }),
-  getBalance: () => api.get('/api/credits/balance'),
-  getTransactions: (limit = 50) => api.get(`/api/credits/transactions?limit=${limit}`),
+export default {
+  storiesAPI,
 };
-
-// Extras API calls
-export const extrasAPI = {
-  generateCover: (storyId, coverType, premium = false, style = 'dark') => 
-    api.post(`/api/extras/cover?story_id=${storyId}&cover_type=${coverType}&premium=${premium}&style=${style}`),
-  exportEpub: (storyId) => api.post(`/api/extras/epub/${storyId}`, null, { responseType: 'blob' }),
-  exportMobi: (storyId) => api.post(`/api/extras/mobi/${storyId}`, null, { responseType: 'blob' }),
-  exportPdf: (storyId) => api.post(`/api/extras/pdf/${storyId}`, null, { responseType: 'blob' }),
-  generateBlurb: (storyId) => api.post(`/api/extras/blurb/${storyId}`),
-  generateAuthorBio: (bioInfo) => api.post('/api/extras/author-bio', { bio_info: bioInfo }),
-};
-
-export default api;
