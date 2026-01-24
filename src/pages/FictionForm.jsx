@@ -1,357 +1,230 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { storiesAPI } from '../utils/api';
-import '../styles/fiction-form.css';
 
 const FictionForm = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [saveStatus, setSaveStatus] = useState('');
-  const [generationProgress, setGenerationProgress] = useState('');
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    genre: '',
+    theme: '',
+    characters: '',
+    setting: '',
+    length: 'short'
+  });
 
-  const [premise, setPremise] = useState('');
-  const [length, setLength] = useState('sample');
-  const [title, setTitle] = useState('');
-  const [writingStyle, setWritingStyle] = useState('');
-  const [genre, setGenre] = useState('');
-  const [setting, setSetting] = useState('');
-  const [tone, setTone] = useState('');
-  const [themes, setThemes] = useState(['']);
-  const [emulateAuthor, setEmulateAuthor] = useState('');
-  const [characters, setCharacters] = useState([{ name: '', role: '', description: '', quirks: [''] }]);
-  const [timeline, setTimeline] = useState([{ chapter: '', event: '', mood: '' }]);
-
-  const creditCosts = { sample: 0, novella: 50, novel: 100 };
-
-  useEffect(() => {
-    if (!user) navigate('/login');
-  }, [user, navigate]);
-
-  useEffect(() => {
-    const savedDraft = localStorage.getItem('fictionDraft');
-    if (savedDraft) {
-      try {
-        const draft = JSON.parse(savedDraft);
-        setPremise(draft.premise || '');
-        setLength(draft.length || 'sample');
-        setTitle(draft.title || '');
-        setWritingStyle(draft.writingStyle || '');
-        setGenre(draft.genre || '');
-        setSetting(draft.setting || '');
-        setTone(draft.tone || '');
-        setThemes(draft.themes || ['']);
-        setEmulateAuthor(draft.emulateAuthor || '');
-        setCharacters(draft.characters || [{ name: '', role: '', description: '', quirks: [''] }]);
-        setTimeline(draft.timeline || [{ chapter: '', event: '', mood: '' }]);
-      } catch (e) {
-        console.error('Failed to load draft:', e);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => saveDraft(), 3000);
-    return () => clearTimeout(timer);
-  }, [premise, length, title, writingStyle, genre, setting, tone, themes, emulateAuthor, characters, timeline]);
-
-  const saveDraft = () => {
-    try {
-      const draft = { premise, length, title, writingStyle, genre, setting, tone, themes, emulateAuthor, characters, timeline, savedAt: new Date().toISOString() };
-      localStorage.setItem('fictionDraft', JSON.stringify(draft));
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus(''), 2000);
-    } catch (e) {
-      console.error('Save draft failed:', e);
-      setSaveStatus('');
-    }
-  };
-
-  const clearDraft = () => localStorage.removeItem('fictionDraft');
-
-  const pollForStory = async (storyId, maxAttempts = 80) => {
-    for (let i = 0; i < maxAttempts; i++) {
-      try {
-        const elapsed = Math.floor(i * 3 / 60);
-        const mins = elapsed > 0 ? `(~${elapsed} min)` : '';
-        setGenerationProgress(`Waiting for story to complete... Attempt ${i + 1}/${maxAttempts} ${mins}`);
-        
-        const response = await storiesAPI.getOne(storyId);
-        
-        if (response.data && response.data.id) {
-          setGenerationProgress('Story found! Loading your creation...');
-          return response.data;
-        }
-      } catch (err) {
-        // Log CORS errors but don't spam console
-        if (err.message.includes('CORS') || err.status === 500) {
-          console.log(`Poll ${i + 1}: Backend still generating...`);
-        } else if (err.status !== 404) {
-          console.warn(`Poll ${i + 1}:`, err.message);
-        }
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 3000));
-    }
-    
-    // Final attempt message
-    return null; // Timeout - let user go to dashboard
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setGenerationProgress('');
-
-    const cost = creditCosts[length];
-    const userCredits = user?.credits_balance || 0;
-    
-    if (!user) {
-      setError('You must be logged in to generate stories');
-      return;
-    }
-
-    if (userCredits < cost) {
-      setError(`Insufficient credits. Need ${cost} credits, you have ${userCredits}.`);
-      return;
-    }
-
     setLoading(true);
-
-    const cleanCharacters = characters.filter(c => c.name).map(c => ({ ...c, quirks: c.quirks.filter(q => q) }));
-    const cleanTimeline = timeline.filter(t => t.event);
-    const cleanThemes = themes.filter(t => t);
-
-    const payload = {
-      premise,
-      story_length: length,
-      ...(title && { title }),
-      ...(writingStyle && { writing_style: writingStyle }),
-      ...(genre && { genre }),
-      ...(setting && { setting }),
-      ...(tone && { tone }),
-      ...(cleanThemes.length && { themes: cleanThemes }),
-      ...(emulateAuthor && { emulate_author: emulateAuthor }),
-      ...(cleanCharacters.length && { characters: cleanCharacters }),
-      ...(cleanTimeline.length && { timeline: cleanTimeline })
-    };
+    setError(null);
 
     try {
-      setGenerationProgress('Sending request to AI server...');
-      const response = await storiesAPI.generateFiction(payload);
+      // Submit the story generation request
+      const response = await storiesAPI.create(formData);
       
-      console.log('Generation response:', response.data);
-      
-      if (response.data && response.data.story && response.data.story.id) {
-        const storyId = response.data.story.id;
-        setGenerationProgress('Story queued! Llama 70B is generating (2-3 min expected)...');
-        
-        const storyData = await pollForStory(storyId);
-        
-        if (storyData) {
-          // Story found and ready
-          clearDraft();
-          setLoading(false); // RESET LOADING
-          navigate(`/stories/${storyId}`, { state: { storyData } });
-        } else {
-          // Timeout - story is still generating but will be in dashboard soon
-          clearDraft();
-          setGenerationProgress('Story generation submitted! Check your Dashboard in a moment.');
-          setLoading(false); // RESET LOADING
-          
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 3000);
-        }
-      } else {
-        throw new Error('Invalid response from server - no story ID received');
+      if (!response || !response.id) {
+        throw new Error('Failed to create story - no ID returned');
       }
+
+      const storyId = response.id;
+      console.log('Story created with ID:', storyId);
+
+      // Poll for story completion with improved logic
+      const maxAttempts = 60; // 60 attempts = 5 minutes max
+      const pollInterval = 5000; // 5 seconds between polls
+      let attempts = 0;
+      
+      const pollStory = async () => {
+        try {
+          attempts++;
+          console.log(`Polling attempt ${attempts}/${maxAttempts}`);
+          
+          const story = await storiesAPI.getOne(storyId);
+          
+          if (story && story.status === 'completed' && story.content) {
+            // Story is ready - navigate to detail page
+            console.log('Story completed successfully');
+            setLoading(false);
+            navigate(`/story/${storyId}`);
+            return;
+          }
+          
+          if (story && story.status === 'failed') {
+            throw new Error('Story generation failed');
+          }
+          
+          // Continue polling if not completed and haven't exceeded max attempts
+          if (attempts < maxAttempts) {
+            setTimeout(pollStory, pollInterval);
+          } else {
+            throw new Error('Story generation timed out - please check back later');
+          }
+        } catch (pollError) {
+          console.error('Polling error:', pollError);
+          
+          // If it's a 404, the story might not be saved yet - retry
+          if (pollError.message.includes('404') && attempts < maxAttempts) {
+            console.log('Story not found yet, will retry...');
+            setTimeout(pollStory, pollInterval);
+          } else {
+            // Real error - stop polling
+            setLoading(false);
+            setError(pollError.message || 'Failed to check story status');
+          }
+        }
+      };
+
+      // Start polling after a short delay to give backend time to save
+      setTimeout(pollStory, 2000);
+
     } catch (err) {
-      const errorMsg = err.message || 'Failed to generate story';
-      setError(errorMsg);
-      console.error('Generation error:', err);
-      setGenerationProgress('Generation failed. Check error message below.');
-      setLoading(false); // RESET LOADING
+      console.error('Submit error:', err);
+      setLoading(false); // CRITICAL FIX: Always set loading to false on error
+      setError(err.message || 'Failed to generate story');
     }
   };
 
-  const addTheme = () => setThemes([...themes, '']);
-  const updateTheme = (index, value) => {
-    const newThemes = [...themes];
-    newThemes[index] = value;
-    setThemes(newThemes);
-  };
-  const removeTheme = (index) => setThemes(themes.filter((_, i) => i !== index));
-
-  const addCharacter = () => setCharacters([...characters, { name: '', role: '', description: '', quirks: [''] }]);
-  const updateCharacter = (index, field, value) => {
-    const newCharacters = [...characters];
-    newCharacters[index][field] = value;
-    setCharacters(newCharacters);
-  };
-  const removeCharacter = (index) => setCharacters(characters.filter((_, i) => i !== index));
-
-  const addTimelineEvent = () => setTimeline([...timeline, { chapter: '', event: '', mood: '' }]);
-  const updateTimelineEvent = (index, field, value) => {
-    const newTimeline = [...timeline];
-    newTimeline[index][field] = value;
-    setTimeline(newTimeline);
-  };
-  const removeTimelineEvent = (index) => setTimeline(timeline.filter((_, i) => i !== index));
-
-  if (!user) {
-    return <div className="fiction-form-container" style={{ padding: '2rem', textAlign: 'center' }}><p>Loading user data...</p></div>;
-  }
-
   return (
-    <div className="fiction-form-page">
-      <div className="fiction-form-container">
-        <div className="form-header">
-          <h1>Generate Fiction Story</h1>
-          <div className="form-actions">
-            {saveStatus === 'saved' && <span className="save-status saved">Draft saved</span>}
-            {saveStatus === 'saving' && <span className="save-status saving">Saving...</span>}
-            <button type="button" onClick={saveDraft} className="btn btn-secondary btn-sm">Save Draft</button>
-          </div>
-        </div>
-        <p className="form-subtitle">
-          Create a compelling fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
-        </p>
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">
+            Generate Your Story
+          </h1>
 
-        {error && <div className="error-message"><strong>Error:</strong> {error}</div>}
-        {generationProgress && <div className="generation-progress">{generationProgress}</div>}
-
-        <form onSubmit={handleSubmit}>
-          {/* PREMISE SECTION */}
-          <div className="form-section">
-            <h2 className="form-section-title">Story Premise</h2>
-            <div className="form-group">
-              <label>Premise <span className="required">*</span></label>
-              <textarea value={premise} onChange={(e) => setPremise(e.target.value)} placeholder="Enter your story premise. Example: A detective discovers reality is a simulation..." minLength={10} maxLength={2000} required />
-              <small>{premise.length}/2000 characters</small>
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-800">{error}</p>
             </div>
-          </div>
+          )}
 
-          {/* BASIC SETTINGS */}
-          <div className="form-section">
-            <h2 className="form-section-title">Basic Settings</h2>
-            
-            <div className="input-row">
-              <div className="form-group">
-                <label>Story Length <span className="required">*</span></label>
-                <select value={length} onChange={(e) => setLength(e.target.value)} required>
-                  <option value="sample">Sample (FREE)</option>
-                  <option value="novella">Novella (50 credits)</option>
-                  <option value="novel">Novel (100 credits)</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Title (Optional)</label>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Leave blank for AI-generated title" />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-2">
+                Genre *
+              </label>
+              <select
+                id="genre"
+                name="genre"
+                value={formData.genre}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+              >
+                <option value="">Select a genre</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="sci-fi">Science Fiction</option>
+                <option value="mystery">Mystery</option>
+                <option value="romance">Romance</option>
+                <option value="thriller">Thriller</option>
+                <option value="horror">Horror</option>
+              </select>
             </div>
 
-            <div className="input-row">
-              <div className="form-group">
-                <label>Writing Style (Optional)</label>
-                <select value={writingStyle} onChange={(e) => setWritingStyle(e.target.value)}>
-                  <option value="">-- Select Style --</option>
-                  <option value="sarcastic_deadpan">Sarcastic Deadpan</option>
-                  <option value="gothic_horror">Gothic Horror</option>
-                  <option value="dark_comedy">Dark Comedy</option>
-                  <option value="noir">Noir</option>
-                  <option value="cyberpunk">Cyberpunk</option>
-                  <option value="modern">Modern</option>
-                  <option value="classic">Classic</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Genre (Optional)</label>
-                <input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} placeholder="e.g., Science Fiction, Mystery, Romance" />
-              </div>
+            <div>
+              <label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">
+                Theme *
+              </label>
+              <input
+                type="text"
+                id="theme"
+                name="theme"
+                value={formData.theme}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                placeholder="e.g., redemption, love conquers all, coming of age"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+              />
             </div>
-          </div>
 
-          {/* CONTEXT & TONE */}
-          <div className="form-section">
-            <h2 className="form-section-title">Context & Tone</h2>
-            
-            <div className="form-group">
-              <label>Setting (Optional)</label>
-              <input type="text" value={setting} onChange={(e) => setSetting(e.target.value)} placeholder="Where and when does the story take place?" />
+            <div>
+              <label htmlFor="characters" className="block text-sm font-medium text-gray-700 mb-2">
+                Main Characters
+              </label>
+              <textarea
+                id="characters"
+                name="characters"
+                value={formData.characters}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="Describe your main characters (optional)"
+                rows="3"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+              />
             </div>
-            
-            <div className="form-group">
-              <label>Tone (Optional)</label>
-              <input type="text" value={tone} onChange={(e) => setTone(e.target.value)} placeholder="e.g., suspenseful, darkly humorous, melancholic" />
-            </div>
-            
-            <div className="form-group">
-              <label>Emulate Author (Optional)</label>
-              <input type="text" value={emulateAuthor} onChange={(e) => setEmulateAuthor(e.target.value)} placeholder="e.g., Write like Stephen King or Douglas Adams" />
-            </div>
-          </div>
 
-          {/* THEMES */}
-          <div className="form-section">
-            <h2 className="form-section-title">Themes</h2>
-            <div className="multi-input-group">
-              {themes.map((theme, i) => (
-                <div key={i} className="input-row">
-                  <input type="text" value={theme} onChange={(e) => updateTheme(i, e.target.value)} placeholder={`Theme ${i + 1}`} />
-                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTheme(i)}>x</button>}
-                </div>
-              ))}
-              <button type="button" className="add-button" onClick={addTheme}>+ Add Theme</button>
+            <div>
+              <label htmlFor="setting" className="block text-sm font-medium text-gray-700 mb-2">
+                Setting
+              </label>
+              <input
+                type="text"
+                id="setting"
+                name="setting"
+                value={formData.setting}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder="e.g., medieval castle, futuristic city, small town"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+              />
             </div>
-          </div>
 
-          {/* CHARACTERS */}
-          <div className="form-section">
-            <h2 className="form-section-title">Characters (Optional)</h2>
-            <div className="multi-input-group">
-              {characters.map((char, i) => (
-                <div key={i}>
-                  <div className="input-row">
-                    <input type="text" placeholder="Character name" value={char.name} onChange={(e) => updateCharacter(i, 'name', e.target.value)} />
-                    <input type="text" placeholder="Role" value={char.role} onChange={(e) => updateCharacter(i, 'role', e.target.value)} />
-                    {i > 0 && <button type="button" className="remove-button" onClick={() => removeCharacter(i)}>x</button>}
-                  </div>
-                  <input type="text" placeholder="Description" value={char.description} onChange={(e) => updateCharacter(i, 'description', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem' }} />
-                </div>
-              ))}
-              <button type="button" className="add-button" onClick={addCharacter}>+ Add Character</button>
+            <div>
+              <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
+                Story Length
+              </label>
+              <select
+                id="length"
+                name="length"
+                value={formData.length}
+                onChange={handleChange}
+                disabled={loading}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+              >
+                <option value="short">Short (500-1000 words)</option>
+                <option value="medium">Medium (1000-2000 words)</option>
+                <option value="long">Long (2000+ words)</option>
+              </select>
             </div>
-          </div>
 
-          {/* TIMELINE */}
-          <div className="form-section">
-            <h2 className="form-section-title">Plot Timeline (Optional)</h2>
-            <div className="multi-input-group">
-              {timeline.map((event, i) => (
-                <div key={i} className="input-row">
-                  <input type="text" placeholder="Chapter #" value={event.chapter} onChange={(e) => updateTimelineEvent(i, 'chapter', e.target.value)} />
-                  <input type="text" placeholder="Event" value={event.event} onChange={(e) => updateTimelineEvent(i, 'event', e.target.value)} />
-                  <input type="text" placeholder="Mood" value={event.mood} onChange={(e) => updateTimelineEvent(i, 'mood', e.target.value)} />
-                  {i > 0 && <button type="button" className="remove-button" onClick={() => removeTimelineEvent(i)}>x</button>}
-                </div>
-              ))}
-              <button type="button" className="add-button" onClick={addTimelineEvent}>+ Add Event</button>
-            </div>
-          </div>
-
-          {/* SUBMIT */}
-          <div className="form-actions">
-            <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
-              {loading ? 'Generating...' : `Generate Fiction (${creditCosts[length]} credits)`}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generating your story...
+                </span>
+              ) : (
+                'Generate Story'
+              )}
             </button>
-            <button type="button" onClick={() => navigate('/dashboard')} className="btn btn-secondary" disabled={loading}>Cancel</button>
-          </div>
-        </form>
+          </form>
+
+          {loading && (
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-blue-800 text-sm">
+                This may take a few minutes. Please don't close this window.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
