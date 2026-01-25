@@ -41,7 +41,8 @@ const Signup = () => {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>👻 Join GhostWriter</h1>
+          <img src="/logo.PNG" alt="GhostWriter Logo" style={{ width: '120px', marginBottom: '1rem' }} />
+          <h1>Join GhostWriter</h1>
           <p>Create your account and start writing</p>
         </div>
 
