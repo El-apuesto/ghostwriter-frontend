@@ -21,9 +21,11 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await authAPI.getMe();
-          setUser(response.data);
+          // Backend returns user data directly, not wrapped in { data: ... }
+          const userData = await authAPI.getMe();
+          setUser(userData);
         } catch (err) {
+          console.error('Failed to fetch user:', err);
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }
@@ -36,8 +38,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setError(null);
     try {
+      // Backend returns { access_token, token_type, user } at root level
       const response = await authAPI.login({ email, password });
-      const { access_token, user: userData } = response.data;
+      const { access_token, user: userData } = response;
       
       localStorage.setItem('token', access_token);
       localStorage.setItem('user', JSON.stringify(userData));
@@ -54,8 +57,9 @@ export const AuthProvider = ({ children }) => {
   const signup = async (name, email, password) => {
     setError(null);
     try {
+      // Backend returns { access_token, token_type, user } at root level
       const response = await authAPI.signup({ name, email, password });
-      const { access_token, user: userData } = response.data;
+      const { access_token, user: userData } = response;
       
       localStorage.setItem('token', access_token);
       localStorage.setItem('user', JSON.stringify(userData));
