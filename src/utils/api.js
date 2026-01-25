@@ -32,6 +32,44 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
+// Auth API
+export const authAPI = {
+  // Login
+  login: async (email, password) => {
+    return apiCall('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  },
+
+  // Signup
+  signup: async (username, email, password) => {
+    return apiCall('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ username, email, password }),
+    });
+  },
+
+  // Get current user
+  getMe: async (token) => {
+    return apiCall('/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  },
+
+  // Logout (if needed)
+  logout: async (token) => {
+    return apiCall('/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  },
+};
+
 // Stories API
 export const storiesAPI = {
   // Get all stories
@@ -78,5 +116,6 @@ export const storiesAPI = {
 };
 
 export default {
+  authAPI,
   storiesAPI,
 };
