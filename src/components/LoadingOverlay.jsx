@@ -7,7 +7,7 @@ function LoadingOverlay() {
     "The AI is haunted... in a good way",
     "Crafting nightmares and punchlines...",
     "Your story is possessing the server...",
-    "The typewriter ghost is typing...",
+    "The typewriter is working...",
     "Consulting with dead authors...",
     "Bribing the muses with coffee..."
   ]
@@ -24,7 +24,9 @@ function LoadingOverlay() {
   return (
     <div className="loading-overlay">
       <div className="loading-content">
-        <div className="ghost-loader">👻</div>
+        <div className="ghost-loader">
+          <div className="spinner"></div>
+        </div>
         <p className="loading-text">{message}</p>
         <div className="loading-bar">
           <div className="loading-progress"></div>
