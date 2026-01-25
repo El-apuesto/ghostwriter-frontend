@@ -1,12 +1,10 @@
-API
-
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || `HTTP error! status: ${response.status}`);
+    throw new Error(error.detail || error.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
 };
@@ -34,24 +32,33 @@ const apiCall = async (endpoint, options = {}) => {
 
 // Auth API
 export const authAPI = {
-  // Login
-  login: async (email, password) => {
+  // Login - accepts object { email, password }
+  login: async ({ email, password }) => {
     return apiCall('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
   },
 
-  // Signup
-  signup: async (username, email, password) => {
+  // Signup - accepts object { name, email, password }
+  signup: async ({ name, email, password }) => {
     return apiCall('/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ 
+        full_name: name, // Backend expects 'full_name'
+        email, 
+        password 
+      }),
     });
   },
 
-  // Get current user
-  getMe: async (token) => {
+  // Get current user - reads token from localStorage
+  getMe: async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+    
     return apiCall('/auth/me', {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -60,7 +67,12 @@ export const authAPI = {
   },
 
   // Logout (if needed)
-  logout: async (token) => {
+  logout: async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return;
+    }
+    
     return apiCall('/auth/logout', {
       method: 'POST',
       headers: {
@@ -74,7 +86,12 @@ export const authAPI = {
 export const storiesAPI = {
   // Get all stories
   getAll: async () => {
-    return apiCall('/stories');
+    const token = localStorage.getItem('token');
+    return apiCall('/stories', {
+      headers: token ? {
+        'Authorization': `Bearer ${token}`,
+      } : {},
+    });
   },
 
   // Get a single story by ID
@@ -82,13 +99,26 @@ export const storiesAPI = {
     if (!id) {
       throw new Error('Story ID is required');
     }
-    return apiCall(`/stories/${id}`);
+    const token = localStorage.getItem('token');
+    return apiCall(`/stories/${id}`, {
+      headers: token ? {
+        'Authorization': `Bearer ${token}`,
+      } : {},
+    });
   },
 
   // Create a new story
   create: async (storyData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication required to create stories');
+    }
+    
     return apiCall('/stories', {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
       body: JSON.stringify(storyData),
     });
   },
@@ -98,8 +128,16 @@ export const storiesAPI = {
     if (!id) {
       throw new Error('Story ID is required');
     }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication required to update stories');
+    }
+    
     return apiCall(`/stories/${id}`, {
       method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
       body: JSON.stringify(storyData),
     });
   },
@@ -109,8 +147,16 @@ export const storiesAPI = {
     if (!id) {
       throw new Error('Story ID is required');
     }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication required to delete stories');
+    }
+    
     return apiCall(`/stories/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   },
 };
