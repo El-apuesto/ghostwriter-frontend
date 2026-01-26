@@ -129,6 +129,8 @@ const FictionForm = () => {
       ...(cleanTimeline.length && { timeline: cleanTimeline })
     };
 
+    console.log('Submitting payload:', payload);
+
     try {
       setGenerationProgress('Sending request to AI...');
       const response = await storiesAPI.create(payload);
@@ -146,9 +148,22 @@ const FictionForm = () => {
         throw new Error('Invalid response from server - no story ID received');
       }
     } catch (err) {
-      const errorMsg = err.message || 'Failed to generate story';
+      console.error('Full error object:', err);
+      
+      // Better error extraction
+      let errorMsg = 'Failed to generate story';
+      
+      if (typeof err === 'string') {
+        errorMsg = err;
+      } else if (err.message) {
+        errorMsg = err.message;
+      } else if (err.detail) {
+        errorMsg = err.detail;
+      } else if (err.error) {
+        errorMsg = typeof err.error === 'string' ? err.error : JSON.stringify(err.error);
+      }
+      
       setError(errorMsg);
-      console.error('Generation error:', err);
       alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check your Dashboard - the story may have been created.`);
     } finally {
       setLoading(false);
