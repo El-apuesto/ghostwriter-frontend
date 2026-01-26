@@ -103,7 +103,7 @@ export const storiesAPI = {
   },
 
   create: async (storyData) => {
-    return apiCall('/api/stories', {
+    return apiCall('/api/stories/generate', {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(storyData),
