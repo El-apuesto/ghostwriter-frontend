@@ -30,9 +30,19 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
+// Helper to get auth headers
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+  return {
+    'Authorization': `Bearer ${token}`,
+  };
+};
+
 // Auth API
 export const authAPI = {
-  // Login - accepts object { email, password }
   login: async ({ email, password }) => {
     return apiCall('/api/auth/login', {
       method: 'POST',
@@ -40,140 +50,184 @@ export const authAPI = {
     });
   },
 
-  // Signup - accepts object { name, email, password }
   signup: async ({ name, email, password }) => {
     return apiCall('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify({ 
-        full_name: name, // Backend expects 'full_name'
+        full_name: name,
         email, 
         password 
       }),
     });
   },
 
-  // Get current user - reads token from localStorage
   getMe: async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
     return apiCall('/api/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
   },
 
-  // Logout (if needed)
   logout: async () => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      return;
-    }
+    if (!token) return;
     
     return apiCall('/api/auth/logout', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
   },
 };
 
 // Credits API
 export const creditsAPI = {
-  // Get user's credit balance
   getBalance: async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-    
     return apiCall('/api/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
   },
 };
 
 // Stories API
 export const storiesAPI = {
-  // Get all stories
   getAll: async () => {
-    const token = localStorage.getItem('token');
     return apiCall('/api/stories', {
-      headers: token ? {
-        'Authorization': `Bearer ${token}`,
-      } : {},
+      headers: getAuthHeaders(),
     });
   },
 
-  // Get a single story by ID
   getOne: async (id) => {
-    if (!id) {
-      throw new Error('Story ID is required');
-    }
-    const token = localStorage.getItem('token');
+    if (!id) throw new Error('Story ID is required');
     return apiCall(`/api/stories/${id}`, {
-      headers: token ? {
-        'Authorization': `Bearer ${token}`,
-      } : {},
+      headers: getAuthHeaders(),
     });
   },
 
-  // Create a new story
   create: async (storyData) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Authentication required to create stories');
-    }
-    
     return apiCall('/api/stories', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(storyData),
     });
   },
 
-  // Update a story
   update: async (id, storyData) => {
-    if (!id) {
-      throw new Error('Story ID is required');
-    }
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Authentication required to update stories');
-    }
-    
+    if (!id) throw new Error('Story ID is required');
     return apiCall(`/api/stories/${id}`, {
       method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(storyData),
     });
   },
 
-  // Delete a story
   delete: async (id) => {
-    if (!id) {
-      throw new Error('Story ID is required');
-    }
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Authentication required to delete stories');
-    }
-    
+    if (!id) throw new Error('Story ID is required');
     return apiCall(`/api/stories/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
+    });
+  },
+
+  generateBiography: async (biographyData) => {
+    return apiCall('/api/stories/generate-biography', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(biographyData),
+    });
+  },
+};
+
+// Covers API
+export const coversAPI = {
+  generateBasic: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/cover/basic`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+
+  generateAI: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/cover/ai`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+
+  generatePrint: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/cover/print`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+};
+
+// Exports API
+export const exportsAPI = {
+  toEPUB: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/export/epub`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+
+  toPDF: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/export/pdf`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+
+  toMOBI: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/export/mobi`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+};
+
+// Extras API
+export const extrasAPI = {
+  generateBlurb: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/blurb`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+
+  generateAuthorBio: async (storyId) => {
+    if (!storyId) throw new Error('Story ID is required');
+    return apiCall(`/api/stories/${storyId}/author-bio`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+  },
+};
+
+// Payments API
+export const paymentsAPI = {
+  getPackages: async () => {
+    return apiCall('/api/payments/packages');
+  },
+
+  createCheckout: async (packageName) => {
+    if (!packageName) throw new Error('Package name is required');
+    return apiCall('/api/payments/create-checkout-session', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ package: packageName }),
+    });
+  },
+
+  verifySession: async (sessionId) => {
+    if (!sessionId) throw new Error('Session ID is required');
+    return apiCall(`/api/payments/verify-session/${sessionId}`, {
+      headers: getAuthHeaders(),
     });
   },
 };
@@ -182,4 +236,8 @@ export default {
   authAPI,
   creditsAPI,
   storiesAPI,
+  coversAPI,
+  exportsAPI,
+  extrasAPI,
+  paymentsAPI,
 };
