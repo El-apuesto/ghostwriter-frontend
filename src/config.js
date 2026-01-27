@@ -1,34 +1,38 @@
 // API Configuration
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Credit costs for different story types
+// Credit costs for different story types - MATCHES BACKEND
 export const CREDIT_COSTS = {
-  sample: 10,
-  novella: 25,
-  novel: 100,
-  short_memoir: 25,
-  standard_biography: 50,
-  comprehensive: 100,
-  ebook_cover_free: 0,
-  ebook_cover_premium: 10,
-  print_cover_free: 0,
-  print_cover_premium: 10,
-  epub: 5,
-  mobi: 5,
-  pdf: 5,
-  blurb: 2,
+  // Fiction
+  fiction_sample: 0,
+  fiction_novella: 50,
+  fiction_novel: 100,
+  
+  // Biography
+  biography_sample: 0,
+  biography_short_memoir: 50,
+  biography_standard: 75,
+  biography_comprehensive: 125,
+  
+  // Extras
+  ebook_cover: 10,
+  print_cover: 15,
+  epub_export: 5,
+  mobi_export: 5,
+  kdp_pdf: 10,
+  blurb: 5,
   author_bio: 3,
 };
 
-// Credit packs
+// Credit packs - MATCHES BACKEND (prices in cents converted to dollars)
 export const CREDIT_PACKS = {
-  micro: { name: 'Micro Pack', credits: 10, price: 1.50, bonus: 0 },
-  small: { name: 'Small Pack', credits: 25, price: 3.50, bonus: 0 },
-  medium: { name: 'Medium Pack', credits: 50, price: 6.50, bonus: 0 },
-  starter: { name: 'Starter Pack', credits: 100, price: 12.00, bonus: 0 },
-  value: { name: 'Value Pack', credits: 250, price: 28.00, bonus: 10 },
-  pro: { name: 'Pro Pack', credits: 500, price: 52.00, bonus: 15 },
-  ultimate: { name: 'Ultimate Pack', credits: 1000, price: 95.00, bonus: 20 },
+  micro: { name: 'Micro Top-Up', credits: 20, price: 5.00, bonus: 0 },
+  small: { name: 'Small Top-Up', credits: 40, price: 10.00, bonus: 0 },
+  medium: { name: 'Medium Top-Up', credits: 60, price: 15.00, bonus: 0 },
+  starter: { name: 'Starter Pack', credits: 100, price: 25.00, bonus: 0 },
+  value: { name: 'Value Pack', credits: 250, price: 60.00, bonus: 4 },
+  pro: { name: 'Pro Pack', credits: 550, price: 120.00, bonus: 15 },
+  ultimate: { name: 'Ultimate Pack', credits: 1200, price: 240.00, bonus: 25 },
 };
 
 // Writing styles
