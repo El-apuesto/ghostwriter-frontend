@@ -1,18 +1,21 @@
 // API Configuration
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 // Credit costs for different story types - MATCHES BACKEND
 export const CREDIT_COSTS = {
   // Fiction
   fiction_sample: 0,
-  fiction_novella: 50,
-  fiction_novel: 100,
+  fiction_novella: 130,
+  fiction_novel: 210,
+  
+  // Premium Fiction
+  fiction_premium_novella: 150,
+  fiction_premium_novel: 230,
   
   // Biography
   biography_sample: 0,
-  biography_short_memoir: 50,
-  biography_standard: 75,
-  biography_comprehensive: 125,
+  biography_short_memoir: 130,
+  biography_standard: 130,
   
   // Extras
   ebook_cover: 10,
@@ -26,13 +29,23 @@ export const CREDIT_COSTS = {
 
 // Credit packs - MATCHES BACKEND (prices in cents converted to dollars)
 export const CREDIT_PACKS = {
-  micro: { name: 'Micro Top-Up', credits: 20, price: 5.00, bonus: 0 },
-  small: { name: 'Small Top-Up', credits: 40, price: 10.00, bonus: 0 },
-  medium: { name: 'Medium Top-Up', credits: 60, price: 15.00, bonus: 0 },
-  starter: { name: 'Starter Pack', credits: 100, price: 25.00, bonus: 0 },
-  value: { name: 'Value Pack', credits: 250, price: 60.00, bonus: 4 },
-  pro: { name: 'Pro Pack', credits: 550, price: 120.00, bonus: 15 },
-  ultimate: { name: 'Ultimate Pack', credits: 1200, price: 240.00, bonus: 25 },
+  top_up: { name: 'Top-Up Pack', credits: 50, price: 5.00, bonus: 0, priceId: 'price_1SuIGA5EmQCAemjp8HDzJlpv' },
+};
+
+// Stripe Price IDs for products
+export const STRIPE_PRICE_IDS = {
+  // Fiction
+  novella: 'price_1SudhH5EmQCAemjpOuZF2n53',
+  premium_novella: 'price_1SudjM5EmQCAemjp9sEg3Vyh',
+  novel: 'price_1Sudli5EmQCAemjpDHIMhgaC',
+  premium_novel: 'price_1Sudmv5EmQCAemjp7aLriIhA',
+  
+  // Sequels and Trilogies
+  sequel: 'price_1Sudpo5EmQCAemjpkFIKal3c',
+  trilogy: 'price_1SudsM5EmQCAemjpECUhoolR',
+  
+  // Credit Top-Up
+  top_up: 'price_1SuIGA5EmQCAemjp8HDzJlpv',
 };
 
 // Writing styles

@@ -1,9 +1,20 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
+    console.error('API Error Details:', error); // Log full error details
+    console.error('Error detail array:', error.detail); // Log the detail array specifically
+    
+    // Handle validation errors
+    if (error.detail && Array.isArray(error.detail)) {
+      const validationErrors = error.detail.map(err => 
+        typeof err === 'string' ? err : err.msg || JSON.stringify(err)
+      ).join(', ');
+      throw new Error(`Validation error: ${validationErrors}`);
+    }
+    
     throw new Error(error.detail || error.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
@@ -90,7 +101,7 @@ export const creditsAPI = {
 // Stories API
 export const storiesAPI = {
   getAll: async () => {
-    return apiCall('/api/stories', {
+    return apiCall('/api/stories/', {
       headers: getAuthHeaders(),
     });
   },
@@ -103,6 +114,9 @@ export const storiesAPI = {
   },
 
   create: async (storyData) => {
+    console.log('Sending story data:', storyData);
+    console.log('Stringified payload:', JSON.stringify(storyData));
+    
     return apiCall('/api/stories/generate', {
       method: 'POST',
       headers: getAuthHeaders(),

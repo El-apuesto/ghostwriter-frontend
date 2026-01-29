@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { storiesAPI } from '../utils/api';
+import { GENRES, WRITING_STYLES, CREDIT_COSTS } from '../config';
 import '../styles/fiction-form.css';
 
 const FictionForm = () => {
@@ -14,6 +15,7 @@ const FictionForm = () => {
 
   const [premise, setPremise] = useState('');
   const [length, setLength] = useState('sample');
+  const [premiumLevel, setPremiumLevel] = useState('standard');
   const [title, setTitle] = useState('');
   const [writingStyle, setWritingStyle] = useState('');
   const [genre, setGenre] = useState('');
@@ -24,7 +26,23 @@ const FictionForm = () => {
   const [characters, setCharacters] = useState([{ name: '', role: '', description: '', quirks: [''] }]);
   const [timeline, setTimeline] = useState([{ chapter: '', event: '', mood: '' }]);
 
-  const creditCosts = { sample: 0, novella: 50, novel: 100, epic: 150 };
+  const creditCosts = { 
+    short: CREDIT_COSTS.fiction_sample, 
+    novella: CREDIT_COSTS.fiction_novella, 
+    novel: CREDIT_COSTS.fiction_novel 
+  };
+
+  const getCreditCost = () => {
+    let baseCost = creditCosts[length] || 0;
+    if (premiumLevel === 'premium') {
+      baseCost += 20;
+    }
+    return baseCost;
+  };
+
+  const getDollarAmount = (credits) => {
+    return (credits / 10).toFixed(2); // 10 credits = $1
+  };
 
   useEffect(() => {
     if (!user) navigate('/login');
@@ -116,9 +134,9 @@ const FictionForm = () => {
     const cleanThemes = themes.filter(t => t);
 
     const payload = {
-      genre: genre || 'Fiction',
+      genre: (genre || 'mystery').trim().toLowerCase(),  // Clean up genre value
       theme: premise,
-      length: length,
+      length: length === 'sample' ? 'short' : length,  // Convert sample to short
       ...(title && { title }),
       ...(writingStyle && { writing_style: writingStyle }),
       ...(setting && { setting }),
@@ -150,21 +168,31 @@ const FictionForm = () => {
     } catch (err) {
       console.error('Full error object:', err);
       
-      // Better error extraction
-      let errorMsg = 'Failed to generate story';
+      // User-friendly error messages
+      let userFriendlyMsg = 'Something went wrong while generating your story. Please try again.';
       
       if (typeof err === 'string') {
-        errorMsg = err;
+        if (err.includes('422') || err.includes('validation')) {
+          userFriendlyMsg = 'Please check all required fields and try again.';
+        } else if (err.includes('credits')) {
+          userFriendlyMsg = 'You don\'t have enough credits for this story length.';
+        } else if (err.includes('auth')) {
+          userFriendlyMsg = 'Please log in again and try.';
+        } else {
+          userFriendlyMsg = err;
+        }
       } else if (err.message) {
-        errorMsg = err.message;
-      } else if (err.detail) {
-        errorMsg = err.detail;
-      } else if (err.error) {
-        errorMsg = typeof err.error === 'string' ? err.error : JSON.stringify(err.error);
+        if (err.message.includes('422') || err.message.includes('validation')) {
+          userFriendlyMsg = 'Please check all required fields and try again.';
+        } else if (err.message.includes('credits')) {
+          userFriendlyMsg = 'You don\'t have enough credits for this story length.';
+        } else {
+          userFriendlyMsg = err.message;
+        }
       }
       
-      setError(errorMsg);
-      alert(`Generation failed: ${errorMsg}\n\nYour draft has been saved. Check your Dashboard - the story may have been created.`);
+      setError(userFriendlyMsg);
+      alert(`Story generation failed: ${userFriendlyMsg}\n\nYour draft has been saved. You can check your Dashboard - the story may have been created.`);
     } finally {
       setLoading(false);
       setGenerationProgress('');
@@ -211,7 +239,7 @@ const FictionForm = () => {
           </div>
         </div>
         <p className="form-subtitle">
-          Create a compelling fiction story with AI. Cost: <strong>{creditCosts[length]} credits</strong> (You have {user?.credits_balance || 0})
+          Create a compelling fiction story with AI. Cost: <strong>${getDollarAmount(getCreditCost())} ({getCreditCost()} credits)</strong> (You have {user?.credits_balance || 0} credits)
         </p>
 
         {error && <div className="error-message">{error}</div>}
@@ -236,16 +264,37 @@ const FictionForm = () => {
               <div className="form-group">
                 <label>Story Length <span className="required">*</span></label>
                 <select value={length} onChange={(e) => setLength(e.target.value)} required>
-                  <option value="sample">Sample - FREE (~3k words)</option>
-                  <option value="novella">Novella - 50 credits (~45k words)</option>
-                  <option value="novel">Novel - 100 credits (~90k words)</option>
-                  <option value="epic">Epic Novel - 150 credits (~140k words)</option>
+                  <option value="short">Sample - FREE (~3k words)</option>
+                  <option value="novella">Novella - $13 (130 credits) - 40-60k words</option>
+                  <option value="novel">Novel - $21 (210 credits) - 80-100k words</option>
                 </select>
+                <div className="product-details">
+                  {length === 'novella' && (
+                    <small>
+                      <strong>Includes:</strong> 40-60k words • 1 AI cover • Python templates • Back-cover copy • Title page
+                    </small>
+                  )}
+                  {length === 'novel' && (
+                    <small>
+                      <strong>Includes:</strong> 80-100k words • 4 AI cover options • Python templates • Back-cover blurb • Title page
+                    </small>
+                  )}
+                </div>
               </div>
               
               <div className="form-group">
-                <label>Title (Optional)</label>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Leave blank for AI-generated title" />
+                <label>Premium Upgrade <span className="optional">(Optional)</span></label>
+                <select value={premiumLevel} onChange={(e) => setPremiumLevel(e.target.value)}>
+                  <option value="standard">Standard</option>
+                  <option value="premium">Premium (+$2, +20 credits)</option>
+                </select>
+                <div className="product-details">
+                  {premiumLevel === 'premium' && (
+                    <small>
+                      <strong>Premium includes:</strong> TOC • Dedication • About author • Creative chapter titles • Enhanced blurb
+                    </small>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -254,21 +303,20 @@ const FictionForm = () => {
                 <label>Writing Style (Optional)</label>
                 <select value={writingStyle} onChange={(e) => setWritingStyle(e.target.value)}>
                   <option value="">-- Select Style --</option>
-                  <option value="sarcastic_deadpan">Sarcastic Deadpan</option>
-                  <option value="gothic_horror">Gothic Horror</option>
-                  <option value="dark_comedy">Dark Comedy</option>
-                  <option value="noir">Noir</option>
-                  <option value="cyberpunk">Cyberpunk</option>
-                  <option value="modern">Modern</option>
-                  <option value="classic">Classic</option>
-                  <option value="literary">Literary Fiction</option>
-                  <option value="pulp">Pulp Fiction</option>
+                  {WRITING_STYLES.map(style => (
+                    <option key={style.value} value={style.value}>{style.label}</option>
+                  ))}
                 </select>
               </div>
               
               <div className="form-group">
                 <label>Genre (Optional)</label>
-                <input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} placeholder="e.g., Science Fiction, Mystery, Romance" />
+                <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+                  <option value="">-- Select Genre --</option>
+                  {GENRES.map(genre => (
+                    <option key={genre.value} value={genre.value}>{genre.label}</option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

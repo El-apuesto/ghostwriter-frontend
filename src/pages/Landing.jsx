@@ -32,7 +32,7 @@ const Landing = () => {
             {/* CRITICAL FIX: Correct logo path */}
             <img 
               src="/logo.PNG" 
-              alt="Ghostwriter Logo" 
+              alt="Phantm.ink Logo" 
               className="h-16 mx-auto mb-6"
               onError={(e) => {
                 console.error('Logo failed to load');
@@ -40,7 +40,7 @@ const Landing = () => {
               }}
             />
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Ghostwriter AI
+              Phantm.ink
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
               Create amazing stories with the power of AI
