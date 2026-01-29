@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import FictionForm from './pages/FictionForm';
 import BiographyForm from './pages/BiographyForm';
@@ -36,6 +37,7 @@ function App() {
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/terms" element={<TermsOfService />} />
 
               {/* Protected Routes */}

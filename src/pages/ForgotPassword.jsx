@@ -1,42 +1,56 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../config';
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
     setLoading(true);
 
-    const result = await login(email, password);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Password reset link has been sent to your email!');
+        setEmail('');
+      } else {
+        setError(data.detail || 'Failed to send reset link');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    }
     
     setLoading(false);
-    
-    if (result.success) {
-      navigate('/dashboard');
-    } else {
-      setError(result.error);
-    }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>Welcome Back</h1>
-          <p>Login to continue your stories</p>
+          <h1>Reset Password</h1>
+          <p>Enter your email to receive a password reset link</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
+          {message && <div className="success-message">{message}</div>}
           
           <div className="form-group">
             <label>Email</label>
@@ -49,34 +63,17 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <Link to="/forgot-password" className="forgot-password-link">
-              Forgot your password?
-            </Link>
-          </div>
-
           <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
 
         <div className="auth-footer">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          <Link to="/login">← Back to Login</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;
