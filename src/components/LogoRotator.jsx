@@ -46,7 +46,30 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     "/logos/variant-3.png",
     "/logos/style-1.png",
     "/logos/style-2.png",
-    "/logos/style-3.png"
+    "/logos/style-3.png",
+    // iPhone IMG_ format patterns
+    "/logos/IMG_0001.png",
+    "/logos/IMG_0002.png",
+    "/logos/IMG_0003.png",
+    "/logos/IMG_0004.png",
+    "/logos/IMG_0005.png",
+    "/logos/IMG_1000.png",
+    "/logos/IMG_2000.png",
+    "/logos/IMG_3000.png",
+    "/logos/IMG_4000.png",
+    "/logos/IMG_5000.png",
+    "/logos/IMG_6000.png",
+    "/logos/IMG_7000.png",
+    "/logos/IMG_8000.png",
+    "/logos/IMG_8459.png",
+    "/logos/IMG_8460.png",
+    "/logos/IMG_8461.png",
+    "/logos/IMG_8462.png",
+    "/logos/IMG_8463.png",
+    "/logos/IMG_8464.png",
+    "/logos/IMG_8465.png",
+    "/logos/IMG_9000.png",
+    "/logos/IMG_9999.png"
   ];
 
   useEffect(() => {
