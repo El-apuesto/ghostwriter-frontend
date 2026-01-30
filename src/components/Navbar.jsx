@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LogoRotator from './LogoRotator';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -14,7 +15,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="container">
         <Link to="/" className="logo">
-          <img src="/logo.png.PNG" alt="Phantm.ink" className="logo-image" />
+          <LogoRotator alt="Phantm.ink" className="logo-image" />
         </Link>
 
         <div className="nav-links">

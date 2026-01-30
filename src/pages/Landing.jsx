@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Testimonials from '../components/Testimonials';
 import Statistics from '../components/Statistics';
+import LogoRotator from '../components/LogoRotator';
 
 const Landing = () => {
   return (
@@ -14,7 +15,10 @@ const Landing = () => {
             <div className="flex justify-center mb-8">
               <div className="w-24 h-24 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-2xl border border-purple-400 border-opacity-30 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-400 opacity-20 animate-pulse"></div>
-                <span className="text-white text-4xl font-serif font-bold relative z-10">P</span>
+                <LogoRotator 
+                  className="w-16 h-16 object-contain relative z-10" 
+                  alt="Phantm.ink Logo" 
+                />
               </div>
             </div>
             
