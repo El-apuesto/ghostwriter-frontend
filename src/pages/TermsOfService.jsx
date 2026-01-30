@@ -12,7 +12,7 @@ function TermsOfService() {
         <section>
           <h2>1. Acceptance of Terms</h2>
           <p>
-            By accessing and using GhostWriter ("Service"), you accept and agree to be bound by the terms and provisions of this agreement.
+            By accessing and using Phantm.ink ("Service"), you accept and agree to be bound by the terms and provisions of this agreement.
             If you do not agree to these terms, please do not use this Service.
           </p>
         </section>
@@ -20,7 +20,7 @@ function TermsOfService() {
         <section>
           <h2>2. Service Description</h2>
           <p>
-            GhostWriter is an AI-powered story generation platform that creates fiction and biography content based on user inputs.
+            Phantm.ink is an AI-powered story generation platform that creates fiction and biography content based on user inputs.
             The Service uses artificial intelligence and machine learning models to generate creative content.
           </p>
         </section>
@@ -29,7 +29,7 @@ function TermsOfService() {
           <h2>3. User-Generated Content & Ownership</h2>
           <h3>3.1 Your Content Ownership</h3>
           <p>
-            You retain all intellectual property rights to the stories you generate using GhostWriter. 
+            You retain all intellectual property rights to the stories you generate using Phantm.ink. 
             The content generated belongs to you, the user who created it, subject to the limitations below.
           </p>
           <h3>3.2 AI-Generated Content Disclaimer</h3>
@@ -179,8 +179,8 @@ function TermsOfService() {
             For questions about these Terms, contact us at:
           </p>
           <p className="contact-info">
-            Email: <a href="mailto:support@ghostwriter.app">support@ghostwriter.app</a><br />
-            Business Entity: GhostWriter LLC (if applicable)<br />
+            Email: <a href="mailto:support@phantm.ink">support@phantm.ink</a><br />
+            Business Entity: Phantm.ink LLC (if applicable)<br />
             Location: Madison, Mississippi, USA
           </p>
         </section>
@@ -193,7 +193,7 @@ function TermsOfService() {
         </section>
 
         <div className="legal-footer">
-          <p><strong>BY USING GHOSTWRITER, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS.</strong></p>
+          <p><strong>BY USING PHANTM.INK, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS.</strong></p>
         </div>
       </div>
     </div>

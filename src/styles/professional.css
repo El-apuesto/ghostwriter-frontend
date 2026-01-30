@@ -1,26 +1,40 @@
-/* Professional Writing Industry Styles */
+/* Professional Dark Phantom Theme - Writing Industry Styles */
 
 /* Import professional fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-/* Typography */
+/* Dark Phantom Theme Colors */
 :root {
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-mono: 'JetBrains+ Mono', 'Courier New', monospace;
   
-  --color-primary: #1e40af;
-  --color-secondary: #4f46e5;
-  --color-accent: #6366f1;
-  --color-text: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-border: #334155;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  /* Dark Phantom Palette */
+  --color-primary: #6b46c1; /* Deep purple */
+  --color-secondary: #9333ea; /* Medium purple */
+  --color-accent: #a855f7; /* Light purple */
+  --color-ethereal: #e9d5ff; /* Ethereal lavender */
+  --color-midnight: #1e1b4b; /* Midnight purple */
+  --color-void: #0f0a1f; /* Deep void */
+  --color-shadow: #312e81; /* Shadow purple */
+  
+  /* Text Colors */
+  --color-text: #f3f4f6; /* Light gray */
+  --color-text-secondary: #d1d5db; /* Medium gray */
+  --color-text-muted: #9ca3af; /* Muted gray */
+  --color-text-ethereal: #e9d5ff; /* Ethereal text */
+  
+  /* Background Colors */
+  --color-background: #0f0a1f; /* Deep void */
+  --color-surface: #1e1b4b; /* Midnight surface */
+  --color-surface-light: #2d1b69; /* Lighter surface */
+  --color-border: #4c1d95; /* Border purple */
+  
+  /* Status Colors */
+  --color-success: #fbbf24; /* Gold instead of green */
+  --color-warning: #f59e0b; /* Amber */
+  --color-error: #ef4444; /* Red */
+  --color-info: #60a5fa; /* Blue */
 }
 
 /* Base styles */
@@ -58,72 +72,161 @@ p {
   border-radius: 0.5rem;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   border: none;
   font-family: var(--font-sans);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-text-ethereal);
   border: 2px solid var(--color-border);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
 }
 
 .btn-secondary:hover {
-  background: var(--color-surface);
+  background: var(--color-surface-light);
   border-color: var(--color-accent);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+  color: var(--color-ethereal);
 }
 
 /* Card styles */
 .card {
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface), var(--color-midnight));
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 2rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .card:hover {
   border-color: var(--color-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
+  background: linear-gradient(135deg, var(--color-surface-light), var(--color-surface));
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 /* Statistics section */
 .statistics-section {
   padding: 4rem 0;
-  background: linear-gradient(135deg, var(--color-surface), rgba(79, 70, 229, 0.1));
+  background: linear-gradient(135deg, var(--color-midnight), var(--color-void));
+  position: relative;
+}
+
+.statistics-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .stat-card {
   text-align: center;
   padding: 2rem;
+  background: linear-gradient(135deg, var(--color-surface), var(--color-midnight));
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
+  box-shadow: 0 15px 35px rgba(168, 85, 247, 0.2);
 }
 
 .stat-number {
   font-family: var(--font-serif);
   font-size: 3rem;
   font-weight: 900;
-  color: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-ethereal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
 }
 
 .stat-label {
