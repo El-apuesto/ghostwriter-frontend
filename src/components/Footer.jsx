@@ -8,7 +8,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h3 className="footer-logo">GhostWriter</h3>
+          <h3 className="footer-logo">Phantm.ink</h3>
           <p className="footer-tagline">AI-powered story generation with a deadpan twist</p>
         </div>
 
@@ -40,7 +40,7 @@ function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>© {currentYear} GhostWriter. All rights reserved. | Madison, MS</p>
+        <p>© {currentYear} Phantm.ink. All rights reserved.</p>
         <p className="footer-disclaimer">
           AI-generated content provided "AS IS" without warranty. Users assume all copyright risks.
         </p>
