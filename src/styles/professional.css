@@ -25,10 +25,10 @@
   --color-text-ethereal: #e9d5ff; /* Ethereal text */
   
   /* Background Colors */
-  --color-background: #0f0a1f; /* Deep void */
-  --color-surface: #1e1b4b; /* Midnight surface */
-  --color-surface-light: #2d1b69; /* Lighter surface */
-  --color-border: #4c1d95; /* Border purple */
+  --color-background: #000000; /* Pure black */
+  --color-surface: #1a1a1a; /* Very dark gray */
+  --color-surface-light: #2a2a2a; /* Darker surface */
+  --color-border: #333333; /* Dark gray border */
   
   /* Status Colors */
   --color-success: #fbbf24; /* Gold instead of green */

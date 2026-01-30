@@ -42,7 +42,7 @@ const Signup = () => {
       <div className="auth-container">
         <div className="auth-header">
           <img src="/logo.png.PNG" alt="Phantm.ink Logo" style={{ width: '120px', marginBottom: '1rem' }} />
-          <h1>Join Phantm.ink</h1>
+          <h1>Start with Phantm.ink</h1>
           <p>Create your account and start writing</p>
         </div>
 

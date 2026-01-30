@@ -5,7 +5,7 @@ import Statistics from '../components/Statistics';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen" style={{background: 'linear-gradient(135deg, #0f0a1f 0%, #1e1b4b 50%, #0f0a1f 100%)'}}>
+    <div className="min-h-screen" style={{background: '#000000'}}>
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
@@ -150,7 +150,7 @@ const Landing = () => {
               <p className="text-purple-200 mb-4 relative z-10">Free Trial</p>
               <ul className="text-purple-100 space-y-3 mb-6 relative z-10">
                 <li>✓ 3,000 words</li>
-                <li>✓ Basic manuscript formatting</li>
+                <li>✓ Start Your Manuscript formatting</li>
                 <li>✓ 1 story per month</li>
                 <li>✓ Standard export options</li>
               </ul>
