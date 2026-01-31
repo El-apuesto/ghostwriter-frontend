@@ -32,18 +32,18 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     const chosenLogo = logoFiles[randomIndex];
     setSelectedLogo(chosenLogo);
     
-    // Create a background logo same size as header (not full page)
+    // Create a full-page background logo at 15% opacity
     const bgDiv = document.createElement('div');
     bgDiv.style.position = 'fixed';
-    bgDiv.style.top = '50%';
-    bgDiv.style.left = '50%';
-    bgDiv.style.transform = 'translate(-50%, -50%)';
-    bgDiv.style.width = '150px'; // Same max size as header
-    bgDiv.style.height = 'auto';
+    bgDiv.style.top = '0';
+    bgDiv.style.left = '0';
+    bgDiv.style.width = '100%'; // Full page width
+    bgDiv.style.height = '100%'; // Full page height
     bgDiv.style.backgroundImage = `url(${chosenLogo})`;
-    bgDiv.style.backgroundSize = 'contain';
+    bgDiv.style.backgroundSize = 'cover'; // Cover entire page
     bgDiv.style.backgroundPosition = 'center';
     bgDiv.style.backgroundRepeat = 'no-repeat';
+    bgDiv.style.backgroundAttachment = 'fixed';
     bgDiv.style.opacity = '0.15'; // 15% opacity
     bgDiv.style.zIndex = '-1'; // Behind content
     bgDiv.style.pointerEvents = 'none'; // Don't interfere with clicks
