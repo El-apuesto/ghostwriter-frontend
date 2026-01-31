@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+// Global variable to track if background has been set
+let backgroundSet = false;
+let globalSelectedLogo = '/logo/1.PNG';
+
 const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
   // Numbered logos 1-18 in /logo/ folder (PNG extension)
   const logoFiles = [
@@ -23,22 +27,29 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     "/logo/18.PNG"
   ];
   
-  // Pick one random logo and use it for both header and background
-  const [selectedLogo, setSelectedLogo] = useState('/logo/1.PNG'); // Set initial logo
+  // Use global selected logo for consistency
+  const [selectedLogo, setSelectedLogo] = useState(globalSelectedLogo);
   
   // Select logo on component mount - but only set background once globally
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * logoFiles.length);
-    const chosenLogo = logoFiles[randomIndex];
-    console.log('Selected logo:', chosenLogo); // Debug log
-    setSelectedLogo(chosenLogo);
-    
-    // Only set background if it hasn't been set already (check for existing background)
-    if (!document.body.style.backgroundImage) {
+    // Only set background if it hasn't been set already
+    if (!backgroundSet) {
+      const randomIndex = Math.floor(Math.random() * logoFiles.length);
+      const chosenLogo = logoFiles[randomIndex];
+      globalSelectedLogo = chosenLogo;
+      backgroundSet = true;
+      
+      console.log('Global logo selected:', chosenLogo); // Debug log
+      setSelectedLogo(chosenLogo);
+      
       // Apply background using CSS classes for better control
       document.body.classList.add('logo-background');
       document.body.style.setProperty('--logo-image', `url(${chosenLogo})`);
-      console.log('Background CSS class applied'); // Debug log
+      console.log('Background CSS class applied globally'); // Debug log
+    } else {
+      // Use the global logo for this instance
+      setSelectedLogo(globalSelectedLogo);
+      console.log('Using global logo:', globalSelectedLogo); // Debug log
     }
     
     return () => {
