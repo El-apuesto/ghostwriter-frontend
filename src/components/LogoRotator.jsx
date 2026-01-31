@@ -43,14 +43,17 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       setSelectedLogo(chosenLogo);
       
       // Apply background directly to body with inline styles
-      document.body.style.backgroundImage = `url(${chosenLogo})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundRepeat = 'no-repeat';
-      document.body.style.backgroundAttachment = 'fixed';
-      document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
-      document.body.style.backgroundBlendMode = 'overlay';
-      console.log('Background applied directly to body'); // Debug log
+      document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
+      document.body.style.setProperty('background-size', 'cover', 'important');
+      document.body.style.setProperty('background-position', 'center', 'important');
+      document.body.style.setProperty('background-repeat', 'no-repeat', 'important');
+      document.body.style.setProperty('background-attachment', 'fixed', 'important');
+      document.body.style.setProperty('background-color', 'rgba(0, 0, 0, 0.85)', 'important');
+      document.body.style.setProperty('background-blend-mode', 'overlay', 'important');
+      document.body.style.setProperty('min-height', '100vh', 'important');
+      document.body.style.setProperty('margin', '0', 'important');
+      document.body.style.setProperty('padding', '0', 'important');
+      console.log('Background applied directly to body with !important'); // Debug log
     } else {
       // Use the global logo for this instance
       setSelectedLogo(globalSelectedLogo);
