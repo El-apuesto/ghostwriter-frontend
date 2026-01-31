@@ -24,12 +24,13 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
   ];
   
   // Pick one random logo and use it for both header and background
-  const [selectedLogo, setSelectedLogo] = useState('');
+  const [selectedLogo, setSelectedLogo] = useState('/logo/1.PNG'); // Set initial logo
   
   // Select logo on component mount
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * logoFiles.length);
     const chosenLogo = logoFiles[randomIndex];
+    console.log('Selected logo:', chosenLogo); // Debug log
     setSelectedLogo(chosenLogo);
     
     // Create a full-page background logo at 15% opacity
@@ -50,6 +51,7 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     bgDiv.id = 'logo-background';
     
     document.body.appendChild(bgDiv);
+    console.log('Background div added'); // Debug log
     
     // Ensure the main app container can scroll normally
     const rootElement = document.getElementById('root');
@@ -85,8 +87,12 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
         maxWidth: '150px' // Cap the maximum size
       }}
       onError={(e) => {
+        console.log('Logo failed to load:', selectedLogo); // Debug log
         // If logo fails to load, hide it to prevent broken image
         e.target.style.display = 'none';
+      }}
+      onLoad={() => {
+        console.log('Logo loaded successfully:', selectedLogo); // Debug log
       }}
     />
   );
