@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
   // Numbered logos 1-18 in /logo/ folder (PNG extension)
@@ -25,11 +25,45 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
   
   const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
 
+  // Set background image with 15% opacity
+  useEffect(() => {
+    // Create a background div instead of modifying body directly
+    const bgDiv = document.createElement('div');
+    bgDiv.style.position = 'fixed';
+    bgDiv.style.top = '0';
+    bgDiv.style.left = '0';
+    bgDiv.style.width = '100%';
+    bgDiv.style.height = '100%';
+    bgDiv.style.backgroundImage = `url(${randomLogo})`;
+    bgDiv.style.backgroundSize = 'cover';
+    bgDiv.style.backgroundPosition = 'center';
+    bgDiv.style.backgroundRepeat = 'no-repeat';
+    bgDiv.style.backgroundAttachment = 'fixed';
+    bgDiv.style.opacity = '0.15'; // 15% opacity for background
+    bgDiv.style.zIndex = '-1'; // Put behind content
+    bgDiv.id = 'logo-background';
+    
+    document.body.appendChild(bgDiv);
+    
+    return () => {
+      // Cleanup background when component unmounts
+      const existingBg = document.getElementById('logo-background');
+      if (existingBg) {
+        existingBg.remove();
+      }
+    };
+  }, [randomLogo]);
+
   return (
     <img 
       src={randomLogo} 
       alt={alt} 
       className={className}
+      style={{ 
+        width: '150%', // Make logo 1.5x bigger (more reasonable)
+        height: 'auto',
+        maxWidth: 'none'
+      }}
       onError={(e) => {
         // If logo fails to load, hide it to prevent broken image
         e.target.style.display = 'none';
