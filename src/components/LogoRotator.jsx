@@ -33,25 +33,14 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     console.log('Selected logo:', chosenLogo); // Debug log
     setSelectedLogo(chosenLogo);
     
-    // Create a full-page background logo at 15% opacity
-    const bgDiv = document.createElement('div');
-    bgDiv.style.position = 'fixed';
-    bgDiv.style.top = '0';
-    bgDiv.style.left = '0';
-    bgDiv.style.width = '100%'; // Full page width
-    bgDiv.style.height = '100%'; // Full page height
-    bgDiv.style.backgroundImage = `url(${chosenLogo})`;
-    bgDiv.style.backgroundSize = 'cover'; // Cover entire page
-    bgDiv.style.backgroundPosition = 'center';
-    bgDiv.style.backgroundRepeat = 'no-repeat';
-    bgDiv.style.backgroundAttachment = 'fixed';
-    bgDiv.style.opacity = '0.15'; // 15% opacity
-    bgDiv.style.zIndex = '-1'; // Behind content
-    bgDiv.style.pointerEvents = 'none'; // Don't interfere with clicks
-    bgDiv.id = 'logo-background';
-    
-    document.body.appendChild(bgDiv);
-    console.log('Background div added'); // Debug log
+    // Apply background directly to body element (true background)
+    document.body.style.backgroundImage = `url(${chosenLogo})`;
+    document.body.style.backgroundSize = 'cover'; // Cover entire page
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed'; // Fixed while scrolling
+    document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)'; // Dark overlay for 15% opacity effect
+    console.log('Background applied to body'); // Debug log
     
     // Ensure the main app container can scroll normally
     const rootElement = document.getElementById('root');
@@ -62,10 +51,12 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     
     return () => {
       // Cleanup background when component unmounts
-      const existingBg = document.getElementById('logo-background');
-      if (existingBg) {
-        existingBg.remove();
-      }
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundRepeat = '';
+      document.body.style.backgroundAttachment = '';
+      document.body.style.backgroundColor = '';
       
       // Reset root element styles
       const rootElement = document.getElementById('root');
