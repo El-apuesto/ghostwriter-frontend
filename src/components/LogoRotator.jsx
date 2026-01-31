@@ -42,10 +42,15 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       console.log('Global logo selected:', chosenLogo); // Debug log
       setSelectedLogo(chosenLogo);
       
-      // Apply background using CSS classes for better control
-      document.body.classList.add('logo-background');
-      document.body.style.setProperty('--logo-image', `url(${chosenLogo})`);
-      console.log('Background CSS class applied globally'); // Debug log
+      // Apply background directly to body with inline styles
+      document.body.style.backgroundImage = `url(${chosenLogo})`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+      document.body.style.backgroundBlendMode = 'overlay';
+      console.log('Background applied directly to body'); // Debug log
     } else {
       // Use the global logo for this instance
       setSelectedLogo(globalSelectedLogo);
