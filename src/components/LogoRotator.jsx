@@ -27,20 +27,21 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
 
   // Set background image with 15% opacity
   useEffect(() => {
-    // Create a background div instead of modifying body directly
+    // Create a background div that fits within the normal page
     const bgDiv = document.createElement('div');
     bgDiv.style.position = 'fixed';
     bgDiv.style.top = '0';
     bgDiv.style.left = '0';
-    bgDiv.style.width = '100%';
-    bgDiv.style.height = '100%';
+    bgDiv.style.width = '100%'; // Normal page width
+    bgDiv.style.height = '100%'; // Normal page height
     bgDiv.style.backgroundImage = `url(${randomLogo})`;
-    bgDiv.style.backgroundSize = 'cover';
+    bgDiv.style.backgroundSize = 'cover'; // Cover entire page
     bgDiv.style.backgroundPosition = 'center';
     bgDiv.style.backgroundRepeat = 'no-repeat';
     bgDiv.style.backgroundAttachment = 'fixed';
     bgDiv.style.opacity = '0.15'; // 15% opacity for background
     bgDiv.style.zIndex = '-1'; // Put behind content
+    bgDiv.style.overflow = 'hidden'; // Prevent scrolling
     bgDiv.id = 'logo-background';
     
     document.body.appendChild(bgDiv);
@@ -60,7 +61,7 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       alt={alt} 
       className={className}
       style={{ 
-        width: '150%', // Make logo 1.5x bigger (more reasonable)
+        width: '200%', // Make header logo twice as big
         height: 'auto',
         maxWidth: 'none'
       }}
