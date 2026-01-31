@@ -1,26 +1,26 @@
 import React from 'react';
 
 const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
-  // Numbered logos 1-18 in /logo/ folder
+  // Numbered logos 1-18 in /logo/ folder (PNG extension)
   const logoFiles = [
-    "/logo/1.png",
-    "/logo/2.png", 
-    "/logo/3.png",
-    "/logo/4.png",
-    "/logo/5.png",
-    "/logo/6.png",
-    "/logo/7.png",
-    "/logo/8.png",
-    "/logo/9.png",
-    "/logo/10.png",
-    "/logo/11.png",
-    "/logo/12.png",
-    "/logo/13.png",
-    "/logo/14.png",
-    "/logo/15.png",
-    "/logo/16.png",
-    "/logo/17.png",
-    "/logo/18.png"
+    "/logo/1.PNG",
+    "/logo/2.PNG", 
+    "/logo/3.PNG",
+    "/logo/4.PNG",
+    "/logo/5.PNG",
+    "/logo/6.PNG",
+    "/logo/7.PNG",
+    "/logo/8.PNG",
+    "/logo/9.PNG",
+    "/logo/10.PNG",
+    "/logo/11.PNG",
+    "/logo/12.PNG",
+    "/logo/13.PNG",
+    "/logo/14.PNG",
+    "/logo/15.PNG",
+    "/logo/16.PNG",
+    "/logo/17.PNG",
+    "/logo/18.PNG"
   ];
   
   const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
