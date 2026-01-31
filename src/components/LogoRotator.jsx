@@ -27,31 +27,22 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
 
   // Set background image with 15% opacity
   useEffect(() => {
-    // Create a background div that fits within the normal page
-    const bgDiv = document.createElement('div');
-    bgDiv.style.position = 'fixed';
-    bgDiv.style.top = '0';
-    bgDiv.style.left = '0';
-    bgDiv.style.width = '100%'; // Normal page width
-    bgDiv.style.height = '100%'; // Normal page height
-    bgDiv.style.backgroundImage = `url(${randomLogo})`;
-    bgDiv.style.backgroundSize = 'cover'; // Cover entire page
-    bgDiv.style.backgroundPosition = 'center';
-    bgDiv.style.backgroundRepeat = 'no-repeat';
-    bgDiv.style.backgroundAttachment = 'fixed';
-    bgDiv.style.opacity = '0.15'; // 15% opacity for background
-    bgDiv.style.zIndex = '-1'; // Put behind content
-    bgDiv.style.overflow = 'hidden'; // Prevent scrolling
-    bgDiv.id = 'logo-background';
-    
-    document.body.appendChild(bgDiv);
+    // Apply background directly to body element
+    document.body.style.backgroundImage = `url(${randomLogo})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)'; // Dark overlay
     
     return () => {
       // Cleanup background when component unmounts
-      const existingBg = document.getElementById('logo-background');
-      if (existingBg) {
-        existingBg.remove();
-      }
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundRepeat = '';
+      document.body.style.backgroundAttachment = '';
+      document.body.style.backgroundColor = '';
     };
   }, [randomLogo]);
 
@@ -61,9 +52,9 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       alt={alt} 
       className={className}
       style={{ 
-        width: '200%', // Make header logo twice as big
+        width: '150%', // Make header logo 1.5x bigger (more reasonable)
         height: 'auto',
-        maxWidth: 'none'
+        maxWidth: '150px' // Cap the maximum size
       }}
       onError={(e) => {
         // If logo fails to load, hide it to prevent broken image
