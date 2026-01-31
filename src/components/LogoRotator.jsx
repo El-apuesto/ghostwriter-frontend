@@ -55,21 +55,35 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('padding', '0', 'important');
       document.body.style.setProperty('position', 'relative', 'important');
       
-      // Apply margins to the main content container instead of body
+      // Apply margins to ALL content containers
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.style.setProperty('background', 'transparent', 'important');
         rootElement.style.setProperty('position', 'relative', 'important');
-        rootElement.style.setProperty('margin', '20px', 'important');
-        rootElement.style.setProperty('padding', '20px', 'important');
+        rootElement.style.setProperty('margin', '30px', 'important');
+        rootElement.style.setProperty('padding', '30px', 'important');
       }
       
-      // Also try to apply margins to common content containers
-      const mainContainer = document.querySelector('.container, .main, #app, .App');
-      if (mainContainer) {
-        mainContainer.style.setProperty('margin', '20px', 'important');
-        mainContainer.style.setProperty('padding', '20px', 'important');
+      // Apply to main content area
+      const mainContent = document.querySelector('main, .main-content, .container');
+      if (mainContent) {
+        mainContent.style.setProperty('margin', '30px', 'important');
+        mainContent.style.setProperty('padding', '30px', 'important');
       }
+      
+      // Apply to ALL text elements
+      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
+      textElements.forEach(element => {
+        element.style.setProperty('margin', '10px 0', 'important');
+        element.style.setProperty('padding', '5px', 'important');
+      });
+      
+      // Apply to ALL containers
+      const allContainers = document.querySelectorAll('div, section, article');
+      allContainers.forEach(container => {
+        container.style.setProperty('margin', '15px', 'important');
+        container.style.setProperty('padding', '15px', 'important');
+      });
       
       console.log('Background applied to body with proper margins'); // Debug log
     } else {
