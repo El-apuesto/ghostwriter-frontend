@@ -44,7 +44,7 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       
       // Apply background to body and root elements (not html to avoid breaking layout)
       document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
-      document.body.style.setProperty('background-size', 'cover', 'important');
+      document.body.style.setProperty('background-size', '50% auto', 'important');
       document.body.style.setProperty('background-position', 'center', 'important');
       document.body.style.setProperty('background-repeat', 'no-repeat', 'important');
       document.body.style.setProperty('background-attachment', 'fixed', 'important');
