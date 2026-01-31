@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
   // Numbered logos 1-18 in /logo/ folder (PNG extension)
@@ -23,12 +23,17 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     "/logo/18.PNG"
   ];
   
-  const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
-
-  // Set background image with 15% opacity
+  // Pick one random logo and use it for both header and background
+  const [selectedLogo, setSelectedLogo] = useState('');
+  
+  // Select logo on component mount
   useEffect(() => {
-    // Apply background directly to body element
-    document.body.style.backgroundImage = `url(${randomLogo})`;
+    const randomIndex = Math.floor(Math.random() * logoFiles.length);
+    const chosenLogo = logoFiles[randomIndex];
+    setSelectedLogo(chosenLogo);
+    
+    // Set background image with the same logo
+    document.body.style.backgroundImage = `url(${chosenLogo})`;
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundRepeat = 'no-repeat';
@@ -44,11 +49,11 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.backgroundAttachment = '';
       document.body.style.backgroundColor = '';
     };
-  }, [randomLogo]);
+  }, []); // Empty dependency array - only runs once on mount
 
   return (
     <img 
-      src={randomLogo} 
+      src={selectedLogo} 
       alt={alt} 
       className={className}
       style={{ 
