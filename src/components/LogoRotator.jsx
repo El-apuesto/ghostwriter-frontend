@@ -42,7 +42,18 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       console.log('Global logo selected:', chosenLogo); // Debug log
       setSelectedLogo(chosenLogo);
       
-      // Apply background directly to body with inline styles
+      // Apply background to multiple elements to ensure it's the actual page background
+      document.documentElement.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
+      document.documentElement.style.setProperty('background-size', 'cover', 'important');
+      document.documentElement.style.setProperty('background-position', 'center', 'important');
+      document.documentElement.style.setProperty('background-repeat', 'no-repeat', 'important');
+      document.documentElement.style.setProperty('background-attachment', 'fixed', 'important');
+      document.documentElement.style.setProperty('background-color', 'rgba(0, 0, 0, 0.85)', 'important');
+      document.documentElement.style.setProperty('background-blend-mode', 'overlay', 'important');
+      document.documentElement.style.setProperty('min-height', '100vh', 'important');
+      document.documentElement.style.setProperty('margin', '0', 'important');
+      document.documentElement.style.setProperty('padding', '0', 'important');
+      
       document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
       document.body.style.setProperty('background-size', 'cover', 'important');
       document.body.style.setProperty('background-position', 'center', 'important');
@@ -53,7 +64,23 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('min-height', '100vh', 'important');
       document.body.style.setProperty('margin', '0', 'important');
       document.body.style.setProperty('padding', '0', 'important');
-      console.log('Background applied directly to body with !important'); // Debug log
+      
+      // Also apply to root div
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        rootElement.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
+        rootElement.style.setProperty('background-size', 'cover', 'important');
+        rootElement.style.setProperty('background-position', 'center', 'important');
+        rootElement.style.setProperty('background-repeat', 'no-repeat', 'important');
+        rootElement.style.setProperty('background-attachment', 'fixed', 'important');
+        rootElement.style.setProperty('background-color', 'rgba(0, 0, 0, 0.85)', 'important');
+        rootElement.style.setProperty('background-blend-mode', 'overlay', 'important');
+        rootElement.style.setProperty('min-height', '100vh', 'important');
+        rootElement.style.setProperty('margin', '0', 'important');
+        rootElement.style.setProperty('padding', '0', 'important');
+      }
+      
+      console.log('Background applied to html, body, and root elements'); // Debug log
     } else {
       // Use the global logo for this instance
       setSelectedLogo(globalSelectedLogo);
