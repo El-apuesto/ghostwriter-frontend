@@ -53,6 +53,12 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.documentElement.style.setProperty('min-height', '100vh', 'important');
       document.documentElement.style.setProperty('margin', '0', 'important');
       document.documentElement.style.setProperty('padding', '0', 'important');
+      document.documentElement.style.setProperty('position', 'fixed', 'important');
+      document.documentElement.style.setProperty('top', '0', 'important');
+      document.documentElement.style.setProperty('left', '0', 'important');
+      document.documentElement.style.setProperty('width', '100vw', 'important');
+      document.documentElement.style.setProperty('height', '100vh', 'important');
+      document.documentElement.style.setProperty('z-index', '-1', 'important');
       
       document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
       document.body.style.setProperty('background-size', 'cover', 'important');
@@ -64,6 +70,7 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('min-height', '100vh', 'important');
       document.body.style.setProperty('margin', '0', 'important');
       document.body.style.setProperty('padding', '0', 'important');
+      document.body.style.setProperty('position', 'relative', 'important');
       
       // Also apply to root div
       const rootElement = document.getElementById('root');
@@ -78,9 +85,10 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
         rootElement.style.setProperty('min-height', '100vh', 'important');
         rootElement.style.setProperty('margin', '0', 'important');
         rootElement.style.setProperty('padding', '0', 'important');
+        rootElement.style.setProperty('position', 'relative', 'important');
       }
       
-      console.log('Background applied to html, body, and root elements'); // Debug log
+      console.log('Background applied to html, body, and root elements with fixed positioning'); // Debug log
     } else {
       // Use the global logo for this instance
       setSelectedLogo(globalSelectedLogo);
