@@ -130,12 +130,17 @@ const FictionForm = () => {
     setLoading(true);
 
     const cleanCharacters = characters.filter(c => c.name).map(c => ({ ...c, quirks: c.quirks.filter(q => q) }));
-    const cleanTimeline = timeline.filter(t => t.event);
+    const cleanTimeline = timeline.filter(t => t.event).map(t => ({
+      chapter: t.chapter,
+      description: t.event,  // Map event to description for backend compatibility
+      mood: t.mood
+    }));
     const cleanThemes = themes.filter(t => t);
 
     const payload = {
       genre: (genre || 'mystery').trim().toLowerCase(),  // Clean up genre value
       theme: premise,
+      premise: premise,  // Send premise as well for backend compatibility
       length: length === 'sample' ? 'short' : length,  // Convert sample to short
       ...(title && { title }),
       ...(writingStyle && { writing_style: writingStyle }),
