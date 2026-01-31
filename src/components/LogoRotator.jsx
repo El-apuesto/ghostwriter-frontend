@@ -32,13 +32,20 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     const chosenLogo = logoFiles[randomIndex];
     setSelectedLogo(chosenLogo);
     
-    // Set background image with the same logo
+    // Set background image that stays fixed while page scrolls
     document.body.style.backgroundImage = `url(${chosenLogo})`;
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundAttachment = 'fixed'; // This makes it static while page scrolls
     document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)'; // Dark overlay
+    
+    // Ensure the main app container can scroll normally
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.style.position = 'relative';
+      rootElement.style.zIndex = '1';
+    }
     
     return () => {
       // Cleanup background when component unmounts
@@ -48,6 +55,13 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.backgroundRepeat = '';
       document.body.style.backgroundAttachment = '';
       document.body.style.backgroundColor = '';
+      
+      // Reset root element styles
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        rootElement.style.position = '';
+        rootElement.style.zIndex = '';
+      }
     };
   }, []); // Empty dependency array - only runs once on mount
 
