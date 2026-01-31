@@ -51,15 +51,24 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('background-color', 'rgba(0, 0, 0, 0.85)', 'important');
       document.body.style.setProperty('background-blend-mode', 'overlay', 'important');
       document.body.style.setProperty('min-height', '100vh', 'important');
-      document.body.style.setProperty('margin', '20px', 'important');
-      document.body.style.setProperty('padding', '20px', 'important');
+      document.body.style.setProperty('margin', '0', 'important');
+      document.body.style.setProperty('padding', '0', 'important');
       document.body.style.setProperty('position', 'relative', 'important');
       
-      // Also apply to root div
+      // Apply margins to the main content container instead of body
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.style.setProperty('background', 'transparent', 'important');
         rootElement.style.setProperty('position', 'relative', 'important');
+        rootElement.style.setProperty('margin', '20px', 'important');
+        rootElement.style.setProperty('padding', '20px', 'important');
+      }
+      
+      // Also try to apply margins to common content containers
+      const mainContainer = document.querySelector('.container, .main, #app, .App');
+      if (mainContainer) {
+        mainContainer.style.setProperty('margin', '20px', 'important');
+        mainContainer.style.setProperty('padding', '20px', 'important');
       }
       
       console.log('Background applied to body with proper margins'); // Debug log
