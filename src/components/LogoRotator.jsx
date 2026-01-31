@@ -32,13 +32,24 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     const chosenLogo = logoFiles[randomIndex];
     setSelectedLogo(chosenLogo);
     
-    // Set background image that stays fixed while page scrolls
-    document.body.style.backgroundImage = `url(${chosenLogo})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed'; // This makes it static while page scrolls
-    document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)'; // Dark overlay
+    // Create a background logo same size as header (not full page)
+    const bgDiv = document.createElement('div');
+    bgDiv.style.position = 'fixed';
+    bgDiv.style.top = '50%';
+    bgDiv.style.left = '50%';
+    bgDiv.style.transform = 'translate(-50%, -50%)';
+    bgDiv.style.width = '150px'; // Same max size as header
+    bgDiv.style.height = 'auto';
+    bgDiv.style.backgroundImage = `url(${chosenLogo})`;
+    bgDiv.style.backgroundSize = 'contain';
+    bgDiv.style.backgroundPosition = 'center';
+    bgDiv.style.backgroundRepeat = 'no-repeat';
+    bgDiv.style.opacity = '0.15'; // 15% opacity
+    bgDiv.style.zIndex = '-1'; // Behind content
+    bgDiv.style.pointerEvents = 'none'; // Don't interfere with clicks
+    bgDiv.id = 'logo-background';
+    
+    document.body.appendChild(bgDiv);
     
     // Ensure the main app container can scroll normally
     const rootElement = document.getElementById('root');
@@ -49,12 +60,10 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     
     return () => {
       // Cleanup background when component unmounts
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundSize = '';
-      document.body.style.backgroundPosition = '';
-      document.body.style.backgroundRepeat = '';
-      document.body.style.backgroundAttachment = '';
-      document.body.style.backgroundColor = '';
+      const existingBg = document.getElementById('logo-background');
+      if (existingBg) {
+        existingBg.remove();
+      }
       
       // Reset root element styles
       const rootElement = document.getElementById('root');
