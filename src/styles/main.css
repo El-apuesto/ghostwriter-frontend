@@ -66,10 +66,16 @@ body {
 }
 
 /* Make all cards and containers semi-transparent */
-.card, .container > div, form, .auth-container, .story-card, .dashboard-card, .profile-card {
-  background: rgba(22, 33, 62, 0.7) !important;
+.card, .container > div, form, .auth-container, .story-card, .dashboard-card, .profile-card, .navbar, .btn {
+  background: rgba(22, 33, 62, 0.3) !important; /* More transparent */
   backdrop-filter: blur(5px);
   border: 1px solid rgba(0, 255, 249, 0.2);
+}
+
+/* Make main content areas even more transparent */
+main, section, .content, .page {
+  background: rgba(22, 33, 62, 0.2) !important;
+  backdrop-filter: blur(3px);
 }
 
 .container {
