@@ -35,26 +35,14 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     
     // Only set background if it hasn't been set already (check for existing background)
     if (!document.body.style.backgroundImage) {
-      // Apply background directly to body element (true background)
-      document.body.style.backgroundImage = `url(${chosenLogo})`;
-      document.body.style.backgroundSize = 'cover'; // Cover entire page
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundRepeat = 'no-repeat';
-      document.body.style.backgroundAttachment = 'fixed'; // Fixed while scrolling
-      document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.85)'; // Dark overlay for 15% opacity effect
-      console.log('Background applied to body'); // Debug log
-    }
-    
-    // Ensure the main app container can scroll normally
-    const rootElement = document.getElementById('root');
-    if (rootElement) {
-      rootElement.style.position = 'relative';
-      rootElement.style.zIndex = '1';
+      // Apply background using CSS classes for better control
+      document.body.classList.add('logo-background');
+      document.body.style.setProperty('--logo-image', `url(${chosenLogo})`);
+      console.log('Background CSS class applied'); // Debug log
     }
     
     return () => {
       // Don't cleanup background on unmount - let it persist
-      // Only cleanup if this is the last instance
     };
   }, []); // Empty dependency array - only runs once on mount
 
