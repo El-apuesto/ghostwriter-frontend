@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { storiesAPI } from '../utils/api';
 import { GENRES, WRITING_STYLES, CREDIT_COSTS } from '../config';
 import '../styles/fiction-form.css';
+import '../styles/mobile-responsive.css';
 
 const FictionForm = () => {
   const { user } = useAuth();

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Story Generator</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh; 
+            padding: 20px; 
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-section h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #3498db;
+            font-style: italic;
+        }
+        
+        .auth-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .character-count {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Enhanced Story Generator</h1>
+        
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <h3>🔐 Login / Signup</h3>
+            <div class="two-column">
+                <div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="password" placeholder="min 3 characters">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="fullName" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn" onclick="signup()">Sign Up</button>
+                        <button class="btn" onclick="login()" style="margin-top: 5px;">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Story Form -->
+        <div id="storyForm" style="display: none;">
+            <!-- Core Story Elements -->
+            <div class="form-section">
+                <h3>📖 Core Story Elements</h3>
+                <div class="form-group">
+                    <label for="plot">Story Plot:</label>
+                    <textarea id="plot" placeholder="What happens in your story? The main conflict and journey..." maxlength="1000"></textarea>
+                    <div class="character-count" id="plotCount">0/1000</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="whenWhere">Setting (When & Where):</label>
+                    <textarea id="whenWhere" placeholder="Time period and location... e.g., Medieval England, 2150 Mars, Victorian London" maxlength="500"></textarea>
+                    <div class="character-count" id="whenWhereCount">0/500</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="characters">Characters:</label>
+                    <textarea id="characters" placeholder="Describe your main characters, their personalities, motivations, and relationships..." maxlength="800"></textarea>
+                    <div class="character-count" id="charactersCount">0/800</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="timeline">Timeline/Key Events:</label>
+                    <textarea id="timeline" placeholder="Major plot points in order... e.g., 1. Discovery 2. Journey begins 3. Conflict 4. Resolution" maxlength="600"></textarea>
+                    <div class="character-count" id="timelineCount">0/600</div>
+                </div>
+            </div>
+            
+            <!-- Style & Tone -->
+            <div class="form-section">
+                <h3>🎨 Style & Tone</h3>
+                <div class="two-column">
+                    <div>
+                        <div class="form-group">
+                            <label for="genre">Genre:</label>
+                            <select id="genre">
+                                <option value="fantasy">Fantasy</option>
+                                <option value="scifi">Science Fiction</option>
+                                <option value="mystery">Mystery</option>
+                                <option value="romance">Romance</option>
+                                <option value="thriller">Thriller</option>
+                                <option value="horror">Horror</option>
+                                <option value="adventure">Adventure</option>
+                                <option value="historical">Historical Fiction</option>
+                                <option value="literary">Literary Fiction</option>
+                                <option value="comedy">Comedy</option>
+                                <option value="satire">Satire</option>
+                                <option value="deadpan">Deadpan Humor</option>
+                                <option value="absurdist">Absurdist Fiction</option>
+                                <option value="biography">Biography/Memoir</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="writingStyle">Writing Style (Author):</label>
+                            <input type="text" id="writingStyle" placeholder="e.g., Stephen King, J.K. Rowling, Ernest Hemingway, Jane Austen">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mood">Mood/Tone:</label>
+                            <input type="text" id="mood" placeholder="e.g., dark and mysterious, uplifting and hopeful, tense and suspenseful">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label for="point_of_view">Point of View:</label>
+                            <select id="point_of_view">
+                                <option value="third person">Third Person</option>
+                                <option value="first person">First Person</option>
+                                <option value="omniscient">Omniscient</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="target_audience">Target Audience:</label>
+                            <select id="target_audience">
+                                <option value="general">General Adult</option>
+                                <option value="young adult">Young Adult (YA)</option>
+                                <option value="middle grade">Middle Grade</option>
+                                <option value="mature">Mature (18+)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="story_length">Story Length:</label>
+                            <select id="story_length">
+                                <option value="short">Short (500-800 words)</option>
+                                <option value="medium">Medium (1500-2500 words)</option>
+                                <option value="long">Long (3000-5000 words)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Options -->
+            <div class="form-section">
+                <h3>🔧 Advanced Options</h3>
+                <div class="form-group">
+                    <label for="themes">Themes:</label>
+                    <input type="text" id="themes" placeholder="e.g., betrayal, redemption, coming of age, love, justice, sacrifice">
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional_notes">Additional Notes:</label>
+                    <textarea id="additional_notes" placeholder="Any specific requirements, things to include or avoid..." maxlength="500"></textarea>
+                    <div class="character-count" id="additionalNotesCount">0/500</div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generateStory()">🚀 Generate Enhanced Story</button>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let authToken = '';
+        
+        // Character counters
+        document.getElementById('plot').addEventListener('input', function() {
+            document.getElementById('plotCount').textContent = `${this.value.length}/1000`;
+        });
+        
+        document.getElementById('whenWhere').addEventListener('input', function() {
+            document.getElementById('whenWhereCount').textContent = `${this.value.length}/500`;
+        });
+        
+        document.getElementById('characters').addEventListener('input', function() {
+            document.getElementById('charactersCount').textContent = `${this.value.length}/800`;
+        });
+        
+        document.getElementById('timeline').addEventListener('input', function() {
+            document.getElementById('timelineCount').textContent = `${this.value.length}/600`;
+        });
+        
+        document.getElementById('additional_notes').addEventListener('input', function() {
+            document.getElementById('additionalNotesCount').textContent = `${this.value.length}/500`;
+        });
+        
+        // Auth functions
+        async function signup() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('fullName').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Signed up successfully! Ready to create amazing stories.', false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Signup failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        async function login() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Logged in successfully! Ready to create amazing stories.', false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Login failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        // Enhanced story generation
+        async function generateStory() {
+            if (!authToken) {
+                showResult('❌ Please login first!', true);
+                return;
+            }
+            
+            const storyData = {
+                // Core elements
+                plot: document.getElementById('plot').value,
+                when_where: document.getElementById('whenWhere').value,
+                characters: document.getElementById('characters').value,
+                genre: document.getElementById('genre').value,
+                writing_style: document.getElementById('writingStyle').value,
+                timeline: document.getElementById('timeline').value,
+                
+                // Enhanced options
+                mood: document.getElementById('mood').value,
+                themes: document.getElementById('themes').value,
+                point_of_view: document.getElementById('point_of_view').value,
+                target_audience: document.getElementById('target_audience').value,
+                story_length: document.getElementById('story_length').value,
+                additional_notes: document.getElementById('additional_notes').value
+            };
+            
+            // Validation
+            if (!storyData.plot || !storyData.characters || !storyData.when_where) {
+                showResult('❌ Please fill in the core story elements (plot, characters, setting)', true);
+                return;
+            }
+            
+            showResult('🤖 Generating your enhanced story... This may take a moment...', false);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/stories/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(storyData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showResult('✅ Enhanced Story Generated Successfully!\n\n' + result.content, false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Generation failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = isError ? 'result error' : 'result';
+            resultDiv.innerHTML = message.replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>

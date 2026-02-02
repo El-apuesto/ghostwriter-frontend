@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Story Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #3498db;
+            font-style: italic;
+        }
+        
+        .auth-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Simple Story Generator</h1>
+        
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <h3>Login / Signup</h3>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" placeholder="password">
+            </div>
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" id="fullName" placeholder="Your Name">
+            </div>
+            <button class="btn" onclick="signup()">Sign Up</button>
+            <button class="btn" onclick="login()" style="margin-top: 10px;">Login</button>
+        </div>
+        
+        <!-- Story Form -->
+        <div id="storyForm" style="display: none;">
+            <div class="form-group">
+                <label for="plot">Story Plot:</label>
+                <textarea id="plot" placeholder="What happens in your story?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="whenWhere">When & Where:</label>
+                <textarea id="whenWhere" placeholder="When and where does your story take place?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="characters">Characters:</label>
+                <textarea id="characters" placeholder="Describe your main characters..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <select id="genre">
+                    <option value="fantasy">Fantasy</option>
+                    <option value="scifi">Science Fiction</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="horror">Horror</option>
+                    <option value="adventure">Adventure</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="writingStyle">Writing Style (Author):</label>
+                <input type="text" id="writingStyle" placeholder="e.g., Stephen King, J.K. Rowling, Ernest Hemingway">
+            </div>
+            
+            <div class="form-group">
+                <label for="timeline">Timeline:</label>
+                <textarea id="timeline" placeholder="Key events in your story..."></textarea>
+            </div>
+            
+            <button class="btn" onclick="generateStory()">Generate Story</button>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let authToken = '';
+        
+        // Auth functions
+        async function signup() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('fullName').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Signed up successfully!', false);
+                } else {
+                    showResult('❌ Signup failed', true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        async function login() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Logged in successfully!', false);
+                } else {
+                    showResult('❌ Login failed', true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        // Story generation
+        async function generateStory() {
+            const storyData = {
+                plot: document.getElementById('plot').value,
+                when_where: document.getElementById('whenWhere').value,
+                characters: document.getElementById('characters').value,
+                genre: document.getElementById('genre').value,
+                writing_style: document.getElementById('writingStyle').value,
+                timeline: document.getElementById('timeline').value
+            };
+            
+            if (!storyData.plot || !storyData.characters) {
+                showResult('❌ Please fill in at least the plot and characters', true);
+                return;
+            }
+            
+            showResult('🤖 Generating story... This may take a moment...', false);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/stories/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(storyData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showResult(result.content, false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Generation failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = isError ? 'result error' : 'result';
+            resultDiv.innerHTML = message.replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>

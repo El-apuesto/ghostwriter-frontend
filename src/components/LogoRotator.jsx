@@ -55,7 +55,7 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('padding', '0', 'important');
       document.body.style.setProperty('position', 'relative', 'important');
       
-      // Apply margins to ALL content containers
+      // Apply margins to ALL content containers BUT preserve background
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.style.setProperty('background', 'transparent', 'important');
@@ -69,20 +69,15 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       if (mainContent) {
         mainContent.style.setProperty('margin', '30px', 'important');
         mainContent.style.setProperty('padding', '30px', 'important');
+        mainContent.style.setProperty('background', 'rgba(0, 0, 0, 0.7)', 'important');
+        mainContent.style.setProperty('border-radius', '10px', 'important');
       }
       
-      // Apply to ALL text elements
-      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
+      // Apply to text elements ONLY (not all divs)
+      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span');
       textElements.forEach(element => {
         element.style.setProperty('margin', '10px 0', 'important');
         element.style.setProperty('padding', '5px', 'important');
-      });
-      
-      // Apply to ALL containers
-      const allContainers = document.querySelectorAll('div, section, article');
-      allContainers.forEach(container => {
-        container.style.setProperty('margin', '15px', 'important');
-        container.style.setProperty('padding', '15px', 'important');
       });
       
       console.log('Background applied to body with proper margins'); // Debug log

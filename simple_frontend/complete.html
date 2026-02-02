@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Story Generator - With Covers & Exports</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; 
+            padding: 20px; 
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .form-section h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #28a745;
+        }
+        
+        .btn-secondary:hover {
+            background: #218838;
+        }
+        
+        .btn-export {
+            background: #17a2b8;
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 14px;
+            width: auto;
+            display: inline-block;
+        }
+        
+        .btn-export:hover {
+            background: #138496;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+        
+        .auth-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .character-count {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .cover-preview {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cover-preview h4 {
+            color: #333;
+            margin: 10px 0;
+        }
+        
+        .cover-preview p {
+            color: #666;
+            font-style: italic;
+            margin: 5px 0;
+        }
+        
+        .export-section {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .export-section h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Complete Story Generator</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            With AI Covers & Professional Exports
+        </p>
+        
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <h3>🔐 Login / Signup</h3>
+            <div class="two-column">
+                <div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="password" placeholder="min 3 characters">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="fullName" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn" onclick="signup()">Sign Up</button>
+                        <button class="btn" onclick="login()" style="margin-top: 5px;">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Story Form -->
+        <div id="storyForm" style="display: none;">
+            <!-- Title & Author -->
+            <div class="form-section">
+                <h3>📖 Story Details</h3>
+                <div class="two-column">
+                    <div>
+                        <div class="form-group">
+                            <label for="title">Story Title:</label>
+                            <input type="text" id="title" placeholder="Give your story a title...">
+                        </div>
+                        <div class="form-group">
+                            <label for="author_name">Author Name:</label>
+                            <input type="text" id="author_name" placeholder="Your name as author">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="generate_cover">
+                                <input type="checkbox" id="generate_cover" checked> Generate Cover Description
+                            </label>
+                            <small style="color: #666; display: block; margin-top: 5px;">
+                                Creates a professional cover concept for your story
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Core Story Elements -->
+            <div class="form-section">
+                <h3>📖 Core Story Elements</h3>
+                <div class="form-group">
+                    <label for="plot">Story Plot:</label>
+                    <textarea id="plot" placeholder="What happens in your story? The main conflict and journey..." maxlength="1000"></textarea>
+                    <div class="character-count" id="plotCount">0/1000</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="whenWhere">Setting (When & Where):</label>
+                    <textarea id="whenWhere" placeholder="Time period and location... e.g., Medieval England, 2150 Mars, Victorian London" maxlength="500"></textarea>
+                    <div class="character-count" id="whenWhereCount">0/500</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="characters">Characters:</label>
+                    <textarea id="characters" placeholder="Describe your main characters, their personalities, motivations, and relationships..." maxlength="800"></textarea>
+                    <div class="character-count" id="charactersCount">0/800</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="timeline">Timeline/Key Events:</label>
+                    <textarea id="timeline" placeholder="Major plot points in order... e.g., 1. Discovery 2. Journey begins 3. Conflict 4. Resolution" maxlength="600"></textarea>
+                    <div class="character-count" id="timelineCount">0/600</div>
+                </div>
+            </div>
+            
+            <!-- Style & Tone -->
+            <div class="form-section">
+                <h3>🎨 Style & Tone</h3>
+                <div class="two-column">
+                    <div>
+                        <div class="form-group">
+                            <label for="genre">Genre:</label>
+                            <select id="genre">
+                                <option value="fantasy">Fantasy</option>
+                                <option value="scifi">Science Fiction</option>
+                                <option value="mystery">Mystery</option>
+                                <option value="romance">Romance</option>
+                                <option value="thriller">Thriller</option>
+                                <option value="horror">Horror</option>
+                                <option value="adventure">Adventure</option>
+                                <option value="historical">Historical Fiction</option>
+                                <option value="literary">Literary Fiction</option>
+                                <option value="comedy">Comedy</option>
+                                <option value="satire">Satire</option>
+                                <option value="deadpan">Deadpan Humor</option>
+                                <option value="absurdist">Absurdist Fiction</option>
+                                <option value="biography">Biography/Memoir</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="writingStyle">Writing Style (Author):</label>
+                            <input type="text" id="writingStyle" placeholder="e.g., Stephen King, J.K. Rowling, Ernest Hemingway, Jane Austen">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mood">Mood/Tone:</label>
+                            <input type="text" id="mood" placeholder="e.g., dark and mysterious, uplifting and hopeful, tense and suspenseful">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label for="point_of_view">Point of View:</label>
+                            <select id="point_of_view">
+                                <option value="third person">Third Person</option>
+                                <option value="first person">First Person</option>
+                                <option value="omniscient">Omniscient</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="target_audience">Target Audience:</label>
+                            <select id="target_audience">
+                                <option value="general">General Adult</option>
+                                <option value="young adult">Young Adult (YA)</option>
+                                <option value="middle grade">Middle Grade</option>
+                                <option value="mature">Mature (18+)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="story_length">Story Length:</label>
+                            <select id="story_length">
+                                <option value="short">Short (500-800 words)</option>
+                                <option value="medium">Medium (1500-2500 words)</option>
+                                <option value="long">Long (3000-5000 words)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Options -->
+            <div class="form-section">
+                <h3>🔧 Advanced Options</h3>
+                <div class="form-group">
+                    <label for="themes">Themes:</label>
+                    <input type="text" id="themes" placeholder="e.g., betrayal, redemption, coming of age, love, justice, sacrifice">
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional_notes">Additional Notes:</label>
+                    <textarea id="additional_notes" placeholder="Any specific requirements, things to include or avoid..." maxlength="500"></textarea>
+                    <div class="character-count" id="additionalNotesCount">0/500</div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generateStory()">🚀 Generate Complete Story with Exports</button>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let authToken = '';
+        let currentStory = null;
+        
+        // Character counters
+        document.getElementById('plot').addEventListener('input', function() {
+            document.getElementById('plotCount').textContent = `${this.value.length}/1000`;
+        });
+        
+        document.getElementById('whenWhere').addEventListener('input', function() {
+            document.getElementById('whenWhereCount').textContent = `${this.value.length}/500`;
+        });
+        
+        document.getElementById('characters').addEventListener('input', function() {
+            document.getElementById('charactersCount').textContent = `${this.value.length}/800`;
+        });
+        
+        document.getElementById('timeline').addEventListener('input', function() {
+            document.getElementById('timelineCount').textContent = `${this.value.length}/600`;
+        });
+        
+        document.getElementById('additional_notes').addEventListener('input', function() {
+            document.getElementById('additionalNotesCount').textContent = `${this.value.length}/500`;
+        });
+        
+        // Auth functions
+        async function signup() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('fullName').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Signed up successfully! Ready to create amazing stories.', false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Signup failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        async function login() {
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.access_token;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('storyForm').style.display = 'block';
+                    showResult('✅ Logged in successfully! Ready to create amazing stories.', false);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Login failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        // Enhanced story generation
+        async function generateStory() {
+            if (!authToken) {
+                showResult('❌ Please login first!', true);
+                return;
+            }
+            
+            const storyData = {
+                // Core elements
+                plot: document.getElementById('plot').value,
+                when_where: document.getElementById('whenWhere').value,
+                characters: document.getElementById('characters').value,
+                genre: document.getElementById('genre').value,
+                writing_style: document.getElementById('writingStyle').value,
+                timeline: document.getElementById('timeline').value,
+                
+                // Enhanced options
+                mood: document.getElementById('mood').value,
+                themes: document.getElementById('themes').value,
+                point_of_view: document.getElementById('point_of_view').value,
+                target_audience: document.getElementById('target_audience').value,
+                story_length: document.getElementById('story_length').value,
+                additional_notes: document.getElementById('additional_notes').value,
+                
+                // Cover and title
+                title: document.getElementById('title').value,
+                author_name: document.getElementById('author_name').value,
+                generate_cover: document.getElementById('generate_cover').checked
+            };
+            
+            // Validation
+            if (!storyData.plot || !storyData.characters || !storyData.when_where) {
+                showResult('❌ Please fill in the core story elements (plot, characters, setting)', true);
+                return;
+            }
+            
+            showResult('🤖 Generating your complete story with covers and exports... This may take a moment...', false);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/stories/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(storyData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    currentStory = result;
+                    displayCompleteStory(result);
+                } else {
+                    const error = await response.json();
+                    showResult('❌ Generation failed: ' + error.detail, true);
+                }
+            } catch (error) {
+                showResult('❌ Error: ' + error.message, true);
+            }
+        }
+        
+        function displayCompleteStory(story) {
+            let html = `
+                <div class="result">
+                    <h2>✅ Complete Story Generated!</h2>
+                    <h3>${story.title}</h3>
+                    <p><strong>By:</strong> ${story.author}</p>
+                    <p><strong>Genre:</strong> ${story.genre} | <strong>Style:</strong> ${story.writing_style}</p>
+            `;
+            
+            // Add cover info if generated
+            if (story.cover_info) {
+                html += `
+                    <div class="cover-preview">
+                        <h4>🎨 Cover Concept</h4>
+                        <p><strong>Title:</strong> ${story.cover_info.title}</p>
+                        <p><strong>Author:</strong> ${story.cover_info.author}</p>
+                        <p><strong>Style:</strong> ${story.cover_info.style}</p>
+                        <p><em>${story.cover_info.description}</em></p>
+                    </div>
+                `;
+            }
+            
+            // Add story content
+            html += `
+                <div style="margin-top: 20px;">
+                    <h4>📖 Story Content</h4>
+                    <div style="background: white; padding: 20px; border-radius: 8px; line-height: 1.6;">
+                        ${story.content.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `;
+            
+            // Add export options
+            html += `
+                <div class="export-section">
+                    <h3>📥 Export Options</h3>
+                    <p style="margin-bottom: 15px;">Download your story in multiple formats:</p>
+                    <button class="btn-export" onclick="downloadExport('pdf')">📄 Download PDF</button>
+                    <button class="btn-export" onclick="downloadExport('word')">📝 Download Word</button>
+                    <button class="btn-export" onclick="downloadExport('text')">📃 Download Text</button>
+                </div>
+            `;
+            
+            html += '</div>';
+            document.getElementById('result').innerHTML = html;
+        }
+        
+        function downloadExport(format) {
+            if (!currentStory || !currentStory.exports) {
+                showResult('❌ No exports available', true);
+                return;
+            }
+            
+            const exportData = currentStory.exports[format];
+            const filename = `${currentStory.title.replace(/[^a-z0-9]/gi, '_')}_${format}`;
+            
+            let mimeType;
+            switch(format) {
+                case 'pdf':
+                    mimeType = 'application/pdf';
+                    break;
+                case 'word':
+                    mimeType = 'application/msword';
+                    break;
+                case 'text':
+                    mimeType = 'text/plain';
+                    break;
+            }
+            
+            // Create download link
+            const binaryString = atob(exportData);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            
+            const blob = new Blob([bytes], { type: mimeType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = isError ? 'result error' : 'result';
+            resultDiv.innerHTML = message.replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>
