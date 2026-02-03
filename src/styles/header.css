@@ -19,7 +19,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 30px; /* Half the height - was 60px */
+  height: 20px; /* Even shorter - was 30px */
   gap: 2rem; /* Add gap between logo and buttons */
 }
 
@@ -30,7 +30,7 @@
 }
 
 .logo-text {
-  font-size: 1.2rem; /* Smaller for smaller header */
+  font-size: 1rem; /* Even smaller for shorter header */
   font-weight: 700;
   background: linear-gradient(135deg, #00ff88, #00ffff);
   -webkit-background-clip: text;

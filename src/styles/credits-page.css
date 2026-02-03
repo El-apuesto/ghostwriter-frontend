@@ -94,7 +94,7 @@
 
 .pack-image-container {
   width: 100%;
-  height: 100px;
+  height: 60px;
   position: relative;
   overflow: hidden;
   border-radius: 13px 13px 0 0;
@@ -194,7 +194,7 @@
 }
 
 .pack-name {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #00ff88;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -222,8 +222,8 @@
 .pack-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .pack-credits {
