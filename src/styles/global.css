@@ -145,12 +145,13 @@ body.logo-background::before {
 }
 
 .form-container {
-  background: rgba(26, 26, 26, 0.9);
+  background: rgba(26, 26, 26, 0.7) !important; /* More transparent */
   border: 2px solid var(--neon-purple);
   border-radius: 15px;
   padding: 40px;
   margin-bottom: 60px;
   box-shadow: 0 0 40px rgba(122, 39, 255, 0.3);
+  backdrop-filter: blur(5px);
 }
 
 .form-title {
@@ -205,13 +206,14 @@ label {
 input, textarea, select {
   width: 100%;
   padding: 12px 15px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5) !important; /* More transparent */
   border: 1px solid var(--neon-purple);
   border-radius: 5px;
   color: var(--text-white);
   font-family: 'Rajdhani', sans-serif;
   font-size: 1rem;
   transition: all 0.3s;
+  backdrop-filter: blur(3px);
 }
 
 input:focus, textarea:focus, select:focus {
