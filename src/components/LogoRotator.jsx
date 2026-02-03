@@ -39,10 +39,10 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       globalSelectedLogo = chosenLogo;
       backgroundSet = true;
       
-      console.log('Global logo selected:', chosenLogo); // Debug log
+      console.log('Global logo selected:', chosenLogo);
       setSelectedLogo(chosenLogo);
       
-      // Apply background to body and root elements (not html to avoid breaking layout)
+      // Apply background to body only - NO MARGINS
       document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
       document.body.style.setProperty('background-size', '50% auto', 'important');
       document.body.style.setProperty('background-position', 'center', 'important');
@@ -51,46 +51,29 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       document.body.style.setProperty('background-color', 'rgba(0, 0, 0, 0.85)', 'important');
       document.body.style.setProperty('background-blend-mode', 'overlay', 'important');
       document.body.style.setProperty('min-height', '100vh', 'important');
+      
+      // NO EXCESSIVE MARGINS - let CSS handle it
       document.body.style.setProperty('margin', '0', 'important');
       document.body.style.setProperty('padding', '0', 'important');
-      document.body.style.setProperty('position', 'relative', 'important');
       
-      // Apply margins to ALL content containers BUT preserve background
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.style.setProperty('background', 'transparent', 'important');
         rootElement.style.setProperty('position', 'relative', 'important');
-        rootElement.style.setProperty('margin', '30px', 'important');
-        rootElement.style.setProperty('padding', '30px', 'important');
+        // REMOVED EXCESSIVE MARGINS
       }
       
-      // Apply to main content area
-      const mainContent = document.querySelector('main, .main-content, .container');
-      if (mainContent) {
-        mainContent.style.setProperty('margin', '30px', 'important');
-        mainContent.style.setProperty('padding', '30px', 'important');
-        mainContent.style.setProperty('background', 'rgba(0, 0, 0, 0.7)', 'important');
-        mainContent.style.setProperty('border-radius', '10px', 'important');
-      }
-      
-      // Apply to text elements ONLY (not all divs)
-      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span');
-      textElements.forEach(element => {
-        element.style.setProperty('margin', '10px 0', 'important');
-        element.style.setProperty('padding', '5px', 'important');
-      });
-      
-      console.log('Background applied to body with proper margins'); // Debug log
+      console.log('Background applied to body with normal margins');
     } else {
       // Use the global logo for this instance
       setSelectedLogo(globalSelectedLogo);
-      console.log('Using global logo:', globalSelectedLogo); // Debug log
+      console.log('Using global logo:', globalSelectedLogo);
     }
     
     return () => {
       // Don't cleanup background on unmount - let it persist
     };
-  }, []); // Empty dependency array - only runs once on mount
+  }, []);
 
   return (
     <img 
@@ -98,17 +81,16 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       alt={alt} 
       className={className}
       style={{ 
-        width: '150%', // Make header logo 1.5x bigger (more reasonable)
+        width: '100%',
         height: 'auto',
-        maxWidth: '150px' // Cap the maximum size
+        maxWidth: '64px'
       }}
       onError={(e) => {
-        console.log('Logo failed to load:', selectedLogo); // Debug log
-        // If logo fails to load, hide it to prevent broken image
+        console.log('Logo failed to load:', selectedLogo);
         e.target.style.display = 'none';
       }}
       onLoad={() => {
-        console.log('Logo loaded successfully:', selectedLogo); // Debug log
+        console.log('Logo loaded successfully:', selectedLogo);
       }}
     />
   );

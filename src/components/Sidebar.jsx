@@ -16,9 +16,9 @@ const Sidebar = () => {
 
   const navItems = [
     { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/dashboard', label: 'Dashboard', icon: '�' },
-    { path: '/credits', label: 'Buy Credits', icon: '�' },
-    { path: '/instructions', label: 'Instructions', icon: '�' },
+    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/credits', label: 'Buy Credits', icon: '💳' },
+    { path: '/instructions', label: 'Instructions', icon: '📋' },
     { path: '/profile', label: 'Profile', icon: '👤' },
   ];
 
@@ -43,10 +43,8 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        {/* NO HEADER - REMOVED GHOSTWRITER TEXT */}
         <div className="sidebar-header">
-          <h2 className="sidebar-logo">
-            <span className="logo-text">GhostWriter</span>
-          </h2>
           <button 
             className="sidebar-close"
             onClick={closeSidebar}

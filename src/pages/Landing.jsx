@@ -7,6 +7,65 @@ import LogoRotator from '../components/LogoRotator';
 const Landing = () => {
   return (
     <div className="min-h-screen" style={{background: '#000000'}}>
+      {/* Simple Login/Signup buttons in top right - NO HEADER COMPONENT */}
+      <div style={{
+        position: 'fixed',
+        top: '1rem',
+        right: '1rem',
+        zIndex: 1000,
+        display: 'flex',
+        gap: '0.5rem'
+      }}>
+        <Link
+          to="/login"
+          style={{
+            padding: '0.5rem 1rem',
+            border: '1px solid #a855f7',
+            background: 'rgba(0, 0, 0, 0.8)',
+            color: '#a855f7',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = '#a855f7';
+            e.target.style.color = '#fff';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(0, 0, 0, 0.8)';
+            e.target.style.color = '#a855f7';
+          }}
+        >
+          Login
+        </Link>
+        <Link
+          to="/signup"
+          style={{
+            padding: '0.5rem 1rem',
+            border: '1px solid #6366f1',
+            background: 'rgba(99, 102, 241, 0.2)',
+            color: '#6366f1',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = '#6366f1';
+            e.target.style.color = '#fff';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(99, 102, 241, 0.2)';
+            e.target.style.color = '#6366f1';
+          }}
+        >
+          Sign Up
+        </Link>
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
