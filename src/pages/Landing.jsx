@@ -89,10 +89,19 @@ const Landing = () => {
               Advanced AI assistance for plot development, character arcs, and narrative structure. 
               Maintain your unique voice while getting professional guidance.
             </p>
-            <ul className="mt-4 space-y-2 text-purple-200 relative z-10">
-              <li>• Plot structure analysis</li>
-              <li>• Character development</li>
-              <li>• Pacing optimization</li>
+            <ul className="mt-4 space-y-2 text-purple-200 relative z-10 pl-4">
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Plot structure analysis</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Character development</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Pacing optimization</span>
+              </li>
             </ul>
           </div>
 
@@ -106,10 +115,19 @@ const Landing = () => {
               Export in industry-standard formats with professional layouts. 
               Ready for submission to publishers or self-publishing platforms.
             </p>
-            <ul className="mt-4 space-y-2 text-purple-200 relative z-10">
-              <li>• ePub & PDF export</li>
-              <li>• Professional formatting</li>
-              <li>• Cover design assistance</li>
+            <ul className="mt-4 space-y-2 text-purple-200 relative z-10 pl-4">
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>ePub & PDF export</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Professional formatting</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Cover design assistance</span>
+              </li>
             </ul>
           </div>
 
@@ -123,10 +141,19 @@ const Landing = () => {
               Specialized AI trained on bestselling novels across all major genres. 
               From literary fiction to commercial thrillers, we understand the market.
             </p>
-            <ul className="mt-4 space-y-2 text-purple-200 relative z-10">
-              <li>• 20+ genre specializations</li>
-              <li>• Market trend analysis</li>
-              <li>• Style adaptation</li>
+            <ul className="mt-4 space-y-2 text-purple-200 relative z-10 pl-4">
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>20+ genre specializations</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Market trend analysis</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Style adaptation</span>
+              </li>
             </ul>
           </div>
         </div>

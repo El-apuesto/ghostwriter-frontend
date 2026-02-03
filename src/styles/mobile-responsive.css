@@ -12,6 +12,13 @@ body {
   -ms-text-size-adjust: 100%;
 }
 
+/* Fixed background logo on mobile */
+body.logo-background {
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
 /* Mobile-first approach */
 @media (max-width: 768px) {
   /* Navigation */
@@ -24,10 +31,14 @@ body {
     gap: 0.5rem;
   }
   
-  /* Forms */
+  /* Forms - Remove gray boxes on mobile */
   .form-container {
     padding: 1rem;
     margin: 0.5rem;
+    background: transparent !important; /* Remove gray background */
+    border: none !important; /* Remove borders */
+    border-radius: 0 !important; /* Remove rounded corners */
+    box-shadow: none !important; /* Remove shadows */
   }
   
   .form-group {
@@ -61,22 +72,23 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
   
-  /* Cards */
+  /* Cards - Remove gray boxes on mobile */
   .card {
     margin: 0.5rem;
     padding: 1rem;
-    border-radius: 12px;
+    background: transparent !important; /* Remove gray background */
+    border: none !important; /* Remove borders */
+    border-radius: 0 !important; /* Remove rounded corners */
+    box-shadow: none !important; /* Remove shadows */
   }
   
-  /* Story cards */
-  .story-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
+  /* Story cards - Remove gray boxes on mobile */
   .story-card {
     padding: 1rem;
-    border-radius: 12px;
+    background: transparent !important; /* Remove gray background */
+    border: none !important; /* Remove borders */
+    border-radius: 0 !important; /* Remove rounded corners */
+    box-shadow: none !important; /* Remove shadows */
   }
   
   /* Fiction form mobile */
@@ -113,7 +125,10 @@ body {
 @media (max-width: 480px) {
   .form-container {
     padding: 0.75rem;
-    margin: 0.25rem;
+    background: transparent !important; /* Remove gray background */
+    border: none !important; /* Remove borders */
+    border-radius: 0 !important; /* Remove rounded corners */
+    box-shadow: none !important; /* Remove shadows */
   }
   
   .form-input,
@@ -130,6 +145,10 @@ body {
   .card {
     padding: 0.75rem;
     margin: 0.25rem;
+    background: transparent !important; /* Remove gray background */
+    border: none !important; /* Remove borders */
+    border-radius: 0 !important; /* Remove rounded corners */
+    box-shadow: none !important; /* Remove shadows */
   }
 }
 

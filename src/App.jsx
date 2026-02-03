@@ -21,6 +21,8 @@ import Success from './pages/Success';
 import Cancel from './pages/Cancel';
 import Transactions from './pages/Transactions';
 import TermsOfService from './pages/TermsOfService';
+import RefundPolicy from './pages/RefundPolicy';
+import Instructions from './pages/Instructions';
 
 // Styles
 import './styles/main.css';
@@ -39,6 +41,8 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
+              <Route path="/instructions" element={<Instructions />} />
 
               {/* Protected Routes */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
