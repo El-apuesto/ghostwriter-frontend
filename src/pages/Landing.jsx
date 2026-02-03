@@ -178,7 +178,7 @@ const Landing = () => {
             {/* Novella Pack */}
             <div className="relative group">
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-32 overflow-hidden">
                   <img 
                     src="/credit-packs/novella.JPEG" 
                     alt="Novella Pack"
@@ -209,7 +209,7 @@ const Landing = () => {
                 <div className="absolute top-4 right-4 bg-white bg-opacity-20 rounded-lg px-3 py-1">
                   <span className="text-white text-sm font-semibold">POPULAR</span>
                 </div>
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-32 overflow-hidden">
                   <img 
                     src="/credit-packs/novella plus.JPEG" 
                     alt="Premium Novella Pack"
@@ -237,7 +237,7 @@ const Landing = () => {
             {/* Novel Pack */}
             <div className="relative group">
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-32 overflow-hidden">
                   <img 
                     src="/credit-packs/novel.JPEG" 
                     alt="Novel Pack"
@@ -265,7 +265,7 @@ const Landing = () => {
             {/* Premium Novel Pack */}
             <div className="relative group">
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-32 overflow-hidden">
                   <img 
                     src="/credit-packs/novel-plus.JPEG" 
                     alt="Premium Novel Pack"
@@ -296,7 +296,7 @@ const Landing = () => {
             {/* Double Feature */}
             <div className="relative group">
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
-                <div className="relative h-40 overflow-hidden">
+                <div className="relative h-24 overflow-hidden">
                   <img 
                     src="/credit-packs/2.JPEG" 
                     alt="Double Feature"
@@ -327,7 +327,7 @@ const Landing = () => {
                 <div className="absolute top-3 right-3 bg-white bg-opacity-20 rounded-lg px-2 py-1">
                   <span className="text-white text-xs font-semibold">BEST VALUE</span>
                 </div>
-                <div className="relative h-40 overflow-hidden">
+                <div className="relative h-24 overflow-hidden">
                   <img 
                     src="/credit-packs/3.JPEG" 
                     alt="Triple Feature"
@@ -355,7 +355,7 @@ const Landing = () => {
             {/* Non-Fiction Upgrade */}
             <div className="relative group">
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
-                <div className="relative h-40 overflow-hidden">
+                <div className="relative h-24 overflow-hidden">
                   <img 
                     src="/credit-packs/upgrade .JPEG" 
                     alt="Non-Fiction Upgrade"
