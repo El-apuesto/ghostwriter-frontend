@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 
 // Pages
@@ -32,7 +32,7 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="app">
-          <Navbar />
+          <Sidebar />
           <main className="main-content">
             <Routes>
               {/* Public Routes */}
