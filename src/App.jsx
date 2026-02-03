@@ -43,6 +43,7 @@ function App() {
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/instructions" element={<Instructions />} />
+              <Route path="/credits" element={<Credits />} /> {/* Now public - users can view packages before signing up */}
 
               {/* Protected Routes */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -50,7 +51,6 @@ function App() {
               <Route path="/generate/biography" element={<ProtectedRoute><BiographyForm /></ProtectedRoute>} />
               <Route path="/library" element={<ProtectedRoute><StoryLibrary /></ProtectedRoute>} />
               <Route path="/story/:id" element={<ProtectedRoute><StoryDetail /></ProtectedRoute>} />
-              <Route path="/credits" element={<ProtectedRoute><Credits /></ProtectedRoute>} />
               <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
