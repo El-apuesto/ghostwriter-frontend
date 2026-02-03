@@ -162,69 +162,221 @@ const Landing = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* Professional Pricing Section */}
+      {/* Professional Pricing Section with Your Images */}
       <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
-              Professional Pricing Plans
+              Credit Packages
             </h2>
             <p className="text-xl text-purple-100">
-              Flexible options for writers at every stage of their career
+              Choose the perfect package for your writing journey
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-5 transition-opacity"></div>
-              <h3 className="text-2xl font-serif font-semibold text-white mb-2 relative z-10">Sample</h3>
-              <p className="text-purple-200 mb-4 relative z-10">Free Trial</p>
-              <ul className="text-purple-100 space-y-3 mb-6 relative z-10">
-                <li>✓ 3,000 words</li>
-                <li>✓ Start Your Manuscript formatting</li>
-                <li>✓ 1 story per month</li>
-                <li>✓ Standard export options</li>
-              </ul>
-              <div className="text-center relative z-10">
-                <span className="text-3xl font-bold text-white">$0</span>
-                <p className="text-purple-200">Perfect for trying our platform</p>
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {/* Novella Pack */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/credit-packs/novella.jpeg" 
+                    alt="Novella Pack"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-4xl">📖</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-serif font-semibold text-white mb-2">Novella</h3>
+                  <p className="text-purple-200 mb-4">45,000 words</p>
+                  <div className="text-center">
+                    <span className="text-2xl font-bold text-white">$13</span>
+                    <p className="text-purple-100 text-sm">130 credits</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-8 border-2 border-purple-400 border-opacity-60 transform scale-105 shadow-2xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-indigo-400 opacity-20 animate-pulse"></div>
-              <div className="bg-white bg-opacity-20 rounded-lg px-3 py-1 inline-block mb-4 relative z-10">
-                <span className="text-white text-sm font-semibold">MOST POPULAR</span>
-              </div>
-              <h3 className="text-2xl font-serif font-semibold text-white mb-2 relative z-10">Professional</h3>
-              <p className="text-purple-100 mb-4 relative z-10">$21 (210 credits)</p>
-              <ul className="text-white space-y-3 mb-6 relative z-10">
-                <li>✓ 80-100k words (Full Novel)</li>
-                <li>✓ Advanced manuscript formatting</li>
-                <li>✓ 4 professional cover options</li>
-                <li>✓ Publisher-ready export</li>
-                <li>✓ Priority support</li>
-              </ul>
-              <div className="text-center relative z-10">
-                <span className="text-3xl font-bold text-white">$21</span>
-                <p className="text-purple-100">Complete novel package</p>
+            {/* Premium Novella Pack */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl overflow-hidden border-2 border-purple-400 border-opacity-60 transform scale-105 shadow-2xl relative">
+                <div className="absolute top-4 right-4 bg-white bg-opacity-20 rounded-lg px-3 py-1">
+                  <span className="text-white text-sm font-semibold">POPULAR</span>
+                </div>
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/credit-packs/novella-plus.jpeg" 
+                    alt="Premium Novella Pack"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-4xl">📚</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-serif font-semibold text-white mb-2">Premium Novella</h3>
+                  <p className="text-purple-200 mb-4">45,000 words + features</p>
+                  <div className="text-center">
+                    <span className="text-2xl font-bold text-white">$15</span>
+                    <p className="text-purple-100 text-sm">150 credits</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-5 transition-opacity"></div>
-              <h3 className="text-2xl font-serif font-semibold text-white mb-2 relative z-10">Enterprise</h3>
-              <p className="text-purple-200 mb-4 relative z-10">Custom Solution</p>
-              <ul className="text-purple-100 space-y-3 mb-6 relative z-10">
-                <li>✓ Unlimited words</li>
-                <li>✓ Custom formatting templates</li>
-                <li>✓ Team collaboration</li>
-                <li>✓ API access</li>
-                <li>✓ Dedicated support</li>
-              </ul>
-              <div className="text-center relative z-10">
-                <span className="text-3xl font-bold text-white">Custom</span>
-                <p className="text-purple-200">Contact for enterprise pricing</p>
+            {/* Novel Pack */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/credit-packs/novel.jpeg" 
+                    alt="Novel Pack"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-4xl">📕</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-serif font-semibold text-white mb-2">Novel</h3>
+                  <p className="text-purple-200 mb-4">90,000 words</p>
+                  <div className="text-center">
+                    <span className="text-2xl font-bold text-white">$21</span>
+                    <p className="text-purple-100 text-sm">210 credits</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Premium Novel Pack */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/credit-packs/novel-plus.jpeg" 
+                    alt="Premium Novel Pack"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-4xl">📗</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-serif font-semibold text-white mb-2">Premium Novel</h3>
+                  <p className="text-purple-200 mb-4">90,000 words + features</p>
+                  <div className="text-center">
+                    <span className="text-2xl font-bold text-white">$23</span>
+                    <p className="text-purple-100 text-sm">230 credits</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature Packs */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-8">
+            {/* Double Feature */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src="/credit-packs/2.jpeg" 
+                    alt="Double Feature"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-3xl">📚📚</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-serif font-semibold text-white mb-1">Double Feature</h3>
+                  <p className="text-purple-200 text-sm mb-2">2 Novel Generations</p>
+                  <div className="text-center">
+                    <span className="text-xl font-bold text-white">$39</span>
+                    <p className="text-purple-100 text-xs">390 credits</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Triple Feature */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl overflow-hidden border-2 border-purple-400 border-opacity-60 transform scale-105 shadow-2xl">
+                <div className="absolute top-3 right-3 bg-white bg-opacity-20 rounded-lg px-2 py-1">
+                  <span className="text-white text-xs font-semibold">BEST VALUE</span>
+                </div>
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src="/credit-packs/3.jpeg" 
+                    alt="Triple Feature"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-3xl">📚📚📚</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-serif font-semibold text-white mb-1">Triple Feature</h3>
+                  <p className="text-purple-200 text-sm mb-2">3 Novel Generations</p>
+                  <div className="text-center">
+                    <span className="text-xl font-bold text-white">$63</span>
+                    <p className="text-purple-100 text-xs">630 credits</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Non-Fiction Upgrade */}
+            <div className="relative group">
+              <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src="/credit-packs/upgrade.jpeg" 
+                    alt="Non-Fiction Upgrade"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center" style={{display: 'none'}}>
+                    <span className="text-white text-3xl">📝</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-serif font-semibold text-white mb-1">Non-Fiction</h3>
+                  <p className="text-purple-200 text-sm mb-2">Biography/Memoir</p>
+                  <div className="text-center">
+                    <span className="text-xl font-bold text-white">$5</span>
+                    <p className="text-purple-100 text-xs">50 credits</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

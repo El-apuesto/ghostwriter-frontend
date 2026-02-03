@@ -87,9 +87,43 @@
   background: rgba(0, 0, 0, 0.8);
   border: 2px solid #00ff88;
   border-radius: 15px;
-  padding: 2rem;
+  padding: 0;
   transition: all 0.3s ease;
   overflow: hidden;
+}
+
+.pack-image-container {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 13px 13px 0 0;
+}
+
+.pack-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pack-card:hover .pack-image {
+  transform: scale(1.05);
+}
+
+.pack-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 255, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px 13px 0 0;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.5;
 }
 
 .pack-card::before {
@@ -189,6 +223,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 2rem;
 }
 
 .pack-credits {
@@ -356,6 +391,10 @@
 
   .pack-card.popular {
     transform: scale(1);
+  }
+
+  .pack-image-container {
+    height: 150px; /* Smaller on mobile */
   }
 
   .usage-grid {

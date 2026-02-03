@@ -95,9 +95,42 @@ const Credits = () => {
           {packages && Object.entries(packages).map(([key, pack]) => {
             const isPopular = key === 'creator'
             
+            // Map package keys to image filenames
+            const getImageName = (packageKey) => {
+              const imageMap = {
+                'novella': 'novella',
+                'premium_novella': 'novella-plus', 
+                'novel': 'novel',
+                'premium_novel': 'novel-plus',
+                'double_feature': '2',
+                'triple_feature': '3',
+                'non_fiction_upgrade': 'upgrade'
+              }
+              return imageMap[packageKey] || packageKey
+            }
+            
+            const imageName = getImageName(key)
+            const imageUrl = `/credit-packs/${imageName}.jpeg`
+            
             return (
               <div key={key} className={`pack-card ${isPopular ? 'popular' : ''}`}>
                 {isPopular && <div className="popular-badge">MOST POPULAR</div>}
+                
+                {/* Pack Image */}
+                <div className="pack-image-container">
+                  <img 
+                    src={imageUrl} 
+                    alt={pack.name}
+                    className="pack-image"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'block'
+                    }}
+                  />
+                  <div className="pack-image-placeholder" style={{display: 'none'}}>
+                    <div className="placeholder-icon">💎</div>
+                  </div>
+                </div>
                 
                 <div className="pack-header">
                   <h3 className="pack-name">{pack.name}</h3>
