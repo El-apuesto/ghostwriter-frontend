@@ -179,6 +179,7 @@ const Landing = () => {
               Buy Credits
             </Link>
           </div>
+        </div>
       </div>
 
       {/* Professional CTA Section */}
