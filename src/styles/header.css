@@ -1,15 +1,23 @@
-/* 🎯 HEADER STYLES - NOT TOO BIG! */
+/* 🎯 COMPLETELY HIDDEN HEADER - REPLACED BY SIDEBAR */
 
 .header {
-  background: transparent !important; /* Remove background */
-  border-bottom: 2px solid #00ff88;
-  backdrop-filter: none; /* Remove blur */
-  padding: 0.75rem 0; /* Reduced from 1.5rem */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  display: none !important; /* Force hide */
+}
+
+.header-container {
+  display: none !important; /* Force hide */
+}
+
+.header-actions {
+  display: none !important; /* Force hide */
+}
+
+.header-btn {
+  display: none !important; /* Force hide */
+}
+
+.signup-btn {
+  display: none !important; /* Force hide */
 }
 
 .header-container {

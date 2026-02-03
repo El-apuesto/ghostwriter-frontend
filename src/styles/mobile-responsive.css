@@ -21,12 +21,12 @@ body.logo-background {
 
 /* Mobile-first approach */
 @media (max-width: 768px) {
-  /* Add top margin to account for much smaller header */
-  .main-content,
-  .page-container,
-  main {
-    padding-top: 30px !important; /* Account for smaller header */
-  }
+/* Remove header padding since header is gone */
+.main-content,
+.page-container,
+main {
+  padding-top: 0 !important; /* No header to account for */
+}
   
   /* Navigation */
   .nav-container {
@@ -41,7 +41,7 @@ body.logo-background {
   /* Forms - NORMAL margins on mobile */
   .form-container {
     padding: 1rem !important;
-    margin: 1rem !important;
+    margin: 0.5rem !important; /* Much smaller margins */
     background: rgba(26, 26, 26, 0.9) !important;
     border: 2px solid var(--neon-purple) !important;
     border-radius: 15px !important;
@@ -130,16 +130,16 @@ body.logo-background {
 
 /* Small phones */
 @media (max-width: 480px) {
-  /* Add top margin to account for even smaller header */
-  .main-content,
-  .page-container,
-  main {
-    padding-top: 25px !important; /* Account for even smaller header */
-  }
+/* Remove header padding since header is gone */
+.main-content,
+.page-container,
+main {
+  padding-top: 0 !important; /* No header to account for */
+}
   
   .form-container {
     padding: 0.75rem;
-    margin: 1rem !important;
+    margin: 0.5rem !important; /* Much smaller margins */
     background: rgba(26, 26, 26, 0.9) !important;
     border: 2px solid var(--neon-purple) !important;
     border-radius: 15px !important;
