@@ -21,11 +21,11 @@ body.logo-background {
 
 /* Mobile-first approach */
 @media (max-width: 768px) {
-  /* Add top margin to account for fixed header */
+  /* Add top margin to account for much smaller header */
   .main-content,
   .page-container,
   main {
-    padding-top: 60px !important; /* Account for fixed header */
+    padding-top: 30px !important; /* Account for smaller header */
   }
   
   /* Navigation */
@@ -130,11 +130,11 @@ body.logo-background {
 
 /* Small phones */
 @media (max-width: 480px) {
-  /* Add top margin to account for fixed header */
+  /* Add top margin to account for even smaller header */
   .main-content,
   .page-container,
   main {
-    padding-top: 50px !important; /* Account for smaller header */
+    padding-top: 25px !important; /* Account for even smaller header */
   }
   
   .form-container {
