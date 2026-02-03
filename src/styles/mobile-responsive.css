@@ -47,14 +47,15 @@ main {
     gap: 0.5rem;
   }
   
-  /* Forms - NORMAL margins on mobile */
+  /* Forms - TINY margins on mobile */
   .form-container {
-    padding: 1rem !important;
-    margin: 0.5rem !important; /* Much smaller margins */
-    background: rgba(26, 26, 26, 0.9) !important;
-    border: 2px solid var(--neon-purple) !important;
-    border-radius: 15px !important;
-    box-shadow: 0 0 40px rgba(122, 39, 255, 0.3) !important;
+    padding: 0.5rem !important;
+    margin: 0.25rem !important; /* SUPER TINY margins */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
   
   .form-group {
@@ -147,12 +148,13 @@ main {
 }
   
   .form-container {
-    padding: 0.75rem;
-    margin: 0.5rem !important; /* Much smaller margins */
-    background: rgba(26, 26, 26, 0.9) !important;
-    border: 2px solid var(--neon-purple) !important;
-    border-radius: 15px !important;
-    box-shadow: 0 0 40px rgba(122, 39, 255, 0.3) !important;
+    padding: 0.25rem !important;
+    margin: 0.1rem !important; /* MICROSCOPIC margins */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
   
   .form-input,
