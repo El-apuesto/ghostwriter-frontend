@@ -386,7 +386,8 @@
   }
 
   .packs-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
   }
 
   .pack-card.popular {
@@ -394,7 +395,7 @@
   }
 
   .pack-image-container {
-    height: 150px; /* Smaller on mobile */
+    height: 80px !important;
   }
 
   .usage-grid {
