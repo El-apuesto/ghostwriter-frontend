@@ -180,7 +180,7 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src="/credit-packs/novella.jpeg" 
+                    src="/credit-packs/novella.JPEG" 
                     alt="Novella Pack"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -211,7 +211,7 @@ const Landing = () => {
                 </div>
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src="/credit-packs/novella-plus.jpeg" 
+                    src="/credit-packs/novella plus.JPEG" 
                     alt="Premium Novella Pack"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -239,7 +239,7 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src="/credit-packs/novel.jpeg" 
+                    src="/credit-packs/novel.JPEG" 
                     alt="Novel Pack"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -267,7 +267,7 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src="/credit-packs/novel-plus.jpeg" 
+                    src="/credit-packs/novel-plus.JPEG" 
                     alt="Premium Novel Pack"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -298,7 +298,7 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
                 <div className="relative h-40 overflow-hidden">
                   <img 
-                    src="/credit-packs/2.jpeg" 
+                    src="/credit-packs/2.JPEG" 
                     alt="Double Feature"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -329,7 +329,7 @@ const Landing = () => {
                 </div>
                 <div className="relative h-40 overflow-hidden">
                   <img 
-                    src="/credit-packs/3.jpeg" 
+                    src="/credit-packs/3.JPEG" 
                     alt="Triple Feature"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {
@@ -357,7 +357,7 @@ const Landing = () => {
               <div className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl overflow-hidden border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all">
                 <div className="relative h-40 overflow-hidden">
                   <img 
-                    src="/credit-packs/upgrade.jpeg" 
+                    src="/credit-packs/upgrade .JPEG" 
                     alt="Non-Fiction Upgrade"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale(105)"
                     onError={(e) => {

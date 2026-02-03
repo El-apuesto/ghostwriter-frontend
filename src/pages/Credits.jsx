@@ -99,18 +99,18 @@ const Credits = () => {
             const getImageName = (packageKey) => {
               const imageMap = {
                 'novella': 'novella',
-                'premium_novella': 'novella-plus', 
+                'premium_novella': 'novella plus', 
                 'novel': 'novel',
                 'premium_novel': 'novel-plus',
                 'double_feature': '2',
                 'triple_feature': '3',
-                'non_fiction_upgrade': 'upgrade'
+                'non_fiction_upgrade': 'upgrade '
               }
               return imageMap[packageKey] || packageKey
             }
             
             const imageName = getImageName(key)
-            const imageUrl = `/credit-packs/${imageName}.jpeg`
+            const imageUrl = `/credit-packs/${imageName}.JPEG`
             
             return (
               <div key={key} className={`pack-card ${isPopular ? 'popular' : ''}`}>
