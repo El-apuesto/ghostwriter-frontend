@@ -1,4 +1,4 @@
-/* 📱 MOBILE - CLEAN BLACK BACKGROUND */
+/* 📱 MOBILE - FORCE TINY MARGINS */
 
 body {
   background: #000 !important;
@@ -11,14 +11,16 @@ body {
 .main-content,
 .form-container,
 .card,
-.story-card {
+.story-card,
+.auth-container,
+.auth-page {
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
-  padding: 0.5rem !important;
-  margin: 0 !important;
+  padding: 0.25rem !important;
+  margin: 0.1rem !important;
 }
 
 /* Fixed background logo on mobile */
@@ -35,6 +37,18 @@ body.logo-background {
 .page-container,
 main {
   padding-top: 0 !important; /* No header to account for */
+}
+
+/* Auth pages - FORCE TINY MARGINS */
+.auth-page,
+.auth-container {
+  padding: 0.25rem !important;
+  margin: 0.1rem !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
   
   /* Navigation */
@@ -145,6 +159,18 @@ main {
 .page-container,
 main {
   padding-top: 0 !important; /* No header to account for */
+}
+
+/* Auth pages - MICROSCOPIC MARGINS */
+.auth-page,
+.auth-container {
+  padding: 0.1rem !important;
+  margin: 0.05rem !important; /* EVEN SMALLER */
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
   
   .form-container {

@@ -6,8 +6,8 @@ function Header() {
     <header className="header">
       <div className="header-container">
         <div className="logo-container">
-          <div className="logo-text glitch" data-text="GHOSTWRITER">
-            GHOSTWRITER
+          <div className="logo-text glitch" data-text="PHANTM">
+            PHANTM
           </div>
           <p className="tagline">Where Stories Haunt the Digital Void</p>
         </div>
