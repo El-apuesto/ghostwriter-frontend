@@ -25,9 +25,8 @@
 
 body {
   font-family: 'Rajdhani', sans-serif;
-  background: linear-gradient(180deg, #000000 0%, #0a0515 50%, #0f0919 100%);
-  color: var(--text-white);
-  min-height: 100vh;
+  background: #000 !important;
+  color: #fff;
   overflow-x: hidden;
 }
 

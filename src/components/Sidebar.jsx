@@ -16,9 +16,9 @@ const Sidebar = () => {
 
   const navItems = [
     { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/credits', label: 'Credits', icon: '💳' },
-    { path: '/fiction', label: 'Fiction', icon: '📚' },
-    { path: '/non-fiction', label: 'Non-Fiction', icon: '📰' },
+    { path: '/dashboard', label: 'Dashboard', icon: '�' },
+    { path: '/credits', label: 'Buy Credits', icon: '�' },
+    { path: '/instructions', label: 'Instructions', icon: '�' },
     { path: '/profile', label: 'Profile', icon: '👤' },
   ];
 
