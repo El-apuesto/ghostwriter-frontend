@@ -31,14 +31,14 @@ body.logo-background {
     gap: 0.5rem;
   }
   
-  /* Forms - Remove gray boxes on mobile */
+  /* Forms - NORMAL margins on mobile */
   .form-container {
-    padding: 1rem;
-    margin: 0.5rem;
-    background: transparent !important; /* Remove gray background */
-    border: none !important; /* Remove borders */
-    border-radius: 0 !important; /* Remove rounded corners */
-    box-shadow: none !important; /* Remove shadows */
+    padding: 1rem !important;
+    margin: 1rem !important;
+    background: rgba(26, 26, 26, 0.9) !important;
+    border: 2px solid var(--neon-purple) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 0 40px rgba(122, 39, 255, 0.3) !important;
   }
   
   .form-group {
@@ -142,13 +142,9 @@ body.logo-background {
     font-size: 0.9rem;
   }
   
-  .card {
-    padding: 0.75rem;
-    margin: 0.25rem;
-    background: transparent !important; /* Remove gray background */
-    border: none !important; /* Remove borders */
-    border-radius: 0 !important; /* Remove rounded corners */
-    box-shadow: none !important; /* Remove shadows */
+  .page-container {
+    padding: 10px !important; /* Normal mobile padding */
+    margin: 0 !important;
   }
 }
 

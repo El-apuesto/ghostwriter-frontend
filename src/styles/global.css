@@ -18,6 +18,9 @@
   --bg-card: #1a1a1a;
   --text-white: #ffffff;
   --text-gray: #aaaaaa;
+  
+  /* Logo Background Image */
+  --logo-image: url('/logo.png.PNG');
 }
 
 body {
@@ -61,7 +64,7 @@ body.logo-background::before {
   padding: 20px;
   position: relative;
   z-index: 2;
-  background: #000000;
+  background: transparent; /* Remove black background to show logo */
 }
 
 .header {
