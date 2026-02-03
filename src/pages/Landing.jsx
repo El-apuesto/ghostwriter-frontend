@@ -70,13 +70,36 @@ const Landing = () => {
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
-            {/* Logo */}
+            {/* Logo - BIGGER and centered */}
             <div className="flex justify-center mb-8">
-              <div className="w-24 h-24 bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-2xl border border-purple-400 border-opacity-30 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-400 opacity-20 animate-pulse"></div>
+              <div style={{
+                width: '150px',
+                height: '150px',
+                background: 'linear-gradient(135deg, #a855f7, #7c3aed, #6366f1)',
+                borderRadius: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 25px 50px -12px rgba(168, 85, 247, 0.5)',
+                border: '1px solid rgba(168, 85, 247, 0.3)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.4))',
+                  opacity: 0.2,
+                  animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                }}></div>
                 <LogoRotator 
-                  className="w-16 h-16 object-contain relative z-10" 
-                  alt="Phantm.ink Logo" 
+                  className="relative z-10" 
+                  alt="Phantm.ink Logo"
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    objectFit: 'contain'
+                  }}
                 />
               </div>
             </div>

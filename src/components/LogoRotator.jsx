@@ -5,7 +5,7 @@ let backgroundSet = false;
 let globalSelectedLogo = '/logo/1.PNG';
 
 const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
-  // Numbered logos 1-18 in /logo/ folder (PNG extension)
+  // Numbered logos 1-24 in /logo/ folder (PNG extension)
   const logoFiles = [
     "/logo/1.PNG",
     "/logo/2.PNG", 
@@ -24,7 +24,13 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
     "/logo/15.PNG",
     "/logo/16.PNG",
     "/logo/17.PNG",
-    "/logo/18.PNG"
+    "/logo/18.PNG",
+    "/logo/19.PNG",
+    "/logo/20.PNG",
+    "/logo/21.PNG",
+    "/logo/22.PNG",
+    "/logo/23.PNG",
+    "/logo/24.PNG"
   ];
   
   // Use global selected logo for consistency
