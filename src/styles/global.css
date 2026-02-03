@@ -144,13 +144,13 @@ body.logo-background::before {
 }
 
 .form-container {
-  background: rgba(26, 26, 26, 0.7) !important; /* More transparent */
-  border: 2px solid var(--neon-purple);
-  border-radius: 15px;
-  padding: 40px;
-  margin-bottom: 60px;
-  box-shadow: 0 0 40px rgba(122, 39, 255, 0.3);
-  backdrop-filter: blur(5px);
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 .form-title {
