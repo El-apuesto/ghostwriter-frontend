@@ -1,9 +1,9 @@
 /* 🎯 HEADER STYLES - NOT TOO BIG! */
 
 .header {
-  background: rgba(0, 0, 0, 0.9);
+  background: transparent !important; /* Remove background */
   border-bottom: 2px solid #00ff88;
-  backdrop-filter: blur(10px);
+  backdrop-filter: none; /* Remove blur */
   padding: 0.75rem 0; /* Reduced from 1.5rem */
   position: fixed;
   top: 0;
@@ -97,6 +97,7 @@
 @media (max-width: 768px) {
   .header {
     padding: 0.25rem 0;
+    background: transparent !important;
   }
   
   .header-container {
@@ -123,10 +124,21 @@
   .header-btn {
     padding: 0.2rem 0.6rem;
     font-size: 0.7rem;
+    background: rgba(0, 255, 136, 0.2) !important; /* Semi-transparent */
+    backdrop-filter: blur(3px);
+  }
+  
+  .signup-btn {
+    background: rgba(0, 255, 255, 0.2) !important; /* Semi-transparent */
+    backdrop-filter: blur(3px);
   }
 }
 
 @media (max-width: 480px) {
+  .header {
+    background: transparent !important;
+  }
+  
   .header-container {
     height: 20px; /* Even smaller on very small screens */
   }
@@ -138,5 +150,12 @@
   .header-btn {
     padding: 0.2rem 0.5rem;
     font-size: 0.6rem;
+    background: rgba(0, 255, 136, 0.15) !important; /* Even more transparent */
+    backdrop-filter: blur(2px);
+  }
+  
+  .signup-btn {
+    background: rgba(0, 255, 255, 0.15) !important; /* Even more transparent */
+    backdrop-filter: blur(2px);
   }
 }
