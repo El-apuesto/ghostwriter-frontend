@@ -21,6 +21,13 @@ body.logo-background {
 
 /* Mobile-first approach */
 @media (max-width: 768px) {
+  /* Add top margin to account for fixed header */
+  .main-content,
+  .page-container,
+  main {
+    padding-top: 60px !important; /* Account for fixed header */
+  }
+  
   /* Navigation */
   .nav-container {
     padding: 0.5rem 1rem;
@@ -123,12 +130,20 @@ body.logo-background {
 
 /* Small phones */
 @media (max-width: 480px) {
+  /* Add top margin to account for fixed header */
+  .main-content,
+  .page-container,
+  main {
+    padding-top: 50px !important; /* Account for smaller header */
+  }
+  
   .form-container {
     padding: 0.75rem;
-    background: transparent !important; /* Remove gray background */
-    border: none !important; /* Remove borders */
-    border-radius: 0 !important; /* Remove rounded corners */
-    box-shadow: none !important; /* Remove shadows */
+    margin: 1rem !important;
+    background: rgba(26, 26, 26, 0.9) !important;
+    border: 2px solid var(--neon-purple) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 0 40px rgba(122, 39, 255, 0.3) !important;
   }
   
   .form-input,
