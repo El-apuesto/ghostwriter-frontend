@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="apple-touch-icon" href="/logo.png.PNG">
-  <link rel="shortcut icon" href="/favicon.svg">
+  <!-- Favicon - Uses same logo as site -->
+  <link rel="icon" type="image/png" href="/logo/1.PNG" id="favicon">
+  <link rel="apple-touch-icon" href="/logo/1.PNG">
+  <link rel="shortcut icon" href="/logo/1.PNG">
   
   <!-- Primary Meta Tags -->
   <title>Phantm.ink - AI Story Generator | Create Dark Comedy Novels & Fiction Online</title>
@@ -23,7 +23,7 @@
   <meta property="og:url" content="https://phantm.ink/">
   <meta property="og:title" content="Phantm.ink - AI Story Generator | Create Dark Comedy Novels Online">
   <meta property="og:description" content="Generate complete novels and fiction with AI. Specializes in dark comedy, deadpan humor, and sarcastic storytelling. Try free sample stories now.">
-  <meta property="og:image" content="https://phantm.ink/logo.png.PNG">
+  <meta property="og:image" content="https://phantm.ink/logo/1.PNG">
   <meta property="og:site_name" content="Phantm.ink">
   
   <!-- Twitter Card -->
@@ -31,7 +31,7 @@
   <meta name="twitter:url" content="https://phantm.ink/">
   <meta name="twitter:title" content="Phantm.ink - AI Story Generator | Dark Comedy & Fiction">
   <meta name="twitter:description" content="Generate complete novels with AI. Dark comedy, deadpan humor, sarcastic fiction. Free samples available.">
-  <meta name="twitter:image" content="https://phantm.ink/logo.png.PNG">
+  <meta name="twitter:image" content="https://phantm.ink/logo/1.PNG">
   
   <!-- Schema.org JSON-LD for SoftwareApplication -->
   <script type="application/ld+json">
@@ -68,7 +68,7 @@
     "@type": "Organization",
     "name": "Phantm.ink",
     "url": "https://phantm.ink/",
-    "logo": "https://phantm.ink/logo.png.PNG",
+    "logo": "https://phantm.ink/logo/1.PNG",
     "description": "AI-powered creative writing platform for generating novels, fiction, and biographies with dark comedy and deadpan humor.",
     "sameAs": []
   }
@@ -95,6 +95,24 @@
   <!-- Performance Hints -->
   <link rel="preconnect" href="https://phantm.ink">
   <link rel="dns-prefetch" href="https://phantm.ink">
+  
+  <!-- Script to sync favicon with rotating logo -->
+  <script>
+    // Sync favicon with the logo selected by LogoRotator
+    window.addEventListener('DOMContentLoaded', () => {
+      // Listen for logo change event from LogoRotator
+      window.addEventListener('logoSelected', (event) => {
+        const selectedLogo = event.detail.logo;
+        const favicon = document.getElementById('favicon');
+        const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
+        const shortcutIcon = document.querySelector('link[rel="shortcut icon"]');
+        
+        if (favicon) favicon.href = selectedLogo;
+        if (appleTouchIcon) appleTouchIcon.href = selectedLogo;
+        if (shortcutIcon) shortcutIcon.href = selectedLogo;
+      });
+    });
+  </script>
 </head>
 <body class="logo-background">
   <div id="root"></div>

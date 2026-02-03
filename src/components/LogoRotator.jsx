@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 let backgroundSet = false;
 let globalSelectedLogo = '/logo/1.PNG';
 
-const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
+const LogoRotator = ({ className = "", alt = "Phantm.ink Logo", style = {} }) => {
   // Numbered logos 1-24 in /logo/ folder (PNG extension)
   const logoFiles = [
     "/logo/1.PNG",
@@ -48,6 +48,9 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       console.log('Global logo selected:', chosenLogo);
       setSelectedLogo(chosenLogo);
       
+      // Dispatch event to notify favicon update
+      window.dispatchEvent(new CustomEvent('logoSelected', { detail: { logo: chosenLogo } }));
+      
       // Apply background to body only - NO MARGINS
       document.body.style.setProperty('background-image', `url(${chosenLogo})`, 'important');
       document.body.style.setProperty('background-size', '50% auto', 'important');
@@ -89,7 +92,8 @@ const LogoRotator = ({ className = "", alt = "Phantm.ink Logo" }) => {
       style={{ 
         width: '100%',
         height: 'auto',
-        maxWidth: '64px'
+        maxWidth: '64px',
+        ...style
       }}
       onError={(e) => {
         console.log('Logo failed to load:', selectedLogo);
