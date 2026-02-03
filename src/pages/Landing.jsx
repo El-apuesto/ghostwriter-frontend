@@ -162,21 +162,21 @@ const Landing = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* Professional Pricing Section with Your Images */}
+      {/* CTA Section - Credit packs removed from landing page */}
       <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mt-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
               Ready to Start Writing?
             </h2>
             <p className="text-xl text-purple-100 mb-8">
-              Purchase credits to generate your stories
+              Get credits to power your creative journey
             </p>
             <Link 
               to="/credits" 
-              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all"
+              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-xl transform hover:scale-105"
             >
-              Buy Credits
+              View Credit Packages
             </Link>
           </div>
         </div>

@@ -76,8 +76,8 @@
 
 .packs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -94,7 +94,7 @@
 
 .pack-image-container {
   width: 100%;
-  height: 15px;
+  height: 180px;
   position: relative;
   overflow: hidden;
   border-radius: 13px 13px 0 0;
@@ -170,6 +170,7 @@
   font-weight: 700;
   letter-spacing: 1px;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  z-index: 10;
 }
 
 .bonus-badge {
@@ -184,21 +185,22 @@
   font-weight: 700;
   letter-spacing: 1px;
   box-shadow: 0 0 20px rgba(255, 0, 136, 0.6);
+  z-index: 10;
 }
 
 .pack-header {
   text-align: center;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   border-bottom: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .pack-name {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #00ff88;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .pack-price {
@@ -209,12 +211,12 @@
 }
 
 .price-symbol {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #00ffff;
 }
 
 .price-amount {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #00ffff;
 }
@@ -223,19 +225,19 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .pack-credits {
   text-align: center;
-  padding: 1.5rem;
+  padding: 1rem;
   background: rgba(0, 255, 136, 0.1);
   border-radius: 10px;
 }
 
 .credits-number {
   display: block;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
@@ -245,23 +247,23 @@
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 2px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .pack-description {
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.85rem;
+  line-height: 1.4;
 }
 
 .pack-buy-btn {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
+  padding: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .pack-buy-btn:disabled {
@@ -380,14 +382,33 @@
   color: #ff0044;
 }
 
+/* Desktop: 4 per row, then 3 remaining */
+@media (min-width: 1024px) {
+  .packs-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .packs-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile: 2 per row */
 @media (max-width: 768px) {
+  .credits-page-container {
+    padding: 80px 1rem 2rem;
+  }
+
   .credits-page-header h1 {
     font-size: 2rem;
   }
 
   .packs-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
   .pack-card.popular {
@@ -395,7 +416,24 @@
   }
 
   .pack-image-container {
-    height: 10px !important; /* EVEN TINER on mobile */
+    height: 140px;
+  }
+
+  .pack-name {
+    font-size: 0.9rem;
+  }
+
+  .price-amount {
+    font-size: 1.6rem;
+  }
+
+  .credits-number {
+    font-size: 1.6rem;
+  }
+
+  .pack-buy-btn {
+    padding: 0.7rem;
+    font-size: 0.85rem;
   }
 
   .usage-grid {
