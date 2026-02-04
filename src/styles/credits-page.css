@@ -250,6 +250,16 @@
   font-size: 0.8rem;
 }
 
+.credits-bonus {
+  display: block;
+  color: var(--accent-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.25rem;
+}
+
 .pack-description {
   text-align: center;
   color: rgba(255, 255, 255, 0.7);

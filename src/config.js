@@ -29,7 +29,62 @@ export const CREDIT_COSTS = {
 
 // Credit packs - MATCHES BACKEND (prices in cents converted to dollars)
 export const CREDIT_PACKS = {
-  top_up: { name: 'Top-Up Pack', credits: 50, price: 5.00, bonus: 0, priceId: 'price_1SuIGA5EmQCAemjp8HDzJlpv' },
+  novella: { 
+    name: 'Novella Pack', 
+    credits: 130, 
+    price: 13, 
+    bonus: 0, 
+    description: '40-60k words',
+    priceId: 'price_1SudhH5EmQCAemjpOuZF2n53'
+  },
+  premium_novella: { 
+    name: 'Premium Novella', 
+    credits: 150, 
+    price: 15, 
+    bonus: 0, 
+    description: '40-60k words • TOC • Dedication • About Author • Chapter Titles • Enhanced Blurb',
+    priceId: 'price_1SudjM5EmQCAemjp9sEg3Vyh'
+  },
+  novel: { 
+    name: 'Novel Pack', 
+    credits: 210, 
+    price: 21, 
+    bonus: 0, 
+    description: '80-100k words',
+    priceId: 'price_1Sudli5EmQCAemjpDHIMhgaC'
+  },
+  premium_novel: { 
+    name: 'Premium Novel', 
+    credits: 230, 
+    price: 23, 
+    bonus: 0, 
+    description: '80-100k words • TOC • Dedication • About Author • Chapter Titles • Enhanced Blurb',
+    priceId: 'price_1Sudmv5EmQCAemjp7aLriIhA'
+  },
+  starter_pack: { 
+    name: 'Starter Pack', 
+    credits: 210, 
+    price: 21, 
+    bonus: 0, 
+    description: 'Best for 1 novel',
+    priceId: 'price_1SuIGA5EmQCAemjp8HDzJlpv'
+  },
+  duo_pack: { 
+    name: 'Duo Pack', 
+    credits: 420, 
+    price: 39, 
+    bonus: 30, // 7% bonus (420 credits for price of 393)
+    description: '2 novels or 3 novellas',
+    priceId: 'price_1Sudpo5EmQCAemjpkFIKal3c'
+  },
+  trilogy_pack: { 
+    name: 'Trilogy Pack', 
+    credits: 700, 
+    price: 63, 
+    bonus: 70, // 10% bonus (700 credits for price of 630)
+    description: '3 novels with premium',
+    priceId: 'price_1SudsM5EmQCAemjpECUhoolR'
+  }
 };
 
 // Stripe Price IDs for products

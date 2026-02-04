@@ -3,30 +3,18 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { paymentsAPI, authAPI } from '../utils/api'
 import { useAuth } from '../context/AuthContext'
 import CreditsDisplay from '../components/CreditsDisplay'
+import { CREDIT_PACKS } from '../config'
 import '../styles/credits-page.css'
 
 const Credits = () => {
   const { user, updateUser } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const [packages, setPackages] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [packages, setPackages] = useState(CREDIT_PACKS)
+  const [loading, setLoading] = useState(false)
   const [purchasing, setPurchasing] = useState(null)
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await paymentsAPI.getPackages()
-        setPackages(response.pricing || response.packages)
-      } catch (error) {
-        console.error('Failed to fetch packages:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPackages()
-
     // Check for payment success/cancel
     const success = searchParams.get('success')
     const canceled = searchParams.get('canceled')
@@ -93,7 +81,7 @@ const Credits = () => {
         <h2 className="section-title">Choose Your Pack</h2>
         <div className="packs-grid">
           {packages && Object.entries(packages).map(([key, pack]) => {
-            const isPopular = key === 'creator'
+            const isPopular = key === 'duo_pack'
             
             // Map package keys to image filenames
             const getImageName = (packageKey) => {
@@ -102,9 +90,9 @@ const Credits = () => {
                 'premium_novella': 'novella plus', 
                 'novel': 'novel',
                 'premium_novel': 'novel-plus',
-                'double_feature': '2',
-                'triple_feature': '3',
-                'non_fiction_upgrade': 'upgrade '
+                'starter_pack': '2',
+                'duo_pack': '3',
+                'trilogy_pack': '19'
               }
               return imageMap[packageKey] || packageKey
             }
@@ -136,7 +124,7 @@ const Credits = () => {
                   <h3 className="pack-name">{pack.name}</h3>
                   <div className="pack-price">
                     <span className="price-symbol">$</span>
-                    <span className="price-amount">{pack.price_usd}</span>
+                    <span className="price-amount">{pack.price}</span>
                   </div>
                 </div>
 
@@ -144,6 +132,9 @@ const Credits = () => {
                   <div className="pack-credits">
                     <span className="credits-number neon-text">{pack.credits}</span>
                     <span className="credits-label">Credits</span>
+                    {pack.bonus > 0 && (
+                      <span className="credits-bonus">+{pack.bonus} Bonus</span>
+                    )}
                   </div>
 
                   {pack.description && (

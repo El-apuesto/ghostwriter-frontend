@@ -61,21 +61,45 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
-  margin: 20px; /* Add page margins */
-  padding: 20px; /* Add page padding */
+  margin: 0;
+  padding: 0;
 }
 
-/* Make all cards and containers semi-transparent */
-.card, .container > div, form, .auth-container, .story-card, .dashboard-card, .profile-card, .navbar, .btn {
-  background: rgba(22, 33, 62, 0.3) !important;
+/* Watermark Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/logo.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Remove text backgrounds for cleaner look */
+.card, .container > div, .story-card, .dashboard-card, .profile-card, .navbar, .btn {
+  background: transparent !important;
+  backdrop-filter: none;
+  border: 1px solid rgba(0, 255, 249, 0.2);
+}
+
+/* Auth containers need minimal background for readability */
+form, .auth-container {
+  background: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(0, 255, 249, 0.2);
 }
 
-/* Make main content areas even more transparent */
+/* Make main content areas transparent */
 main, section, .content, .page {
-  background: rgba(22, 33, 62, 0.2) !important;
-  backdrop-filter: blur(3px);
+  background: transparent !important;
+  backdrop-filter: none;
 }
 
 /* ============================================
@@ -114,7 +138,7 @@ main, section, .content, .page {
    ============================================ */
 
 .navbar {
-  background: rgba(26, 26, 46, 0.8);
+  background: rgba(0, 0, 0, 0.8);
   border-bottom: 1px solid var(--accent-neon);
   padding: var(--spacing-sm) 0;
   position: sticky;
