@@ -32,12 +32,12 @@ body.logo-background::before {
 }
 
 :root {
-  /* Colors */
-  --bg-primary: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-  --bg-secondary: rgba(26, 26, 46, 0.7); /* Semi-transparent dark blue */
-  --bg-card: rgba(22, 33, 62, 0.7); /* Semi-transparent card background */
-  --accent-cyan: #00fff9;
-  --accent-pink: #ff006e;
+  /* Colors - ONE NEON ACCENT ONLY */
+  --bg-primary: rgba(0, 0, 0, 0.7);
+  --bg-secondary: rgba(26, 26, 46, 0.7);
+  --bg-card: rgba(22, 33, 62, 0.7);
+  --accent-neon: #00fff9; /* Single neon accent */
+  --accent-secondary: #6366f1; /* Secondary accent */
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
   --error: #ff3b3b;
@@ -67,7 +67,7 @@ body {
 
 /* Make all cards and containers semi-transparent */
 .card, .container > div, form, .auth-container, .story-card, .dashboard-card, .profile-card, .navbar, .btn {
-  background: rgba(22, 33, 62, 0.3) !important; /* More transparent */
+  background: rgba(22, 33, 62, 0.3) !important;
   backdrop-filter: blur(5px);
   border: 1px solid rgba(0, 255, 249, 0.2);
 }
@@ -76,6 +76,31 @@ body {
 main, section, .content, .page {
   background: rgba(22, 33, 62, 0.2) !important;
   backdrop-filter: blur(3px);
+}
+
+/* ============================================
+   TOP CENTER LOGO
+   ============================================ */
+
+.top-logo {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1002;
+  text-align: center;
+}
+
+.top-logo img {
+  height: 60px;
+  width: auto;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 249, 0.5));
+  transition: all 0.3s ease;
+}
+
+.top-logo img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 30px rgba(0, 255, 249, 0.8));
 }
 
 .container {
@@ -89,8 +114,8 @@ main, section, .content, .page {
    ============================================ */
 
 .navbar {
-  background: rgba(26, 26, 46, 0.8); /* Semi-transparent navbar */
-  border-bottom: 1px solid var(--accent-cyan);
+  background: rgba(26, 26, 46, 0.8);
+  border-bottom: 1px solid var(--accent-neon);
   padding: var(--spacing-sm) 0;
   position: sticky;
   top: 0;
@@ -126,7 +151,7 @@ main, section, .content, .page {
 }
 
 .logo-text {
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+  background: linear-gradient(135deg, var(--accent-neon), var(--accent-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,16 +170,16 @@ main, section, .content, .page {
 }
 
 .nav-link:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-neon);
 }
 
 .credits-badge {
   background: var(--bg-card);
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  border: 1px solid var(--accent-cyan);
+  border: 1px solid var(--accent-neon);
   font-weight: bold;
-  color: var(--accent-cyan);
+  color: var(--accent-neon);
 }
 
 /* ============================================
@@ -175,7 +200,7 @@ main, section, .content, .page {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+  background: linear-gradient(135deg, var(--accent-neon), var(--accent-secondary));
   color: var(--bg-primary);
 }
 
@@ -186,12 +211,12 @@ main, section, .content, .page {
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid var(--accent-cyan);
-  color: var(--accent-cyan);
+  border: 2px solid var(--accent-neon);
+  color: var(--accent-neon);
 }
 
 .btn-secondary:hover {
-  background: var(--accent-cyan);
+  background: var(--accent-neon);
   color: var(--bg-primary);
 }
 

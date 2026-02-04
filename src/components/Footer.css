@@ -1,6 +1,6 @@
 .footer {
   background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
-  border-top: 2px solid #00fff9;
+  border-top: 2px solid var(--accent-neon);
   padding: 3rem 2rem 1rem;
   margin-top: 5rem;
   color: #b0b0b0;
@@ -17,14 +17,14 @@
 
 .footer-section h3,
 .footer-section h4 {
-  color: #00fff9;
+  color: var(--accent-neon);
   margin-bottom: 1rem;
   font-weight: 600;
 }
 
 .footer-logo {
   font-size: 1.5rem;
-  text-shadow: 0 0 10px #00fff9;
+  text-shadow: 0 0 10px var(--accent-neon);
 }
 
 .footer-tagline {
@@ -50,7 +50,7 @@
 }
 
 .footer-links a:hover {
-  color: #00fff9;
+  color: var(--accent-neon);
 }
 
 .footer-text {

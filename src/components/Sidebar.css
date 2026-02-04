@@ -4,7 +4,7 @@
   left: 1rem;
   z-index: 1001;
   background: rgba(0, 0, 0, 0.9);
-  border: 2px solid #a855f7;
+  border: 2px solid var(--accent-neon);
   border-radius: 8px;
   padding: 0.75rem;
   cursor: pointer;
@@ -15,20 +15,20 @@
 }
 
 .sidebar-toggle:hover {
-  border-color: #6366f1;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 20px rgba(0, 255, 249, 0.4);
 }
 
 .hamburger-line {
   width: 24px;
   height: 3px;
-  background: #a855f7;
+  background: var(--accent-neon);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
 
 .sidebar-toggle:hover .hamburger-line {
-  background: #6366f1;
+  background: var(--accent-secondary);
 }
 
 .sidebar-overlay {
@@ -56,7 +56,7 @@
   height: 100vh;
   width: 280px;
   background: rgba(0, 0, 0, 0.95);
-  border-right: 2px solid #a855f7;
+  border-right: 2px solid var(--accent-neon);
   z-index: 1000;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
@@ -74,7 +74,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  border-bottom: 1px solid rgba(0, 255, 249, 0.3);
 }
 
 .sidebar-logo {
@@ -84,18 +84,17 @@
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #a855f7, #6366f1);
+  background: linear-gradient(135deg, var(--accent-neon), var(--accent-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-family: 'Orbitron', sans-serif;
-  /* NO NEON ANIMATION */
 }
 
 .sidebar-close {
   background: none;
   border: none;
-  color: #a855f7;
+  color: var(--accent-neon);
   font-size: 2rem;
   cursor: pointer;
   padding: 0;
@@ -109,8 +108,8 @@
 }
 
 .sidebar-close:hover {
-  background: rgba(168, 85, 247, 0.2);
-  color: #6366f1;
+  background: rgba(0, 255, 249, 0.2);
+  color: var(--accent-secondary);
 }
 
 .sidebar-nav {
@@ -131,14 +130,14 @@
 }
 
 .sidebar-nav-item:hover {
-  background: rgba(168, 85, 247, 0.1);
-  border-left-color: #a855f7;
+  background: rgba(0, 255, 249, 0.1);
+  border-left-color: var(--accent-neon);
 }
 
 .sidebar-nav-item.active {
-  background: rgba(168, 85, 247, 0.2);
-  border-left-color: #6366f1;
-  color: #6366f1;
+  background: rgba(0, 255, 249, 0.2);
+  border-left-color: var(--accent-secondary);
+  color: var(--accent-secondary);
 }
 
 .nav-icon {
@@ -152,7 +151,7 @@
 
 .sidebar-footer {
   padding: 1.5rem;
-  border-top: 1px solid rgba(168, 85, 247, 0.3);
+  border-top: 1px solid rgba(0, 255, 249, 0.3);
 }
 
 .user-info {
@@ -165,7 +164,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(168, 85, 247, 0.2);
+  background: rgba(0, 255, 249, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;

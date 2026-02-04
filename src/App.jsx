@@ -32,6 +32,11 @@ function App() {
     <Router>
       <AuthProvider>
         <div className="app">
+          {/* Top Center Logo */}
+          <div className="top-logo">
+            <img src="/logo.png" alt="Phantm.ink" />
+          </div>
+          
           <Sidebar />
           <main className="main-content">
             <Routes>
