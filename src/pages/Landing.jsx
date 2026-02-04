@@ -7,7 +7,7 @@ import LogoRotator from '../components/LogoRotator';
 const Landing = () => {
   return (
     <div className="min-h-screen" style={{background: '#000000', position: 'relative'}}>
-      {/* Faint background logo watermark in center - 15% opacity */}
+      {/* MUCH LARGER faint background logo watermark in center - 15% opacity */}
       <div style={{
         position: 'fixed',
         top: '50%',
@@ -21,14 +21,24 @@ const Landing = () => {
           className="background-logo"
           alt="Background Logo"
           style={{
-            width: '400px',
-            height: '400px',
+            width: '800px',
+            height: '800px',
             objectFit: 'contain'
           }}
         />
       </div>
 
-      {/* Logo centered at top - NO PURPLE BOX */}
+      {/* Hamburger menu in top left */}
+      <div style={{
+        position: 'fixed',
+        top: '1rem',
+        left: '1rem',
+        zIndex: 1000
+      }}>
+        {/* Add your hamburger menu component here if you have one */}
+      </div>
+
+      {/* Logo centered at top between hamburger and login buttons */}
       <div style={{
         position: 'fixed',
         top: '1rem',
@@ -46,10 +56,10 @@ const Landing = () => {
         />
       </div>
 
-      {/* Login/Signup buttons in top right */}
+      {/* Smaller Login/Signup buttons in top right - not sitting below border */}
       <div style={{
         position: 'fixed',
-        top: '1rem',
+        top: '1.25rem',
         right: '1rem',
         zIndex: 1000,
         display: 'flex',
@@ -58,13 +68,13 @@ const Landing = () => {
         <Link
           to="/login"
           style={{
-            padding: '0.5rem 1rem',
+            padding: '0.4rem 0.75rem',
             border: '1px solid #a855f7',
             background: 'rgba(0, 0, 0, 0.8)',
             color: '#a855f7',
             borderRadius: '6px',
             textDecoration: 'none',
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             fontWeight: '600',
             transition: 'all 0.3s ease'
           }}
@@ -82,13 +92,13 @@ const Landing = () => {
         <Link
           to="/signup"
           style={{
-            padding: '0.5rem 1rem',
+            padding: '0.4rem 0.75rem',
             border: '1px solid #6366f1',
             background: 'rgba(99, 102, 241, 0.2)',
             color: '#6366f1',
             borderRadius: '6px',
             textDecoration: 'none',
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             fontWeight: '600',
             transition: 'all 0.3s ease'
           }}
