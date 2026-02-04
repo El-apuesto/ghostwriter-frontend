@@ -6,7 +6,28 @@ import LogoRotator from '../components/LogoRotator';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen" style={{background: '#000000'}}>
+    <div className="min-h-screen" style={{background: '#000000', position: 'relative'}}>
+      {/* Faint background logo watermark in center - 15% opacity */}
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 0,
+        opacity: 0.15,
+        pointerEvents: 'none'
+      }}>
+        <LogoRotator 
+          className="background-logo"
+          alt="Background Logo"
+          style={{
+            width: '400px',
+            height: '400px',
+            objectFit: 'contain'
+          }}
+        />
+      </div>
+
       {/* Logo centered at top - NO PURPLE BOX */}
       <div style={{
         position: 'fixed',
@@ -85,7 +106,7 @@ const Landing = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden" style={{zIndex: 1}}>
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center" style={{marginTop: '60px'}}>
             <h1 className="text-6xl md:text-8xl font-serif font-bold text-white mb-6 leading-tight">
@@ -131,10 +152,12 @@ const Landing = () => {
       </div>
 
       {/* Statistics Section */}
-      <Statistics />
+      <div style={{position: 'relative', zIndex: 1}}>
+        <Statistics />
+      </div>
 
       {/* Professional Features Section */}
-      <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8" style={{position: 'relative', zIndex: 1}}>
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
             Professional Writing Tools
@@ -226,10 +249,12 @@ const Landing = () => {
       </div>
 
       {/* Testimonials Section */}
-      <Testimonials />
+      <div style={{position: 'relative', zIndex: 1}}>
+        <Testimonials />
+      </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20">
+      <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20" style={{position: 'relative', zIndex: 1}}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
@@ -249,7 +274,7 @@ const Landing = () => {
       </div>
 
       {/* Professional CTA Section */}
-      <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center" style={{position: 'relative', zIndex: 1}}>
         <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 rounded-2xl p-12 shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-400 opacity-20 animate-pulse"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-30 transition-opacity"></div>
