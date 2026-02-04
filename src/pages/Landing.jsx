@@ -5,6 +5,12 @@ import Statistics from '../components/Statistics';
 import LogoRotator from '../components/LogoRotator';
 
 const Landing = () => {
+  // Unified neon purple color with glow
+  const neonPurple = '#a855f7';
+  const glowStyle = {
+    boxShadow: `0 0 10px ${neonPurple}, 0 0 20px ${neonPurple}40`
+  };
+
   return (
     <div className="min-h-screen" style={{background: '#000000', position: 'relative'}}>
       {/* MUCH LARGER faint background logo watermark in center - 15% opacity */}
@@ -56,7 +62,7 @@ const Landing = () => {
         />
       </div>
 
-      {/* Smaller Login/Signup buttons in top right - not sitting below border */}
+      {/* Unified neon purple Login/Signup buttons in top right */}
       <div style={{
         position: 'fixed',
         top: '1.25rem',
@@ -69,22 +75,25 @@ const Landing = () => {
           to="/login"
           style={{
             padding: '0.4rem 0.75rem',
-            border: '1px solid #a855f7',
+            border: `2px solid ${neonPurple}`,
             background: 'rgba(0, 0, 0, 0.8)',
-            color: '#a855f7',
+            color: neonPurple,
             borderRadius: '6px',
             textDecoration: 'none',
             fontSize: '0.85rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            ...glowStyle
           }}
           onMouseEnter={(e) => {
-            e.target.style.background = '#a855f7';
+            e.target.style.background = neonPurple;
             e.target.style.color = '#fff';
+            e.target.style.boxShadow = `0 0 15px ${neonPurple}, 0 0 30px ${neonPurple}60`;
           }}
           onMouseLeave={(e) => {
             e.target.style.background = 'rgba(0, 0, 0, 0.8)';
-            e.target.style.color = '#a855f7';
+            e.target.style.color = neonPurple;
+            e.target.style.boxShadow = `0 0 10px ${neonPurple}, 0 0 20px ${neonPurple}40`;
           }}
         >
           Login
@@ -93,37 +102,35 @@ const Landing = () => {
           to="/signup"
           style={{
             padding: '0.4rem 0.75rem',
-            border: '1px solid #6366f1',
-            background: 'rgba(99, 102, 241, 0.2)',
-            color: '#6366f1',
+            border: `2px solid ${neonPurple}`,
+            background: `${neonPurple}20`,
+            color: neonPurple,
             borderRadius: '6px',
             textDecoration: 'none',
             fontSize: '0.85rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            ...glowStyle
           }}
           onMouseEnter={(e) => {
-            e.target.style.background = '#6366f1';
+            e.target.style.background = neonPurple;
             e.target.style.color = '#fff';
+            e.target.style.boxShadow = `0 0 15px ${neonPurple}, 0 0 30px ${neonPurple}60`;
           }}
           onMouseLeave={(e) => {
-            e.target.style.background = 'rgba(99, 102, 241, 0.2)';
-            e.target.style.color = '#6366f1';
+            e.target.style.background = `${neonPurple}20`;
+            e.target.style.color = neonPurple;
+            e.target.style.boxShadow = `0 0 10px ${neonPurple}, 0 0 20px ${neonPurple}40`;
           }}
         >
           Sign Up
         </Link>
       </div>
 
-      {/* Hero Section */}
+      {/* Hero Section - NO text "Phantm.ink" here, just description */}
       <div className="relative overflow-hidden" style={{zIndex: 1}}>
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center" style={{marginTop: '60px'}}>
-            <h1 className="text-6xl md:text-8xl font-serif font-bold text-white mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent drop-shadow-lg">
-                Phantm.ink
-              </span>
-            </h1>
+          <div className="text-center" style={{marginTop: '100px', paddingTop: '0'}}>
             <p className="text-xl md:text-2xl text-purple-100 mb-8 max-w-4xl mx-auto leading-relaxed font-light">
               Professional AI-powered writing platform for authors, publishers, and content creators. 
               Transform your ideas into polished manuscripts with industry-standard tools.
@@ -132,28 +139,55 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link
                 to="/signup"
-                className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-10 py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-xl transform hover:scale-105 border border-purple-400 border-opacity-30 relative overflow-hidden group"
+                style={{
+                  background: neonPurple,
+                  border: `2px solid ${neonPurple}`,
+                  ...glowStyle
+                }}
+                className="inline-block text-white px-10 py-4 rounded-lg font-semibold text-lg hover:brightness-110 transition-all transform hover:scale-105"
               >
                 <span className="relative z-10">Start Your Manuscript</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
               </Link>
               <Link
                 to="/login"
-                className="inline-block border-2 border-purple-400 text-purple-100 px-10 py-4 rounded-lg font-semibold text-lg hover:bg-purple-400 hover:bg-opacity-20 transition-all"
+                style={{
+                  border: `2px solid ${neonPurple}`,
+                  color: neonPurple,
+                  ...glowStyle
+                }}
+                className="inline-block px-10 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-20 transition-all"
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = `${neonPurple}20`;
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                }}
               >
                 Sign In
               </Link>
             </div>
             
-            {/* Professional Badges */}
+            {/* Professional Badges - unified neon purple */}
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <span className="px-4 py-2 bg-purple-900 bg-opacity-50 rounded-full text-purple-200 text-sm border border-purple-400 border-opacity-30 backdrop-blur-sm">
+              <span style={{
+                border: `1px solid ${neonPurple}`,
+                color: neonPurple,
+                ...glowStyle
+              }} className="px-4 py-2 bg-black bg-opacity-50 rounded-full text-sm backdrop-blur-sm">
                 🏆 Award-Winning AI
               </span>
-              <span className="px-4 py-2 bg-purple-900 bg-opacity-50 rounded-full text-purple-200 text-sm border border-purple-400 border-opacity-30 backdrop-blur-sm">
+              <span style={{
+                border: `1px solid ${neonPurple}`,
+                color: neonPurple,
+                ...glowStyle
+              }} className="px-4 py-2 bg-black bg-opacity-50 rounded-full text-sm backdrop-blur-sm">
                 📚 Publishing Industry Standard
               </span>
-              <span className="px-4 py-2 bg-purple-900 bg-opacity-50 rounded-full text-purple-200 text-sm border border-purple-400 border-opacity-30 backdrop-blur-sm">
+              <span style={{
+                border: `1px solid ${neonPurple}`,
+                color: neonPurple,
+                ...glowStyle
+              }} className="px-4 py-2 bg-black bg-opacity-50 rounded-full text-sm backdrop-blur-sm">
                 ✍️ Author-Approved
               </span>
             </div>
@@ -178,9 +212,14 @@ const Landing = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-gradient-to-br from-purple-900 to-indigo-900 bg-opacity-50 backdrop-blur-lg rounded-xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-6 relative z-10">
+          <div style={{
+            border: `1px solid ${neonPurple}`,
+            ...glowStyle
+          }} className="bg-gradient-to-br from-purple-900 to-black bg-opacity-50 backdrop-blur-lg rounded-xl p-8 hover:border-opacity-100 transition-all relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div style={{
+              background: neonPurple
+            }} className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 relative z-10">
               <span className="text-white text-2xl">✍️</span>
             </div>
             <h3 className="text-2xl font-serif font-semibold text-white mb-4 relative z-10">Manuscript Development</h3>
@@ -204,9 +243,14 @@ const Landing = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg rounded-xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-            <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mb-6 relative z-10">
+          <div style={{
+            border: `1px solid ${neonPurple}`,
+            ...glowStyle
+          }} className="bg-gradient-to-br from-purple-900 to-black bg-opacity-50 backdrop-blur-lg rounded-xl p-8 hover:border-opacity-100 transition-all relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div style={{
+              background: neonPurple
+            }} className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 relative z-10">
               <span className="text-white text-2xl">📖</span>
             </div>
             <h3 className="text-2xl font-serif font-semibold text-white mb-4 relative z-10">Publishing Ready</h3>
@@ -230,9 +274,14 @@ const Landing = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-900 to-pink-900 bg-opacity-50 backdrop-blur-lg rounded-xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-60 transition-all relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6 relative z-10">
+          <div style={{
+            border: `1px solid ${neonPurple}`,
+            ...glowStyle
+          }} className="bg-gradient-to-br from-purple-900 to-black bg-opacity-50 backdrop-blur-lg rounded-xl p-8 hover:border-opacity-100 transition-all relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div style={{
+              background: neonPurple
+            }} className="w-16 h-16 rounded-lg flex items-center justify-center mb-6 relative z-10">
               <span className="text-white text-2xl">🎯</span>
             </div>
             <h3 className="text-2xl font-serif font-semibold text-white mb-4 relative z-10">Genre Expertise</h3>
@@ -264,7 +313,7 @@ const Landing = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20" style={{position: 'relative', zIndex: 1}}>
+      <div className="bg-gradient-to-br from-purple-900 via-black to-purple-900 bg-opacity-50 backdrop-blur-lg py-20" style={{position: 'relative', zIndex: 1}}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
@@ -275,7 +324,12 @@ const Landing = () => {
             </p>
             <Link 
               to="/credits" 
-              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-xl transform hover:scale-105"
+              style={{
+                background: neonPurple,
+                border: `2px solid ${neonPurple}`,
+                ...glowStyle
+              }}
+              className="inline-block text-white px-8 py-4 rounded-lg font-semibold text-lg hover:brightness-110 transition-all transform hover:scale-105"
             >
               View Credit Packages
             </Link>
@@ -285,13 +339,16 @@ const Landing = () => {
 
       {/* Professional CTA Section */}
       <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center" style={{position: 'relative', zIndex: 1}}>
-        <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 rounded-2xl p-12 shadow-2xl relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-400 opacity-20 animate-pulse"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-30 transition-opacity"></div>
+        <div style={{
+          background: neonPurple,
+          border: `2px solid ${neonPurple}`,
+          ...glowStyle
+        }} className="rounded-2xl p-12 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-purple-600 opacity-20 animate-pulse"></div>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6 relative z-10">
             Ready to Write Your Masterpiece?
           </h2>
-          <p className="text-xl text-purple-100 mb-8 max-w-3xl mx-auto relative z-10">
+          <p className="text-xl text-white mb-8 max-w-3xl mx-auto relative z-10">
             Join thousands of professional authors who trust Phantm.ink for their manuscript development. 
             Start your free trial today.
           </p>
