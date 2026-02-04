@@ -7,7 +7,25 @@ import LogoRotator from '../components/LogoRotator';
 const Landing = () => {
   return (
     <div className="min-h-screen" style={{background: '#000000'}}>
-      {/* Simple Login/Signup buttons in top right - NO HEADER COMPONENT */}
+      {/* Logo centered at top - NO PURPLE BOX */}
+      <div style={{
+        position: 'fixed',
+        top: '1rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000
+      }}>
+        <LogoRotator 
+          alt="Phantm.ink Logo"
+          style={{
+            width: '80px',
+            height: '80px',
+            objectFit: 'contain'
+          }}
+        />
+      </div>
+
+      {/* Login/Signup buttons in top right */}
       <div style={{
         position: 'fixed',
         top: '1rem',
@@ -69,41 +87,7 @@ const Landing = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
-            {/* Logo - BIGGER and centered */}
-            <div className="flex justify-center mb-8">
-              <div style={{
-                width: '150px',
-                height: '150px',
-                background: 'linear-gradient(135deg, #a855f7, #7c3aed, #6366f1)',
-                borderRadius: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 25px 50px -12px rgba(168, 85, 247, 0.5)',
-                border: '1px solid rgba(168, 85, 247, 0.3)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.4))',
-                  opacity: 0.2,
-                  animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-                }}></div>
-                <LogoRotator 
-                  className="relative z-10" 
-                  alt="Phantm.ink Logo"
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-            </div>
-            
+          <div className="text-center" style={{marginTop: '60px'}}>
             <h1 className="text-6xl md:text-8xl font-serif font-bold text-white mb-6 leading-tight">
               <span className="bg-gradient-to-r from-purple-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent drop-shadow-lg">
                 Phantm.ink
@@ -244,7 +228,7 @@ const Landing = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* CTA Section - Credit packs removed from landing page */}
+      {/* CTA Section */}
       <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 bg-opacity-50 backdrop-blur-lg py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
